@@ -1,0 +1,38 @@
+<?php
+	/**
+	 * Project: MVC2022.
+	 * Author:  InCubics
+	 * Date:    30/06/2022
+	 * File:    update.phtml
+	 */
+?>
+<h2>update FruitY</h2>
+&emsp; <a href="<?= back() ?>"?>back</a>
+
+<form action="<?= url('/fruity_update/'.$id) ?>" method="post">
+	<?=  csrf() ?>
+	<label class="formLabel">name</label>
+	<input name="name" type="text" placeholder="vul in"
+		   value="<?= populate('name', $populate) ?>"
+		   class=" <?= ( $failMessages->name ) ? 'bg-danger ' : '' ?>"><br>
+	<!--		   value="--><?php //if(!empty($populate->name)){echo $populate->name;}?><!--"-->
+	<label class="formLabel">color</label>
+	<input name="color" type="text" placeholder="vul in"
+		   value="<?= populate('color', $populate) ?>"
+		   class="<?= ( $failMessages->color ) ? 'bg-danger ' : '' ?>"
+	><br>
+	<label class="formLabel">sweetness</label>
+	<input name="sweetness" type="text" placeholder="vul getal in"
+		   value="<?= populate('sweetness', $populate) ?>"
+		   class="<?= ( $failMessages->sweetness ) ? 'bg-danger ' : '' ?>"><br>
+	<input name="submit" type="submit" value="update" class="btn btn-info px-3">
+</form>
+
+<ul>
+	<?php
+	foreach( $failMessages  as $fails) {
+		foreach($fails as $fail )
+			{echo '<li class="text-danger">'.$fail.'</li>';}
+	}
+	?>
+</ul>

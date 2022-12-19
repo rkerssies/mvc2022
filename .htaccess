@@ -1,0 +1,11 @@
+#Options +FollowSymLinks -MultiViews
+RewriteEngine On
+# dont rewrite real files and folder
+# RewriteCond %{SCRIPT_FILENAME} !-d
+# RewriteCond %{SCRIPT_FILENAME} !-f
+
+# rewrites default from clean URL to get-values
+ RewriteRule ^([^/]+)/([^/]+)/([^/.]+)/([^\.]+)/?$ ./index.php?p0=$1&p1=$2&p2=$3&p3=$4 [L,NC,QSA]
+ RewriteRule ^([^/]+)/([^/]+)/([^\.]+)/?$ ./index.php?p0=$1&p1=$2&p2=$3 [L,NC,QSA]
+ RewriteRule ^([^/]+)/([^\.]+)/?$ ./index.php?p0=$1&p1=$2 [L,NC,QSA]
+ RewriteRule ^([^\.]+)/?$        ./index.php?p0=$1 [L,NC,QSA]

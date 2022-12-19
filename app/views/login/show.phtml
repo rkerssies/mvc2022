@@ -1,0 +1,30 @@
+<?php
+	/**
+	 * Project: MVC2022.
+	 * Author:  InCubics
+	 * Date:    30/06/2022
+	 * File:    show.phtml
+	 */
+
+
+	if(empty(session_get('login')))
+	{		?>
+		<h2>Login</h2>
+		<form action="<?= url('/login') ?>" method="post">
+			<?= csrf() ?>
+			<input type="text" name="username" placeholder="username"><br>
+			<input type="password" name="password" placeholder="password"><br>
+			<input type="submit" name="submit" value="LOGIN">
+		</form>
+<?php
+	}
+	else
+	{		?>
+		<h2>Logoff</h2>
+		<form action="<?= url('/login') ?>" method="post">
+			<?=  csrf() ?>
+			<input type="submit" name="logoff" value="LOGOFF">
+		</form>
+
+<?php
+	}

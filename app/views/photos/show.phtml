@@ -1,0 +1,19 @@
+<?php
+	/**
+	 * Project: MVC2022.
+	 * Author:  InCubics
+	 * Date:    30/06/2022
+	 * File:    show.phtml
+	 */
+?>
+<h3><?= $title ?></h3>
+<hr>
+<style>.photoimg {height: 200px;}</style>
+<?php
+//	print_r($data);
+	foreach($data as $image_url)
+	{
+		echo '<img class="photoimg" src="'.$image_url.'" >';
+	}
+	
+?>

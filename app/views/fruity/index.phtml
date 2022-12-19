@@ -1,0 +1,47 @@
+<?php
+	/**
+	 * Project: MVC2022.
+	 * Author:  InCubics
+	 * Date:    30/06/2022
+	 * File:    index.phtml
+	 */
+?>
+	<h2>index FruitY</h2>
+	<a href="<?= url('/fruity_add') ?>">add</a>
+	&emsp;<a href="<?= url() ?>"?>home</a>
+	<hr>
+
+	Welcome! <br>
+	Actions in FruitY are made as Eloquent alike queries build with model-methods<br>
+
+	<table class="indextable">
+	<?php
+		
+		if(!empty($data))
+		{
+			foreach($data as $row)
+			{
+				echo '<tr>';
+				echo '<td>'.$row->name.'</td>';
+				echo '<td> <a href="'.url('/fruity_update/'.$row->id).'">
+								update
+							</a> </td>';
+				echo '<td> <a href="'.url('/fruity_delete/'.$row->id).'">
+							<i class="bi bi-trash3-fill text-danger"></i>
+						</a> </td>';
+				echo '</tr>';
+			}
+		}
+		else	{
+			echo 'no records found';
+		}
+	?>
+		<ul>
+			<?php
+				foreach( $arrayMessages  as $messages) {
+					foreach($messages as $type =>  $message )
+					{echo '<li class="text-'.$type.'">Message: '.$message.'</li>';}
+				}
+			?>
+		</ul>
+	</table>

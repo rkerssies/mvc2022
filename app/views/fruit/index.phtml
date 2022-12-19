@@ -1,0 +1,38 @@
+<?php
+	/**
+	 * Project: MVC2022.
+	 * Author:  InCubics
+	 * Date:    29/06/2022
+	 * File:    index.phtml
+	 */
+?>
+	<h2>index Fruit</h2>
+	<a href="<?= url('/fruit_add') ?>">add</a>
+		&emsp; <a href="<?= url() ?>"?>home</a>
+	<hr>
+
+	Welcome!<br>
+	Actions in Fruit are made with SQL-queries <br>
+
+	<table class="indextable">
+	<?php
+		if(count($data) > 0)
+		{
+			foreach($data as $row)
+			{
+				echo '<tr>';
+				echo '<td>'.$row->name.'</td>';
+				echo '<td> <a href="'.url('/fruit_update/'.$row->id).'">
+								update
+							</a> </td>';
+				echo '<td> <a href="'.url('/fruit_delete/'.$row->id).'">
+								<i class="bi bi-trash3-fill text-danger"></i>
+							</a> </td>';
+				echo '</tr>';
+			}
+		}
+		else	{
+			echo 'no records found';
+		}
+	?>
+	</table>

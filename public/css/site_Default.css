@@ -1,0 +1,52 @@
+
+body {
+	background-color: 	#c0c0c0;
+	padding:			5px;
+}
+
+article {
+	width:            	1200px;
+	heigth: 		  	500px;
+	min-height:       	400px;
+	background-color: 	#92b6dc;
+	margin:           	auto;
+	padding:			5px;
+}
+
+h1 {
+	color: 				mediumseagreen;
+	font-weight: 		bold;
+}
+
+h2, h3 { color: 		darkolivegreen; }
+
+.author {
+	font: 				10px Arial ;
+	color: 				green;
+	text-align: 		center;
+	margin-top: 		20px;
+	float:				left;
+}
+
+.indextable td a {
+	padding: 			2px;
+}
+.indextable td a:hover {
+	background-color: 	silver;
+}
+
+.photoimg {
+	height: 			100px;
+	border: 			#0c88b4 solid 2px;
+}
+
+label {
+	width:				15%;
+}
+
+.green {
+	background-color: #baccba;
+}
+.red {
+	background-color: #d51919;
+}

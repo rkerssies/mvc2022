@@ -1,0 +1,32 @@
+<?php
+	/**
+	 * Project: MVC2022.
+	 * Author:  InCubics
+	 * Date:    29/06/2022
+	 * File:    add.phtml
+	 */
+?>
+<h2>add Fruit</h2>
+&emsp; <a href="<?= back() ?>"?>back</a>
+
+<form action="<?= url('/fruit_add') ?>" method="post">
+	<?= csrf() ?>
+	<label class="formLabel">name</label>
+	<input name="name" type="text" placeholder="vul in" class=" <?= ( $failMessages->name ) ? 'bg-danger ' : '' ?>"
+		   value="<?= populate('name') ?>"><br>
+	<label class="formLabel">color</label>
+	<input name="color" type="text" placeholder="color" class="<?= ( $failMessages->color ) ? 'bg-danger ' : '' ?>"
+		   value="<?= populate('color') ?>"><br>
+	<label class="formLabel">sweetness</label>
+	<input name="sweetness" type="text" placeholder="MUST be NUMBER !!"
+		   class="<?= ( $failMessages->sweetness ) ? 'bg-danger ' : '' ?>"
+		   value="<?= populate('sweetness') ?>"><br>
+	<input name="submit" type="submit" value="add" class="btn btn-success px-3" >
+</form>
+<ul>
+	<?php foreach( $failMessages  as $fails) {
+		foreach($fails as $fail )
+			echo '<li class="text-danger">'.$fail.'</li>';}
+	?>
+</ul>
+
