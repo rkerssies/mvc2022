@@ -1,4 +1,4 @@
-## mvc2022
+## mvc2022 v1.2
 Basic MVC-framework for educational purposes
 
 This small framework contains many features that Laravel has as well.
@@ -68,6 +68,11 @@ In this framework the processes and functuonality beneeth it all are les abstrac
 	<li>Services
 		<ul>
 			<li>Calling Services before views (eq: nav, meta-tags for seo, css-linktag and js-tags)</li>
+		</ul>
+	</li>
+    <li>Artibuild
+		<ul>
+			<li>An Artisan (basic) alike terminal-command to create all kinds of MVC2022-classfiles and views </li>
 		</ul>
 	</li>
 </ul>
