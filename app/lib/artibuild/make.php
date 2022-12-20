@@ -8,7 +8,7 @@
 
 	function makeController($argsArray) {
 
-		$myfile = fopen('app/controllers/'.$argsArray['args'][0].'.php', "w") or die("Unable to open file!");
+		$myfile = fopen('app/Http/Controllers/'.$argsArray['args'][0].'.php', "w") or die("Unable to open file!");
 		$txt = "<?php";
 		$txt .= "\r\t/**\r\t* Project: MVC2022.\r\t* Author:\tSome other programmer\r\t* Date:\t\t".date('d-m-Y')."\r\t* File:\t\t".$argsArray['args'][0].".php\r\t*/\n";
 		$txt .= "\tnamespace controllers;\n\r\tclass ".$argsArray['args'][0]."\t\r{\r";
@@ -24,7 +24,7 @@
 	
 	function makeModel($argsArray)  {
 
-		$myfile = fopen('app/models/'.$argsArray['args'][0].'.php', "w") or die("Unable to open file!");
+		$myfile = fopen('app/Http/Models/'.$argsArray['args'][0].'.php', "w") or die("Unable to open file!");
 		$txt = "<?php";
 		$txt .= "\r\t/**\r\t* Project: MVC2022.\r\t* Author:\tSome other programmer\r\t* Date:\t\t".date('d-m-Y')."\r\t* File:\t\t".$argsArray['args'][0].".php\r\t*/\n";
 		$txt .= "\tnamespace models;\n\r\tclass ".$argsArray['args'][0]."\t\r\t{\r";
@@ -48,7 +48,7 @@
 			$type = 'auto';
 		}
 		
-		$myfile = fopen('app/middleware/'.$type.'/'.$argsArray['args'][0].'.php', "w") or die("Unable to open file!");
+		$myfile = fopen('app/Http/Middleware/'.$type.'/'.$argsArray['args'][0].'.php', "w") or die("Unable to open file!");
 		$txt = "<?php";
 		$txt .= "\r\t/**\r\t* Project: MVC2022.\r\t* Author:\tSome other programmer\r\t* Date:\t\t".date('d-m-Y')."\r\t* File:\t\tmiddleware/".$type.'/'.$argsArray['args'][0].".php\r\t*/\n";
 		$txt .= "\tnamespace middleware\\".$type.";\n\r\tclass ".$argsArray['args'][0]."\t\r\t{\n";
@@ -64,7 +64,7 @@
 	
 	function makeRequest($argsArray) {
 
-		$myfile = fopen('app/validation/'.$argsArray['args'][0].'.php', "w") or die("Unable to open file!");
+		$myfile = fopen('app/Http/Validation/'.$argsArray['args'][0].'.php', "w") or die("Unable to open file!");
 		$txt = "<?php";
 		$txt .= "\r\t/**\r\t* Project: MVC2022.\r\t* Author:\tSome other programmer\r\t* Date:\t\t".date('d-m-Y')."\r\t* File:\t\tvalidation/".$argsArray['args'][0].".php\r\t*/\n";
 		$txt .= "\tnamespace validation;\n";
@@ -85,7 +85,7 @@
 //		print_r($argsArray);
 //		die;
 		
-		$myfile = fopen('app/services/'.$argsArray['args'][0].'.php', "w") or die("Unable to open file!");
+		$myfile = fopen('app/Http/Services/'.$argsArray['args'][0].'.php', "w") or die("Unable to open file!");
 		$txt = "<?php";
 		$txt .= "\r\t/**\r\t* Project: MVC2022.\r\t* Author:\tSome other programmer\r\t* Date:\t\t".date('d-m-Y')."\r\t* File:\t\tservices/".$argsArray['args'][0].".php\r\t*/\n";
 		$txt .= "\tnamespace services;\n\r";
