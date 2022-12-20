@@ -16,7 +16,7 @@
 		
 		public function validator($request, string $item)
 		{
-			$fR = 'validation\\'.ucfirst($item).'Request';
+			$fR = 'Http\Validation\\'.ucfirst($item).'Request';
 			$rules = (new $fR())->rules();
 			
 			foreach($rules as $fieldName => $validationString)

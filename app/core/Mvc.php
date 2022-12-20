@@ -267,21 +267,21 @@ class mvc
 	private function controller()
 	
 	{
-		if(! is_file('../app/controllers/'.ucfirst($this->controller).'Controller.php'))    {
-			$this->message =  'controller-file not found; '.'../app/controllers/'.ucfirst($this->controller).'Controller.php';
+		if(! is_file('../app/Http/Controllers/'.ucfirst($this->controller).'Controller.php'))    {
+			$this->message =  'controller-file not found; '.'../app/Http/Controllers/'.ucfirst($this->controller).'Controller.php';
 			Response::class()->status = 404;
 			Response::class()->message = $this->message;
 			return false;
 		}
 		
 		// initiate controller-class
-		include_once('../app/controllers/'.ucfirst($this->controller).'Controller.php');
-		$controller = ucFirst($this->controller).'Controller';
+		include_once('../app/Http/Controllers/'.ucfirst($this->controller).'Controller.php');
+		$controller = 'Http\Controllers\\'.ucfirst($this->controller).'Controller';
 		if(class_exists($controller))   {
 			$this->obj       = new $controller();		// make an instance (object) of the controller-class
 		}
 		else    {
-			$this->message = 'class-name <b>'.$controller.'</b> not correct defined in file: '.'../app/controllers/'.ucfirst($this->controller).'Controller.php';
+			$this->message = 'class-name <b>'.$controller.'</b> not correct defined in file: '.'../app/Http/controllers/'.ucfirst($this->controller).'Controller.php';
 			Response::class()->status = 404;
 			Response::class()->message = $this->message;
 			return false;
@@ -294,7 +294,7 @@ class mvc
 			$parameters = $ReflectionMethod->getParameters();
 			
 			if(count($parameters) > 5){
-				$this->message = 'action <b>'.$this->action.'</b> can\'t contain more than 5 params in file: '.'../app/controllers/'.ucfirst($this->controller).'Controller.php';
+				$this->message = 'action <b>'.$this->action.'</b> can\'t contain more than 5 params in file: '.'../app/Http/Controllers/'.ucfirst($this->controller).'Controller.php';
 				Response::class()->status = 404;
 				Response::class()->message = $this->message;
 				return false;
@@ -331,7 +331,7 @@ class mvc
 			Response::class()->route->routeMiddleware   =  $this->middlewareArray;
 		}
 		else    {
-			$this->message = 'action <b>'.$this->action.'</b> doesn\'t exist in class '.$controller. ' in file: '.'../app/controllers/'.ucfirst($this->controller).'Controller.php';
+			$this->message = 'action <b>'.$this->action.'</b> doesn\'t exist in class '.$controller. ' in file: '.'../app/Http/ontrollers/'.ucfirst($this->controller).'Controller.php';
 			Response::class()->status   = 404;
 			Response::class()->message  = $this->message;
 			return false;

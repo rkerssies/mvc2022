@@ -1,9 +1,0 @@
-<?php
-	/**
-	 * Project: MVC2022.
-	 * Author:  InCubics
-	 * Date:    19/12/2022
-	 * File:    artisan.php
-	 */
-    $x = readline('geef getal: ');
-	echo 'hoi '.$argc.' '.$argv[1].' '.$x."\n\r";

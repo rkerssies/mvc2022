@@ -24,8 +24,8 @@
 			$this->mwRoutes = $middlewareArray; // midddleWare called on route
 			
 			// read and initiate all the MiddleWare-classes in ./app/middleware
-			$this->arrayMWauto = (new getFiles())->files('../app/middleware/auto', 'php');
-			$this->arrayMWcall = (new getFiles())->files('../app/middleware/call', 'php');
+			$this->arrayMWauto = (new getFiles())->files('../app/Http/Middleware/auto', 'php');
+			$this->arrayMWcall = (new getFiles())->files('../app/Http/Middleware/call', 'php');
 		}
 		
 		public function run($proces = 'up')
@@ -33,7 +33,7 @@
 			//call all Middleware from auto-folder
 			foreach($this->arrayMWauto as $mwFile)
 			{
-				$nsMW = 'middleware\auto\\'.basename($mwFile, '.php');    				// create namespace-MiddleWare
+				$nsMW = 'Http\Middleware\auto\\'.basename($mwFile, '.php');    				// create namespace-MiddleWare
 				$middlewareObject = new $nsMW();
 				if(!(new \ReflectionMethod($nsMW, $proces)))
 				{
@@ -58,7 +58,7 @@
 						$mwFile = $key;
 					}
 					
-					$nsMW='middleware\call\\'.ucfirst($mwFile).'Middleware';
+					$nsMW='Http\Middleware\call\\'.ucfirst($mwFile).'Middleware';
 					$mwRoute[] = $nsMW;
 					if(!class_exists($nsMW)) {  // check if middleware-class exists
 						$this->message = 'middleware class '.$nsMW.' not found';

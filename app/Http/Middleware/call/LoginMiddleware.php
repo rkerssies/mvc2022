@@ -6,9 +6,7 @@
 	 * File:    MyMiddleware.php
 	 */
 	
-	namespace middleware\call;
-	
-	use core\Response;
+	namespace Http\middleware\call;
 	
 	class LoginMiddleware
 	{

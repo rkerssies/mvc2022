@@ -6,9 +6,7 @@
 	 * File:    MyMiddleware.php
 	 */
 	
-	namespace middleware\call;
-	
-	use core\Response;
+	namespace Http\Middleware\call;
 	
 	class RbacMiddleware
 	{

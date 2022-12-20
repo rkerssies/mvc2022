@@ -6,7 +6,7 @@
 	 * File:    lib\db\Model.php
 	 */
 	
-	namespace models;
+	namespace Http\Models;
 	
 	use lib\db\mysqliDB;
 	

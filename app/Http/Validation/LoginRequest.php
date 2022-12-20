@@ -7,7 +7,7 @@
 	 */
 	
 
-	namespace validation;
+	namespace Http\validation;
 	
 	use core\FormRequests;
 	

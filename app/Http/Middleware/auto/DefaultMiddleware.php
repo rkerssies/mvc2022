@@ -6,9 +6,7 @@
 	 * File:    MyMiddleware.php
 	 */
 	
-	namespace middleware\auto;
-	
-	use core\Response;
+	namespace Http\middleware\auto;
 	
 	class DefaultMiddleware
 	{

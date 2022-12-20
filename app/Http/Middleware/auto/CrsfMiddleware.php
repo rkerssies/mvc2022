@@ -6,7 +6,7 @@
 	 * File:    MyMiddleware.php
 	 */
 	
-	namespace middleware\auto;
+	namespace Http\middleware\auto;
 	
 	class CrsfMiddleware
 	{

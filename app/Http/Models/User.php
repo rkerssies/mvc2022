@@ -6,7 +6,7 @@
 	 * File:    Fruit.php
 	 */
 	
-	namespace models;
+	namespace Http\Models;
 	
 	class User extends Model
 	{
