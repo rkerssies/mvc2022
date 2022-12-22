@@ -50,7 +50,7 @@
 					$data=$request->getFillable(['name', 'color', 'sweetness'], true);
 					if($this->dbClass->querySQL('INSERT INTO `fruits` (`name`, `color`, `sweetness`) VALUES ('.$data.')'))
 					{
-						redirect("/fruits/var_value3/var_value4");   // redirect
+						redirect("/fruits");   // redirect
 					}
 				}
 				else
@@ -64,6 +64,7 @@
 		public function update(Request $request, FormRequests $validator, $id)
 		{
 			$request->all();
+	
 			if(isset($request->post->submit))
 			{ //  submitted, chack validation-form and sql-update
 				$validator->validator($request->post, 'fruit'); // call FruitRequest for data-validation
@@ -74,9 +75,9 @@
 					                            `name` = "'.$data->name.'",
 					                            `color`= "'.$data->color.'" ,
 					                            `sweetness`= "'.$data->sweetness.'"
-												WHERE `id` = '.$request->get->p1, true)) // sweetneess must be int.
+												WHERE `id` = '.$id, true)) // sweetneess must be int.
 					{
-						redirect("/fruits/var_value3/var_value4");   // redirect
+						redirect("/fruits");   // redirect
 					}
 				}
 				else
@@ -86,7 +87,7 @@
 			}
 			elseif(empty($_POST))
 			{            // geen submit, dan select=sql --> gekregen waarden in POST zetten
-				$this->populate=$this->dbClass->querySQL('SELECT * FROM `fruits` WHERE `id` ='.$request->get->p1);
+				$this->populate=$this->dbClass->querySQL('SELECT * FROM `fruits` WHERE `id` ='.$id);
 				$this->id=$this->populate->id;
 			}
 			$this->useView='fruit.update';
