@@ -21,7 +21,6 @@
 			$help .= "\t".'php artibuild --h                                   >> shows all possibilities  '."\n\r";
 			$help .= "\t".'php artibuild --version                             >> shows versien MVC2022 and Artibuild'."\n\r";
 			$help .= "\t".'php artibuild make:controller <Name>Controller      >> creates a controller '."\n\r";
-			$help .= "\t".'php artibuild make:controller <Name>Controller      >> creates a controller '."\n\r";
 			$help .= "\t".'php artibuild make:model <Name>          	    >> creates a model '."\n\r";
 			$help .= "\t".'php artibuild make:view <subFolder.view>            >> creates a view-folder with a viewfile '."\n\r";
 			$help .= "\t".'php artibuild make:view <sub1.sub2.view>            >> creates a view-folder with a viewfile '."\n\r";
