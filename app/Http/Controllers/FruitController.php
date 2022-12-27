@@ -20,8 +20,8 @@
 		
 		public function __construct()
 		{
-			$this->dbClass=new mysqliDB();
-			//			dd( lib\db\pdoDB::query('select * from `fruit`')); // example usage of PDO
+			$this->dbClass = new mysqliDB();
+			// dd( lib\db\pdoDB::query('select * from `fruit`')); // example usage of PDO
 		}
 		
 		public function index(Request $request, $bla=null, $bla2=null)

@@ -30,7 +30,7 @@
 		
 		
 		public static function getInstance()
-		{ // no cinstructor in Singleton
+		{ // no constructor in Singleton
 			if (!self::$instance) {
 				self::$instance = new self();    // or    __CLASS__
 			}
