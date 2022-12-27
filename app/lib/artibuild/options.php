@@ -13,12 +13,13 @@
 		{
 			echo "\t \e[36m".'MVC2022 version: 1.2    Artibuild-version: 1.0'."\033[0m \n";
 		}
-		elseif($arg == '--help')
+		elseif($arg == '--help' || $arg == '--h')
 		{
 			$help = "\t\e[36m".'Some help with the usage of MVC2022-artibuild'."\033[0m \n\r" ;
 			$help .= "\t".'============================================='."\n\r" ;
 			$help .= "\t".'php artibuild --help                                >> shows all possibilities  '."\r";
 			$help .= "\t".'php artibuild --h                                   >> shows all possibilities  '."\n\r";
+			$help .= "\t".'php artibuild --v                             >> shows versien MVC2022 and Artibuild'."\n\r";
 			$help .= "\t".'php artibuild --version                             >> shows versien MVC2022 and Artibuild'."\n\r";
 			$help .= "\t".'php artibuild make:controller <Name>Controller      >> creates a controller '."\n\r";
 			$help .= "\t".'php artibuild make:model <Name>          	    >> creates a model '."\n\r";
