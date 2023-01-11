@@ -23,11 +23,9 @@
 		
 		public function index(Fruit $fruit)
 		{
-			//$this->data = $fruit->all();
-			$this->data=$fruit->select()
-				->orderby('name')
-				->get();
-			$this->useView='fruity.index';
+//			dd($this->data = $fruit->all());
+			$this->data = $fruit->select()->orderby('name')->get();
+			$this->useView = 'fruity.index';
 			// append meta-tag with custom values
 			$this->meta=(object)['keywords'=>'word1, word2, word3', 'description'=>'Bla bla bla describe...'];
 		}
@@ -47,10 +45,10 @@
 				}
 				else
 				{   // validation failed
-					$this->failMessages=(object)$validator->fails['fail'];  // push validation-errors to view
+					$this->failMessages = (object)$validator->fails['fail'];  // push validation-errors to view
 				}
 			}
-			$this->useView='fruity.add';
+			$this->useView = 'fruity.add';
 		}
 		
 		public function update(Fruit $fruit, Request $request, FruitRequest $validator, $id)
@@ -68,17 +66,16 @@
 				}
 				else
 				{   // validation failed
-					$this->failMessages=(object)$validator->fails['fail'];  // push validation-errors to view
+					$this->failMessages = (object)$validator->fails['fail'];  // push validation-errors to view
 					back();
 				}
 			}
 			elseif(empty($request->post))
 			{            // geen submit, dan select=sql --> gekregen waarden in POST zetten
-				$this->populate=$fruit->find($id)
-					->get();    // $id  == $request->get->p1
+				$this->populate=$fruit->find($id)->get();    // $id  == $request->get->p1
 				// $this->populate = $fruit->find($id)->get(['id','name','color','sweetness']); // $id  == $request->get->p1
 			}
-			$this->useView='fruity.update';
+			$this->useView = 'fruity.update';
 		}
 		
 		public function delete(Fruit $fruit, $id)
@@ -89,11 +86,9 @@
 			}
 			else
 			{
-				$this->arrayMessages=[['info'=>'id <b>'.$id.'</b> doesn\'t exist']];
-				$this->data=$fruit->select()
-					->orderby('name')
-					->get();
+				$this->arrayMessages = [['info'=>'id <b>'.$id.'</b> doesn\'t exist']];
+				$this->data = $fruit->select()->orderby('name')->get();
 			}
-			$this->useView='fruity.index';
+			$this->useView = 'fruity.index';
 		}
 	}

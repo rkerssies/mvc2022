@@ -28,7 +28,7 @@
 		{
 			$this->bla2=$bla2;  // if "bla" is passed by router, then it has a value. eq:    /fruit/value/sasa
 			//			dd($request->all());        // example to see all request-data with Request-instance
-			$this->data=$this->dbClass->querySQL('SELECT * FROM `fruits` ORDER BY `name`');
+			$this->data = $this->dbClass->querySQL('SELECT * FROM `fruits` ORDER BY `name`');
 			$this->useView='fruit.index';
 		}
 		
@@ -96,7 +96,7 @@
 		public function delete(Request $request, $id)
 		{
 			$request->all();
-			if(is_numeric($id) && $this->dbClass->querySQL('DELETE FROM `fruits` WHERE `id` = '.$request->get->p1))
+			if(is_numeric($id) && $this->dbClass->querySQL('DELETE FROM `fruits` WHERE `id` = '.$id))
 			{
 				redirect("/fruits/var_value3/var_value4");      // redirect
 				//header("Location: ".url("/fruits/var_value3/var_value4"));   // redirect

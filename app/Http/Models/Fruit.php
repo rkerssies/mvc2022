@@ -10,8 +10,8 @@
 	
 	class Fruit extends Model
 	{
-		//protected $table = 'other_tablename_than "fruits", default tablename = modelname in small-case appended with an 's' ;
-		protected $fillables    = ['name', 'color','sweetness'];
+		//protected $table = 'other_tablename_than_fruits';        /* default tablename = modelname in small-case appended with an 's' */
+		protected $fillables    = ['name', 'color', 'sweetness'];
 		
 		
 		// models may contain methods to create callable queries for reuse
