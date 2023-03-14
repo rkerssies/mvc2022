@@ -6,7 +6,7 @@ Learing a framework can be overweling in the amount of folders, files and possib
 Junior developers  'can't see the forest for the trees'.
 In this framework the processes and functuonality beneeth it all are les abstract and easier to track and learn. 
 
-
+NB: clean-url's is required for this framework
 
 <b>features in this MVC-framework:</b>
 <ul>
