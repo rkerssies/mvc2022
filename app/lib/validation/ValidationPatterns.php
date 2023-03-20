@@ -229,12 +229,23 @@
 			if(is_numeric($limits[1]) && $value >= (int) $limits[0] && $value <= (int) $limits[1])    { // for numbers
 				return true;
 			}
-			if(($limits[1]) && $value >= $limits[0] && $value <= $limits[1])    {   // for strings
+			if(!is_numeric($limits[1]) && $value >= $limits[0] && $value <= $limits[1])    {   // for strings
 				return true;
 			}
 			else    {
 				$this->failMessage = 'field must be betweeen: '.$limits[0].' and '.$limits[1];
 				return false;
+			}
+		}
+		
+		protected function is_Same($value, $sameAs)       // lowest value is (int) 0
+		{
+			if($value != request()->post->$sameAs || $value != request()->get->$sameAs)    { // for numbers
+				$this->failMessage = 'field must be the same as the value of field: '.$sameAs;
+				return false;
+			}
+			else    {
+				return true;
 			}
 		}
 		

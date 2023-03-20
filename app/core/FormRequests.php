@@ -22,12 +22,18 @@
 			foreach($rules as $fieldName => $validationString)
 			{
 				$itemValidationArray = explode('|', $validationString);
+				
 				foreach($itemValidationArray as $v_item)
 				{
+					if($v_item == 'nullable' && empty(request()->$fieldName) ) {  // nullable
+						break;
+					}
 					$v_item_array = explode(':', $v_item);
-					$validator_methodName = 'is_'.ucfirst($v_item_array[0]);
+					
 					if(!empty($v_item_array[1])) { $v_item_value = $v_item_array[1];}
 					else { $v_item_value = null; }
+					
+					$validator_methodName = 'is_'.ucfirst($v_item_array[0]);
 					if(! $this->$validator_methodName($request->$fieldName, $v_item_value))
 					{
 						$fails[$fieldName][]  = $fieldName.'-'.$this->failMessage;
@@ -35,6 +41,7 @@
 					}
 				}
 			}
+
 			if(!empty($fails))  {
 				return false;
 			}
