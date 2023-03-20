@@ -46,6 +46,8 @@ class mvc
 		$this->config = (object) $parts;
 		define( 'DB', $parts['db']); // config-db available in whole framework
 		unset($parts['db']);
+		define( 'SMTP', $parts['smtp']); // config-db available in whole framework
+		unset($parts['smtp']);
 		define( 'CONFIG', $parts);  // config-constants available in whole framework
 		
 		/* Bootsrap reads all files in core-folder for eq: Request-class, Middleware-class and
@@ -130,113 +132,55 @@ class mvc
 		Response::class()->route->path =  $this->path;
 		
 		$path = explode('?', $path)[0]; // remove QSA from path, if is set. Eq: /fruits/var_value1/var_value2?page=3
+		$givenPathToCheck = ltrim($path, '/');
 
-		$method=strtolower($_SERVER['REQUEST_METHOD']);
-		
-		$found = null;
 		foreach($routesValues as $route)
 		{
-			// matches $path with route-pattern?
-			$patternRoute = explode('@', $route)[1];
-			$patternRouteStart= '~^';
-			$patternParams = null;
+			$routePart      = ltrim(explode('@', $route)[1], '/');
+			$methodsToCheck = ltrim(explode('@', $route)[0], '/');
+
 			
-			if($patternRoute == $path)
-			{   // exact match route and url-path
-				if(preg_match(','.$patternRoute.',', $path, $matches))
-				{
-					$found=$route;
-					break;
-				}
-			}   // end elseif
-			elseif(strpos($route, '#') || strpos($route, '%') || strpos($route, '*') || strpos($route, '$'))
+			// alter patterns based on route-part to check on path in request-url;
+			$routePatternToCheck = preg_replace(',/\$[a-zA-Z0-9_-]+\?,', '[/]?[a-zA-Z0-9_-]*', $routePart);
+			$routePatternToCheck = preg_replace(',/\$[a-zA-Z0-9_-]+,', '/[a-zA-Z0-9_-]+', $routePatternToCheck);
+			$routePatternToCheck = str_replace('/*\?,', '[/]?[a-zA-Z_-0-9]*', $routePatternToCheck); // find astrix before adding atrixes in reg-expressions
+			$routePatternToCheck = str_replace('/*', '/[a-zA-Z_-0-9]+', $routePatternToCheck);
+			$routePatternToCheck = str_replace('/#?', '[/]?[0-9]*', $routePatternToCheck);
+			$routePatternToCheck = str_replace('/#', '/[0-9]+', $routePatternToCheck);
+			$routePatternToCheck = str_replace('/%?', '[/]?[a-zA-Z]*', $routePatternToCheck);
+			$routePatternToCheck = str_replace('/%', '/[a-zA-Z]+', $routePatternToCheck);
+
+			// get vars with value from path and get var-name from matched-route
+			if(preg_match(',^'.$routePatternToCheck.'[\/]?$,' ,  $givenPathToCheck))
 			{
-				//echo($patternRoute);
-				if(strpos($patternRoute, '#'))     // numeric-pattern
-				{
-					if(strpos($patternRoute, '#?')){
-						$patternRoute=str_replace('/#?', '/?[0-9]*', $patternRoute);    // optional
-					}
-					else {
-						$patternRoute=str_replace('#', '[0-9]+', $patternRoute);
-					}
+				
+				$requestParam = array();
+				// check if request-method can be found in route-methods (before @-sign)
+				if(! preg_match('~'.strtolower(request()->method).'~', strtolower($methodsToCheck) ) )   {
+					error('405');   //die('<h1>405</h1> method not supported on route-request');
 				}
-				if(strpos($patternRoute, '/%'))     //string-pattern
-				{
-					if(strpos($patternRoute, '%?')){
-						$patternRoute=str_replace('/%?', '/?[a-zA-Z]*', $patternRoute);    // optional
-					}
-					else {
-						$patternRoute=str_replace('%', '[a-zA-Z]+', $patternRoute);
-					}
-				}
-				if(strpos($patternRoute, '/*')) // alphanumeric-pattern
-				{
-					if(strpos($patternRoute, '*?')){
-						$patternRoute=str_replace('/*?', '/?[a-zA-Z_0-9]*', $patternRoute);    // optional
-					}
-					else {
-						$patternRoute=str_replace('*', '[a-zA-Z_0-9]+', $patternRoute);
-					}
-				}
-				if(strpos($patternRoute, '/$'))//&& preg_match(',^'.str_replace('$', '[a-zA-Z-_0-9]+', $patternRoute).',', $path, $matches)) // create vars with its values by route-pattern
-				{
-					$i=0;   // first part always request-method with @-sign
-					$paramsParts =explode('/', ltrim($patternRoute, '/'));
-					$newRoute = '/';
-					
-					foreach($paramsParts as $key=>$param)
+
+				if(strpos($route, '$'))     {     // if $ in route, then put var-name and value from url in var.
+					$pathParts = explode('/',$givenPathToCheck);
+					foreach(explode('/', $routePart) as $key => $route_param)
 					{
-							if(substr($param, 0, 1)=="$" && substr($param, -1, 1)=='?')
-							{
-								$newRoute .= "/?[a-zA-Z-_0-9]*";
-								$req_key=(string)'p'.$i;
-								$requestParams[ltrim(rtrim($param, '?'),'$')]=request()->get->$req_key;    // set property with var-names an there values
-							}
-							elseif(substr($param, 0, 1)=="$" && substr($param, -1, 1)!='?')
-							{
-								$newRoute .= "/[a-zA-Z-_0-9]+";
-								$req_key=(string)'p'.$i;
-								$requestParams[ltrim(rtrim($param, '?'),'$')]=request()->get->$req_key;    // set property with var-names an there values
-							}
-							else    {
-								$newRoute = '/'.ltrim($param, '/');
-							}
-							$patternRoute = $newRoute;
-							
-						$i++;
+						if(substr($route_param, 0,1) == '$')    {
+							$k = rtrim(ltrim( $route_param, '$'),'?');
+							$v = $pathParts[$key];
+							$requestParam[$k] = $v;
+						}
 					}
 				}
-				$patternParamsEnd ='$~';
-//echo preg_match($patternRouteStart.$patternRoute.$patternParamsEnd, $path, $matches);
-//echo($patternRouteStart.$patternRoute.$patternParamsEnd .' >>> '. $path.'<br>');
-				// check created pattern on url-path
-				if(preg_match($patternRouteStart.$patternRoute.$patternParamsEnd, $path, $matches))
-				{
-					$found=$route;
-					if(!empty($requestParams)){ //store params to pass when variables used
-						$this->requestParams=$requestParams;
-					}
-					break;
-				}
+				$this->requestParams    = $requestParam;
+				$this->controller       = $routes[$route][0];
+				$this->action           = $routes[$route][1];
+				$this->middlewareArray  = $routes[$route][2];
+				return true;          // match found, stop looking for other matches
 			}
-		} // end foreach
-		
-		if(empty($found))   {
-			error('404');   //die('<h1>404</h1>');
-		}
-		
-		// check if request-method corresponds with found route-path
-		$methodsFoundRoute =  explode('@',$found)[0];
-		if(!preg_match('~'.$method.'~', $methodsFoundRoute ,  $matches ) )   {
-			error('405');   //die('<h1>405</h1> method not supported on route-request');
 		}
 		// set corresponding controller and action for found route
-		if(! empty($found))  {
-			$this->controller       = $routes[$found][0];
-			$this->action           = $routes[$found][1];
-			$this->middlewareArray  = $routes[$found][2];
-			return true;
+		if( empty($this->controller) || empty($this->action))  {  // no matching route found
+			error('404');   //die('<h1>404</h1>');
 		}
 		return false;
 	}
