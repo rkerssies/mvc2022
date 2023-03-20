@@ -1,5 +1,8 @@
-## mvc2022 v1.2
-Basic MVC-framework for educational purposes
+# mvc2022 
+v2.1 (renewed @ 2023-03)
+
+
+## Basic MVC-framework for educational purposes
 
 This small framework contains many features that Laravel has as well.
 Learing a framework can be overweling in the amount of folders, files and possibilities.
@@ -21,8 +24,12 @@ NB: clean-url's is required for this framework
 		<ul>
 			<li>Models with fillables</li>
 			<li>Models with defining custom tablename (other than modelname + s)</li>
-			<li>Chainable methods to build database queries like Eloquent</li>
-			<li>Database interaction with MySQLi and PDO</li>
+			<li>Chainable methods to build database queries like Eloquent, like:</li>
+            <ul>
+                <li>all</li><li>find</li><li>andWhere</li><li>CRUD-Mmethods</li>
+                <li>Min,Max,Sum,Avg-aggretates</li><li>raw</li>
+            </ul>
+			<li>Database interaction with class for MySQLi basic usage, full MySqli params-bind or PDO</li>
 			<li>Database connection-info stored in config.ini file</li>
 		</ul>
 	</li>
@@ -70,9 +77,21 @@ NB: clean-url's is required for this framework
 			<li>Calling Services before views (eq: nav, meta-tags for seo, css-linktag and js-tags)</li>
 		</ul>
 	</li>
+    <li>Smtp-mailer
+		<ul>
+			<li>Sending email with a view-template</li>
+		</ul>
+	</li>
     <li>Artibuild
 		<ul>
 			<li>An Artisan (basic) alike terminal-command to create all kinds of MVC2022-classfiles and views </li>
 		</ul>
 	</li>
 </ul>
+<br>
+<br>
+<img title="example homepage" alt="example homepage" src="ReadMe_Images/01 home.png">
+<img title="example gallery" alt="example gallery" src="ReadMe_Images/02 gallery.png">
+<img title="example beheer" alt="example beheer" src="ReadMe_Images/03 beheer.png">
+<img title="example login" alt="example login" src="ReadMe_Images/04 login.png">
+<img title="example app-login" alt="example app-login" src="ReadMe_Images/05 app-login.png">

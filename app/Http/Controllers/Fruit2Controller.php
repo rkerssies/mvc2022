@@ -9,7 +9,11 @@
 	
 	use core\Request;
 	use Http\Models\Fruit;
+	use Http\Models\Model;
 	use Http\Validation\FruitRequest;
+	use Http\Models\User;
+	
+	use lib\mail\Smtp;
 	
 	class Fruit2Controller
 	{
@@ -21,13 +25,25 @@
 		
 		}
 		
-		public function index(Fruit $fruit)
-		{
-//			dd($this->data = $fruit->all());
-			$this->data = $fruit->select()->orderby('name')->get();
-			$this->useView = 'fruity.index';
-			// append meta-tag with custom values
-			$this->meta=(object)['keywords'=>'word1, word2, word3', 'description'=>'Bla bla bla describe...'];
+		public function index(Fruit $fruit){
+				$this->bla2 = 'query with BindParams';  // if "bla" is passed by router, then it has a value. eq:    /fruit/value/sasa
+			/*dd( (new Smtp('test', 'Renew Password'))
+					->sendSmtp('ronald@kerssies64.net', ['name'=> 'Ron', 'title'=> 'Forgot password', 'renewal_key' => 'edf45trfdfghn65edertg']) );*/
+			
+			/* //////// some EXAMPLES on data-requests with eloquent-alike queries    //////// */
+//				dd((new Fruit())->find(25)->get()); // OK  finding id !
+			//	dd(((new Fruit())->raw('SELECT * FROM `fruits` WHERE `id` = ?', ['id'=> 25]))->meta); // OK  finding id on RAW !
+//				dd((new Fruit())->select()->where('sweetness', 1)->get()); // ok
+				/*dd((new Fruit())->select(['avg'=>'sweetness',
+										'sum'=> 'sweetness',
+										'min'=> 'sweetness',
+										'max'=> 'sweetness'])->where('color', 'yellow')->get()); // ok*/
+//				dd((new Fruit())->all()->limit(3,4)->get()); // OK all
+//			  dd((new Fruit())->all()->get()); // OK all
+//			  dd((new Fruit())->all()->toJson()->get()); // OK all
+			$this->data = (new Fruit())->select()->orderby('name')->get(); // ok orderBy
+
+				$this->useView='fruity.index';
 		}
 		
 		public function add(Fruit $fruit, Request $request, FruitRequest $validator)      // core\Request $request
@@ -57,22 +73,25 @@
 			if(isset($request->post->submit))
 			{ //  submitted, chack validation-form and sql-update
 				$validator->validator($request->post, 'fruit'); // call FruitRequest for data-validation
-				if(empty($validator->fails))                // dd($validator->fails);
-				{
-					if($fruit->update($request->getFillable(['name', 'color', 'sweetness']), $id))
+				if(empty($validator->fails))    {
+					$fruit->update($request->getFillable(['name', 'color', 'sweetness']), $id);
+
+					if($fruit->affected_rows >0)
 					{
 						redirect("/fruity");   // redirect
 					}
+					elseif($fruit->affected_rows  == 0 ){
+					
+					}
 				}
-				else
-				{   // validation failed
+				else    {   // validation failed
 					$this->failMessages = (object)$validator->fails['fail'];  // push validation-errors to view
 					back();
 				}
 			}
 			elseif(empty($request->post))
 			{            // geen submit, dan select=sql --> gekregen waarden in POST zetten
-				$this->populate=$fruit->find($id)->get();    // $id  == $request->get->p1
+				$this->populate = $fruit->find($id)->get();    // $id  == $request->get->p1
 				// $this->populate = $fruit->find($id)->get(['id','name','color','sweetness']); // $id  == $request->get->p1
 			}
 			$this->useView = 'fruity.update';
@@ -80,12 +99,10 @@
 		
 		public function delete(Fruit $fruit, $id)
 		{
-			if(is_numeric($id) && $fruit->delete($id))
-			{
+			if(is_numeric($id) && $fruit->delete($id))  {
 				redirect("/fruity");
 			}
-			else
-			{
+			else    {
 				$this->arrayMessages = [['info'=>'id <b>'.$id.'</b> doesn\'t exist']];
 				$this->data = $fruit->select()->orderby('name')->get();
 			}

@@ -1,0 +1,21 @@
+<?php
+	/**
+	 * Project: MVC2022.
+	 * Author:  InCubics
+	 * Date:    30/06/2022
+	 * File:    show.phtml
+	 */
+	?>
+
+		<h2>Forgot password</h2>
+		<form action="<?= url('/forgot/'.$hash) ?>" method="post">
+			<?= csrf() ?>
+			enter username to receive an email that lets you reset your password;<br>
+			<input type="text" name="username" placeholder="username"><br>
+			<br>
+			<input type="submit" name="submit" value="request new password">
+		</form>
+		<?php if(isset($msg)) { echo $msg; } ?>
+
+
+

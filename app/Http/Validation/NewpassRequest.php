@@ -11,14 +11,13 @@
 	
 	use core\FormRequests;
 	
-	class FruitRequest extends FormRequests
+	class NewpassRequest extends FormRequests
 	{
 		public function rules()
 		{
 			return [
-				'name'      => 'required|min:4',
-				'color'     => 'required',
-				'sweetness' => 'between:0-5|numeric|nullable'
+				'password1'      => 'required|passwordsimpel',            // check should be more advanced
+				'password2'      => 'required|passwordsimpel|same:password1'
 			];
 		}
  	

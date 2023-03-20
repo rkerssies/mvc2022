@@ -8,13 +8,20 @@
 	
 	namespace Http\Models;
 	
-	use lib\db\mysqliDB;
+//	use lib\db\mysqliDB;
+	use lib\db\mysqliBind as mysqliDB;
 	
 	class Model
 	{
-		private $dbObject   = null;
+		public $dbObject    = null;
 		private $table      = null;
 		public $queryString = null;
+		public $getList     = false;
+		public $inserted_id = null;
+		public $affected_rows = null;
+		public $num_rows = null;
+		public $aggregateKeys = [];
+		public $toJson        = false;
 		
 		public function __construct()
 		{
@@ -37,68 +44,136 @@
 		
 		public function all()
 		{
-			return $this->dbObject->querySQL('SELECT * FROM `'.$this->table.'`');
+			$this->queryString = 'SELECT * FROM `'.$this->table.'`';
+			$this->getList = true;
+			return $this;
 		}
 		
 		public function find($id)
 		{
-			if(is_numeric($id))
+			if(is_numeric( $id))
 			{
-				$this->queryString = 'SELECT * FROM `'.$this->table.'` WHERE `id` = "'.$id.'" ';
+				$this->queryString = 'SELECT * FROM `'.$this->table.'` WHERE id = ?';
+				$this->dbObject->valueArray = array_merge($this->dbObject->valueArray,  ['id'=> $id]);  // collect all params orderd to bind later in get-method: QueryBindParams
 			}
 			else { $this->queryString = '<br>FAIL!  id "'.$id.'" is not a number <br>';}
 			return $this;
 		}
 		
-		public function get($arrayFieldnames = null)
-		{   // this method is at the end of each method-chain on a Model (not find or all) to send the query to the server
+		public function get($arrayFieldnames = [], $getList = false)
+		{
+			if(!empty($getList))    {
+				$this->getList = $getList;
+			}
+			// this method is at the end of each method-chain on a Model (not find or all) to send the query to the server
 			if(!$this->fillables) { die('Error: No fillables defined in model: '.ucfirst(rtrim($this->table, 's')));}
+
+			if(! $this->dbObject->PrepereParams($this->dbObject->valueArray)){
+				die('Failed: prepairing to bind params for MySqli !');
+			}
+
+
+			$dataResult =  $this->dbObject->QueryBindParams($this->queryString, $this->getList);// with BIND_PARAMS
+
+			if($this->dbObject->num_rows > 0 ){
+				$this->num_rows = $this->dbObject->num_rows;        // num rows
+			}
+			if(is_numeric($this->dbObject->inserted_id )){
+				$this->inserted_id = $this->dbObject->inserted_id;  // last inserted ID
+			}
+			if(!empty($this->dbObject->fieldnames )){
+				$this->fieldnames = $this->dbObject->fieldnames;    // names of returned fields
+			}
 			
-			$allData =  $this->dbObject->querySQL($this->queryString);
+			if(!empty($this->dbObject->affected_rows )){
+				$this->affected_rows = $this->dbObject->affected_rows;  // changed/deleted rows
+			}
+			if(!empty($this->dbObject->values )){
+				$this->values = $this->dbObject->valueArray;            // data that was sent
+			}
+			$this->sqlString = $this->dbObject->queryString;            // sql-string with placeholders for params
 			
-			if(isset($this->fillables) && is_array($arrayFieldnames))
-			{
-				foreach($arrayFieldnames as $selectedField)
-				{
-					if(!empty($this->hidden) && is_array($this->hidden)
-						&& !in_array($selectedField, $this->hidden)
-						&& in_array($selectedField, $this->fillables) ) { // show only NOT hidden fieldnames
-						$dataResponse[$selectedField] = $allData->$selectedField;
-					}
-					elseif($this->hidden == false && in_array($selectedField, $this->fillables))
-					{
-						$dataResponse[$selectedField] = $allData->$selectedField;
+
+			if(isset($this->fillables) ) //// && is_array($arrayFieldnames) //Not with aggregates
+			{   // get out only "fillables" keys mentioned in Model, remove other
+				/*$dataResponse = [];*/
+				
+				// select the needed fields
+				if(empty($arrayFieldnames) && !empty($this->dbObject->fieldnamesArray)) {  // specific fields requested
+					$arrayFieldnames = $this->dbObject->fieldnamesArray;
+				}
+				if(!empty($this->aggregateKeys)) {  // add aggregate keys and values
+					$arrayFieldnames =  array_merge($arrayFieldnames, $this->aggregateKeys);
+				}
+
+				if(!empty($this->hidden) && is_array($this->hidden)) { // remove hidden fields from
+					$arrayFieldnames = array_diff($arrayFieldnames, $this->hidden);
+				}
+
+				
+				if($this->dbObject->num_rows > 1 || $this->getList == true) { // filter-out hidden fields of multiple records data
+					foreach($dataResult as $record) {
+						foreach($record as $key => $data)   {
+							if(in_array($key, $arrayFieldnames) || $key == 'id') {
+								$newRecord[$key]=$data;
+							}
+						}
+						$dataResponse[] = (object) $newRecord;
 					}
 				}
-				
-				return (object) $dataResponse;
+				elseif($this->dbObject->num_rows == 1)
+				{   // filter-out hidden fields in a single set recorddata
+					foreach($dataResult as $key => $data)   {
+						if(in_array($key, $arrayFieldnames)|| $key == 'id') {
+							$newRecord[$key]=$data;
+						}
+					}
+					$dataResponse = (object) $newRecord;
+				}
 			}
-			elseif(isset($this->fillables) && ! is_array($arrayFieldnames))    // no specific fields requetsed (return all fillables
+			elseif(isset($this->fillables) && ! is_array($arrayFieldnames))    // no specific fields requested (return all fillables
 			{
-				return fillableArray((array) $allData, (array) $this->fillables);     // return only fillable fields defined in used Model.
+				$dataResponse = fillableArray((array) $dataResult, (array) $this->fillables);     // return only fillable fields defined in used Model.
 			}
-			return $allData;
+			
+			
+			if(!empty($dataResponse) && $this->toJson == true)    {
+				return json_encode($dataResult, JSON_PRETTY_PRINT);
+			}
+			elseif(!empty($dataResponse)){
+				return $dataResponse;
+			}
+
+			return $dataResponse;    // return if Boolean; true || false
 		}
 		
 		//////////
 		public function select($arrayFieldNames = '*')
 		{
 			if($arrayFieldNames != '*' && is_array($arrayFieldNames))   {
-				$stringFieldnames ='';
-				foreach($arrayFieldNames as $fieldName)
+				$fields ='';
+				$i = 0;
+				foreach($arrayFieldNames as $key => $fieldName)
 				{
-					$stringFieldnames .= '`'.$fieldName.'`, ';
+					$agg = strtolower(substr($key,0, 3));
+					$fieldNameArgg = $agg.ucfirst($fieldName);
+					if(in_array($agg, ['avg', 'sum', 'min', 'max']))   {   // Aggregate possibilities
+						$fields.= strtoupper($agg).'(`'.$fieldName.'`) AS `'.$agg.ucfirst($fieldName).'`, ';
+						$this->fillables[$fieldNameArgg] = $fieldNameArgg;  // add aggregateRequest to Fillables
+						$this->aggregateKeys[] = $fieldNameArgg;
+					}
+					else    {       // adding a single record-field to selection
+						$fields.='`'.$fieldName.'`, ';
+					}
 				}
-				$fields = rtrim(', ',$stringFieldnames);
+				$fields = rtrim($fields, ', ');
 			}
 			else    {
 				$fields = '* ';
 			}
-
 			$this->queryString = ' SELECT '.$fields.' FROM `'.$this->table.'` ';
 			return $this;
 		}
-		
 		
 		public function orderby($fieldname)
 		{
@@ -109,30 +184,54 @@
 			return $this;
 		}
 		
-		public function where($fieldname , $value)
+		public function limit($from, $count)
 		{
-			if(isset($fieldname) && isset($value))  {
-				$this->queryString .= 'WHERE `'.$fieldname.'` = "'.$value.'" ';
+			if(is_numeric($from) && $from > 0 && is_numeric($count) && $count > 0 )    {
+				$this->queryString .= 'LIMIT '.$from.', '.$count. ' ';
 			}
-			else { $this->queryString = '<br>FAIL! WHERE fieldname "'.$fieldname.'" is not a string <br>';}
-			
+			else { $this->queryString = '<br>FAIL!  LIMIT requires numbers is not a string <br>';}
 			return $this;
 		}
 		
-		public function andWhere($fieldname , $value)
+		public function where($fieldname, $value = null, $operator = '=')
 		{
+			if($operator != '=' &&  ! in_array($operator, ['=', '<>', '!=', '<=', '>=', '<', '>', 'IS NOT' ])) {
+				$this->queryString = '<br>FAIL! INVALID comparison operator, third param in method Where<br>';
+			}
+			
 			if(isset($fieldname) && isset($value))  {
-				$this->queryString .= 'AND `'.$fieldname.'` = "'.$value.'" ';
+				$this->queryString .= 'WHERE `'.$fieldname.'` '.$operator.' ? ';
+				$this->dbObject->valueArray = array_merge($this->dbObject->valueArray,  [$fieldname=> $value]);  // collect all params orderd to bind later in get-method: QueryBindParams
+			}
+			else { $this->queryString = '<br>FAIL! WHERE fieldname "'.$fieldname.'" is not a string <br>';}
+
+			return $this;
+		}
+		
+		public function andWhere($fieldname , $value, $operator = '=')
+		{
+			if($operator != '=' &&  ! in_array($operator, ['=', '<>', '!=', '<=', '>=', '<', '>', 'IS NOT' ])) {
+				$this->queryString = '<br>FAIL! INVALID comparison operator, third param in method andWhere<br>';
+				}
+			
+			if(isset($fieldname) && isset($value))  {
+				$this->queryString .= 'AND `'.$fieldname.'`'.$operator.' ? ';
+				$this->dbObject->valueArray = array_merge($this->dbObject->valueArray,  [$fieldname=> $value]);  // collect all params orderd to bind later in get-method: QueryBindParams
 			}
 			else { $this->queryString = '<br>FAIL! AND fieldname "'.$fieldname.'" is not a string <br>';}
 			
 			return $this;
 		}
 		
-		public function orWhere($fieldname , $value)
+		public function orWhere($fieldname , $value,  $operator = '=')
 		{
+			if($operator != '=' &&  ! in_array($operator, ['=', '<>', '!=', '<=', '>=', '<', '>', 'IS NOT' ])) {
+				$this->queryString = '<br>FAIL! INVALID comparison operator, third param in method orWhere<br>';
+			}
 			if(isset($fieldname) && isset($value))  {
-				$this->queryString .= 'OR `'.$fieldname.'` = "'.$value.'" ';
+				$this->queryString .= 'OR `'.$fieldname.'` '.$operator.' ? ';
+				$this->dbObject->valueArray = array_merge($this->dbObject->valueArray,  [$fieldname=> $value]);  // collect all params orderd to bind later in get-method: QueryBindParams
+
 			}
 			else { $this->queryString = '<br>FAIL! OR fieldname "'.$fieldname.'" is not a string <br>';}
 			
@@ -156,59 +255,110 @@
 			elseif(!is_string($pattern) || is_numeric($pattern))    {
 				$this->queryString = '<br>FAIL! LIKE fieldname "'.$fieldname.'" is not a string <br>';
 			}
-			$this->queryString = '`'.$fieldname.'` LIKE \''.$fieldname.'\' ';
+			$this->queryString = '`'.$fieldname.'` LIKE \''.$pattern.'\' ';
 			return $this;
 		}
 		
 		/////// insert /// update /// delete /////////////////////
 		public function insert($dataArray)
 		{
-			$fieldnameString = '';
-			$valueString = '';
-			foreach($dataArray as $key => $value)
+			if(! $this->dbObject->PrepereParams($dataArray)){
+				die('Failed: prepairing to bind params for MySqli !');
+			}
+			$stmt = 'INSERT INTO '.$this->table.' ('.$this->dbObject->fieldnames.') VALUES ( '.$this->dbObject->qMarkString.' )';
+			$this->sqlString = $stmt;
+			if($this->dbObject->QueryBindParams($stmt))
 			{
-				$fieldnameString .= '`'.$key.'`, ';
-				$valueString .= '"'.$value.'", ';
+				$this->inserted_id = $this->dbObject->inserted_id;
+				return true;
 			}
-			$fieldnames = rtrim( $fieldnameString, ' ,' );
-			$values     = rtrim($valueString,' ,' );
-
-			return $this->dbObject->querySQL('INSERT INTO `'.$this->table.'` ('.$fieldnames.') VALUES ('.$values.')');
+			return false;
 		}
 		
-		public function delete($findValue = 0, $whereField = 'id')
+		public function delete($findValue = 0, $whereField = 'id', $operator = '=')
 		{
-			if(! is_numeric($findValue) )  {
-				return false;
+			if($operator != '=' &&  ! in_array($operator, ['=', '<>', '!=', '<=', '>=', '<', '>', 'IS', 'IS NOT' ])) {
+				$this->queryString = '<br>FAIL! INVALID comparison operator, third param in method Where<br>';
 			}
-
-			return $this->dbObject->querySQL('DELETE FROM `'.$this->table.'` WHERE `'.$whereField.'` = "'.$findValue.'"');
+//			$this->dbObject->valueArray = array_merge($this->dbObject->valueArray,  [$whereField=> $findValue]);
+			if(! $this->dbObject->PrepereParams([$whereField => $findValue])){
+				die('Failed: prepairing to bind params for MySqli !');
+			}
+			$stmt = 'DELETE FROM `'.$this->table.'` WHERE `'.$whereField.'` '.$operator.' ? ';
+			$this->sqlString = $this->dbObject->stmt;
+			if($this->dbObject->QueryBindParams($stmt))
+			{
+				$this->affected_rows = $this->dbObject->affected_rows;
+				return true;
+			}
+			return false;
 		}
 		
-		
-		public function update($dataArray , $findValue = 0, $whereField = 'id')
+		public function update($dataArray , $findValue = 0, $whereField = 'id', $operator = '=')
 		{
-			if(is_string($dataArray) )  {
-				$dataArray = explode(',',$dataArray);
+			if($operator != '=' &&  ! in_array($operator, ['=', '<>', '!=', '<=', '>=', '<', '>', 'IS', 'IS NOT' ])) {
+				$this->queryString = '<br>FAIL! INVALID comparison operator, third param in method Where<br>';
+			}
+			$params = array_merge((array)$dataArray, [$whereField => $findValue]);
+
+			if(! $this->dbObject->PrepereParams($params))   {
+				die('Failed: prepairing to bind params for MySqli !');
+			}
+
+			$set = '';
+			
+			foreach($dataArray as $key => $value) {
+				if( empty($key)  &&  empty($value)) {
+					$this->queryString = '<br>FAIL! given key: '.$key.' has no value<br>';
+				}
+				$set .= '`'.$key.'` = ?, ';
+			}
+			$set =rtrim($set, ' ,');
+			
+			$stmt = 'UPDATE `'.$this->table.'` SET '.$set.' WHERE `'.$whereField.'` '.$operator.' ? ';
+			$this->sqlString = $stmt;
+			
+			$result = $this->dbObject->QueryBindParams($stmt);
+			$this->error_list = $this->dbObject->error_list;
+			$this->affected_rows = $this->dbObject->affected_rows;
+			//dd($this->affected_rows);
+			if($result == true){
+				return true;
 			}
 			
-			$fieldsNvalues = '';
-			foreach($dataArray as $key => $value)
-			{
-				$fieldsNvalues .= '`'.$key.'` = "'.$value.'" ,';
-			}
-			$set =rtrim($fieldsNvalues, ' ,');
-
-			return $this->dbObject->querySQL('UPDATE `'.$this->table.'` SET '.$set.' WHERE `'.$whereField.'` = "'.$findValue.'"');
+			return false;
 		}
 		
-		
-		public function raw($sql)
+		/////// RAW - queries with bind params /// ///  /////////////////////
+		public function raw($stmt, $dataArray)
 		{
-			if(! is_string($sql))  { 			// Warning!!  NO csrf-check
-				return false;
+			if(! $this->dbObject->PrepereParams($dataArray)){
+				die('Failed: prepairing to bind params for MySqli !');
 			}
-			return $this->dbObject->querySQL($sql);
+			
+			$this->sqlString = $stmt;
+			if($result = $this->dbObject->QueryBindParams($stmt))
+			{
+				$result = (object) array_merge($result,
+					['meta' => (object) [
+						'numrows'=>$this->dbObject->num_rows,
+						'inserted_id' =>$this->dbObject->inserted_id,
+						'affected_rows' =>$this->dbObject->affected_rows,
+						'fieldnames' =>$this->dbObject->fieldnames,
+						'values' =>$this->dbObject->values,
+						'postedValues' =>$this->dbObject->valueArray,
+						'queryString' =>$this->dbObject->queryString
+					]]
+				);
+				
+				return $result;
+			}
+			return false;
 		}
 		
+		public function toJson()
+		{   // change flag to return a data in json-format
+			$this->toJson = true;
+			return $this;
+		}
 	}

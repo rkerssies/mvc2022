@@ -12,6 +12,6 @@
 	{
 		//protected $table = 'other_tablename_than "fruits"';
 		protected $hidden       = ['password'];
-		protected $fillables    = ['username', 'password','profile'];
+		protected $fillables    = ['username', 'password', 'profile', 'forgot_hash'];
 
 	}

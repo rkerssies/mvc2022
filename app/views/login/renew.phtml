@@ -1,0 +1,33 @@
+<?php
+	/**
+	 * Project: MVC2022.
+	 * Author:  InCubics
+	 * Date:    30/06/2022
+	 * File:    show.phtml
+	 */
+	?>
+
+	<h2>Renew password</h2>
+	<form action="<?= url('/renew/'.$hash) ?>" method="post">
+		<?= csrf() ?>
+		Enter your new password twice to  reset it;<br>
+		<input type="hidden" name="id" value="<?= $id ?>>"><br>
+		<input type="password" name="password1" placeholder="new password"
+			   class="<?= ( $failMessages->password1 ) ? 'bg-danger ' : '' ?>"><br>
+		<input type="password" name="password2" placeholder="retype"
+			   class="<?= ( $failMessages->password2 ) ? 'bg-danger ' : '' ?>"><br>
+		<br>
+		<input type="submit" name="submit" value="new password">
+	</form>
+	<?php if(isset($msg)) { echo $msg; } ?>
+
+	<ul>
+		<?php
+			foreach( $failMessages  as $fails) {
+				foreach($fails as $fail )
+				{echo '<li class="text-danger">'.$fail.'</li>';}
+			}
+		?>
+	</ul>
+
+

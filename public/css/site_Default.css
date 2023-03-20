@@ -44,9 +44,14 @@ label {
 	width:				15%;
 }
 
-.green {
+
+.red {
+	color: #d51919;
+}
+
+.succes {
 	background-color: #baccba;
 }
-.red {
+.error {
 	background-color: #d51919;
 }

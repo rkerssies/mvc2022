@@ -28,7 +28,9 @@
 		{
 			$this->bla2=$bla2;  // if "bla" is passed by router, then it has a value. eq:    /fruit/value/sasa
 			//			dd($request->all());        // example to see all request-data with Request-instance
-			$this->data = $this->dbClass->querySQL('SELECT * FROM `fruits` ORDER BY `name`');
+//			$this->data = $this->dbClass->querySQL('SELECT * FROM `fruits` ORDER BY `name`');
+			$this->data = (new Fruit())->select()->orderby('name')->get();
+//			 			dd((new Fruit())->allBind('fruits'));// OK
 			$this->useView='fruit.index';
 		}
 		
@@ -41,7 +43,9 @@
 		public function add(Request $request, FormRequests $validator)      // core\Request $request
 		{
 			$request->all();
-			if(isset($request->post->submit))
+			
+
+/*			if(isset($request->post->submit))
 			{
 				$validator->validator($request->post, 'fruit'); // call FruitRequest for validation
 				//dd($validator->fails);
@@ -49,6 +53,24 @@
 				{
 					$data=$request->getFillable(['name', 'color', 'sweetness'], true);
 					if($this->dbClass->querySQL('INSERT INTO `fruits` (`name`, `color`, `sweetness`) VALUES ('.$data.')'))
+					{
+						redirect("/fruits");   // redirect
+					}
+				}
+				else
+				{   // validation failed
+					$this->failMessages=(object)$validator->fails['fail'];  // push validation-errors to view
+				}
+			}*/
+			if(isset($request->post->submit))
+			{
+				$validator->validator($request->post, 'fruit'); // call FruitRequest for validation
+				//dd($validator->fails);
+				if(!is_array($validator->fails))
+				{
+					$data = $request->getFillable(['name', 'color', 'sweetness']);
+
+					if((new Fruit())->insertBind($data, 'fruits'))
 					{
 						redirect("/fruits");   // redirect
 					}

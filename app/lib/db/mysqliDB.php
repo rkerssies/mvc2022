@@ -14,6 +14,10 @@
 		private $conn;
 		public $num_rows=null;
 		public $affected_rows=null;
+		public $fieldnames = null;
+		public  $valueArray = [];
+		public  $values = null;  ///
+		public $inserted_id = null;
 		
 		
 		public function __construct($host = null, $user = null, $pass = null, $dbname = null)
@@ -86,7 +90,7 @@
 			}
 			else
 			{
-				header('Location:views/errors/422.html');
+				error(422);     // header('Location:views/errors/422.html');
 			}
 			return false;
 		}
