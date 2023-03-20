@@ -11,10 +11,22 @@
 		<h2>Login</h2>
 		<form action="<?= url('/login') ?>" method="post">
 			<?= csrf() ?>
-			<input type="text" name="username" placeholder="username"><br>
-			<input type="password" name="password" placeholder="password"><br>
+			<input type="text" name="username" placeholder="username"
+				   class="<?= ( $failMessages->username ) ? 'bg-danger ' : '' ?>><br>
+			<input type="password" name="password" placeholder="password"
+				   class="<?= ( $failMessages->password ) ? 'bg-danger ' : '' ?>><br>
 			<input type="submit" name="submit" value="LOGIN">
 		</form>
+		<a href="<?= url('/forgot')?>">forgot password</a>
+
+		<ul>
+			<?php
+				foreach( $failMessages  as $fails) {
+					foreach($fails as $fail )
+					{echo '<li class="text-danger">'.$fail.'</li>';}
+				}
+			?>
+		</ul>
 <?php
 	}
 	else
@@ -24,6 +36,7 @@
 			<?=  csrf() ?>
 			<input type="submit" name="logoff" value="LOGOFF">
 		</form>
+		<a href="<?= url('/renew')?>">renew password</a>
 
 <?php
 	}
