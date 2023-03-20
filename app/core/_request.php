@@ -53,7 +53,7 @@
 		if($fieldName == 'id' && isset(request()->get->id) )   {
 			return  request()->get->id;
 		}
-		if(!empty($post->$fieldName))
+		if(isset($post->$fieldName))
 		{
 			return (string) $post->$fieldName;
 		}

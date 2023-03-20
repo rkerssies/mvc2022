@@ -17,6 +17,11 @@
 			echo '</pre>';
 			die;
 		}
+		elseif(is_numeric($var) )
+		{
+			echo $var;
+			die;
+		}
 		elseif(is_bool($var) && $var === false )
 		{
 			die("false");

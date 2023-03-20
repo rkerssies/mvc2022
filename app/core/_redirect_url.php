@@ -15,10 +15,11 @@
 				$out = 'http://';
 			}
 			$out.= rtrim($_SERVER['SERVER_NAME'],'/').'/';
-				if(CONFIG['base_path'] != '/'){
-					$out .= rtrim(ltrim( rtrim(CONFIG['base_path'],'/'),'/'),'/').'/';
-				}
-				$out .= ltrim($path, './');
+			if(CONFIG['base_path'] != '/'){
+				$out .= rtrim(ltrim( rtrim(CONFIG['base_path'],'/'),'/'),'/').'/';
+			}
+			$out .= ltrim($path, './');
+
 			return $out;
 	}
 	
