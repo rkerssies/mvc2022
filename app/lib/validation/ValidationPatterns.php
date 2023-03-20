@@ -44,7 +44,7 @@
 		
 		protected function is_Required($value)
 		{
-			if(empty($value))   {
+			if(empty($value)  )   {      // nb: requird getal 'nul' (0) als text is === null
 				$this->failMessage = 'field is required';
 				return false;
 			}
@@ -220,16 +220,21 @@
 			}
 		}
 		
-		protected function is_Between($value, $scale)
+		protected function is_Between($value, $scale)       // lowest value is (int) 0
 		{
 			$limits = explode('-', $scale);
 			asort($limits);
-			if($value > $limits[0] && $value < $limits[1])    {
-				$this->failMessage = 'field must be betweeen: '.$limits[0].' and '.$limits[1];
-				return false;
+			
+			
+			if(is_numeric($limits[1]) && $value >= (int) $limits[0] && $value <= (int) $limits[1])    { // for numbers
+				return true;
+			}
+			if(($limits[1]) && $value >= $limits[0] && $value <= $limits[1])    {   // for strings
+				return true;
 			}
 			else    {
-				return true;
+				$this->failMessage = 'field must be betweeen: '.$limits[0].' and '.$limits[1];
+				return false;
 			}
 		}
 		

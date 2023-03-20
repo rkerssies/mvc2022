@@ -44,7 +44,9 @@
 				{
 					$out->get->$key = strip_tags(htmlspecialchars($value));
 				}
-				$message = 'GET request-data cleaned';
+				if(! empty( (array) $out->get))  {
+					$message='GET request-data cleaned';
+				}
 			}
 			
 			if(!empty($_POST))
@@ -63,11 +65,11 @@
 				if(isset($_POST['_method']))   {   // add method (PUT, PATCH, DELETE, etc) if provided
 					$out->post->_method = strip_tags(htmlspecialchars($_POST['_method']));
 				}
-				
+
 				if(! empty( (array) $out->get) && !empty((array) $out->post)){
 					$message .= ' & ';
 				}
-				if(!empty((array) $obj->post)){
+				if(!empty((array) $out->post)){
 					$message .= 'POST request-data cleaned';
 				}
 			}

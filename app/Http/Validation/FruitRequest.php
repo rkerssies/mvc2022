@@ -18,7 +18,7 @@
 			return [
 				'name'      => 'required|min:4',
 				'color'     => 'required',
-				'sweetness' => 'required'  //|numeric
+				'sweetness' => 'between:0-5|numeric'
 			];
 		}
  	
