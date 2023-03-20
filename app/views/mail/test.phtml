@@ -1,0 +1,13 @@
+	<style>
+		h2 { color: blue;}
+	</style>
+	<h2><?= $data->title ?></h2>
+	
+	<?php
+		echo 'Hallo '.$data->name.'klik op de volgende link met key:'.$data->renewal_key;
+	?>
+	<hr>
+	Greetings,<br>
+	
+	<b><?= SMTP['defaultFromName'] ?></b><br><br>
+	for questions you can contact us by email: <?= SMTP['defaultFrom'] ?>
