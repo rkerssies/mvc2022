@@ -9,9 +9,8 @@
 	
 	use core\Request;
 	use Http\Models\Fruit;
-	use Http\Models\Model;
 	use Http\Validation\FruitRequest;
-	use Http\Models\User;
+	use Http\Models\User;       // used in data-query examples in index-method
 	
 	use lib\mail\Smtp;
 	
@@ -22,28 +21,27 @@
 		
 		public function __construct()
 		{
-		
+			//
 		}
 		
 		public function index(Fruit $fruit){
 				$this->bla2 = 'query with BindParams';  // if "bla" is passed by router, then it has a value. eq:    /fruit/value/sasa
-			/*dd( (new Smtp('test', 'Renew Password'))
-					->sendSmtp('ronald@kerssies64.net', ['name'=> 'Ron', 'title'=> 'Forgot password', 'renewal_key' => 'edf45trfdfghn65edertg']) );*/
 			
-			/* //////// some EXAMPLES on data-requests with eloquent-alike queries    //////// */
-//				dd((new Fruit())->find(25)->get()); // OK  finding id !
+		/* //////// some EXAMPLES with eloquent-alike data-queries    /////////// */
+			
+			//	dd((new Fruit())->find(25)->get()); // OK  finding id !
 			//	dd(((new Fruit())->raw('SELECT * FROM `fruits` WHERE `id` = ?', ['id'=> 25]))->meta); // OK  finding id on RAW !
-//				dd((new Fruit())->select()->where('sweetness', 1)->get()); // ok
-				/*dd((new Fruit())->select(['avg'=>'sweetness',
-										'sum'=> 'sweetness',
-										'min'=> 'sweetness',
-										'max'=> 'sweetness'])->where('color', 'yellow')->get()); // ok*/
-//				dd((new Fruit())->all()->limit(3,4)->get()); // OK all
-//			  dd((new Fruit())->all()->get()); // OK all
-//			  dd((new Fruit())->all()->toJson()->get()); // OK all
+			// dd((new Fruit())->select()->where('sweetness', 1)->get()); // ok
+			/*dd((new Fruit())->select(['avg'=>'sweetness',
+									'sum'=> 'sweetness',
+									'min'=> 'sweetness',
+									'max'=> 'sweetness'])->where('color', 'yellow')->get()); // ok*/
+			//	dd((new Fruit())->all()->limit(3,4)->get()); // OK all
+			//	dd((new Fruit())->all()->get()); // OK all
+			//	dd((new Fruit())->all()->toJson()->get()); // OK all
+		/* ///////////////////////////////////////////////////////////////////// */
 			$this->data = (new Fruit())->select()->orderby('name')->get(); // ok orderBy
-
-				$this->useView='fruity.index';
+			$this->useView='fruity.index';
 		}
 		
 		public function add(Fruit $fruit, Request $request, FruitRequest $validator)      // core\Request $request
@@ -75,13 +73,8 @@
 				$validator->validator($request->post, 'fruit'); // call FruitRequest for data-validation
 				if(empty($validator->fails))    {
 					$fruit->update($request->getFillable(['name', 'color', 'sweetness']), $id);
-
-					if($fruit->affected_rows >0)
-					{
+					if($fruit->affected_rows >0)    {
 						redirect("/fruity");   // redirect
-					}
-					elseif($fruit->affected_rows  == 0 ){
-					
 					}
 				}
 				else    {   // validation failed
