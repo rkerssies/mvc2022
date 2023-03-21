@@ -25,11 +25,10 @@
 			}
 			elseif($request->post->submit)
 			{
-				//TODO check for validation !
+				
 				$validator->validator($request->post, 'login'); // call FruitRequest for validation
-				if(!is_array($validator->fails))
-				{
-					//
+				if(!is_array($validator->fails))    {
+					//TODO check for validation on login-form
 				}
 				$userFound=$user->select()
 					->where('username', $request->post->username)
@@ -60,56 +59,83 @@
 			if(!empty($request->post->username))
 			{
 				$this->userFound = $user->select()->where('username',$request->post->username )->get();
-				if( !empty($this->userFound) && $user->num_rows == 1)
+				
+				if( !empty($this->userFound->id ))
 				{
-					$this->hash = sha1(date('Hm').$user->values['username'].date('i')); // 40 chars long
-					
+					$this->hash = date('sY').md5($this->userFound->username).date('i');
 					if((new User())->update(['forgot_hash'=> $this->hash], $this->userFound->id))   // default search on ID
 					{
-						if($mail=  (new Smtp('forgot_password', 'Renewing password'))
-						->sendSmtp($this->userFound->username, ['hash'=> $this->hash, 'username'=>$this->userFound->username]))
-						{
-							dd('eMail EXAMPLE >>><br><hr><hr>'.$mail);  // show example
+						$mail=  (new Smtp('forgot_password', 'Renewing password'))
+							->sendSmtp($this->userFound->username, ['hash'=> $this->hash, 'username'=>$this->userFound->username]);
+						if(!is_bool($mail) && is_string($mail)) {
+							dd('<p style="color:red;">eMail EXAMPLE >>></p><hr>'.$mail);  // show example
 						}
+						$this->msg = '<p style="color:blue;">Check your email and click the button to continue the password-renewal procedure</p>';
+						$this->useView='login.show';
 					}
 				}
 				else {
 					$this->msg = '<p style="color:red;">invalid username</p>';
+					// no population on login-form
+					$this->useView='login.forgot';
 				}
-			}
-			$this->useView='login.forgot';
-		}
-		
-		public function changePass(Request $request, User $user)
-		{
-			$request->all();
-			if($request->post->password1 != $request->post->password2)      // validation ???
-			{
-				back();
-			}
-			if(!empty($request->post->submit) && $request->post->password1 == $request->post->password2)
-			{
-				$user->update(['forgot_hash'=> '', 'password'=> sha1($request->post->password1) ], $request->post->id);   // default search on ID
-				// set session for login ?
-				header('Location: '.url('/'));
-			}
-			elseif(!empty($request->get->p1) && is_string($request->get->p1))       // p1 contains hash
-			{
-				if($userFound = $user->select()->where('forgot_hash' , $request->get->p1)->get()) // last update to long ago ??
-				{
-					$this->id = $userFound->id;
-					$this->useView='login.renew';
-				}
-			}
-			elseif(empty($request->post) && !empty(session_get('login')))
-			{   // renew password for user with inloged account
-				$this->hash = null; // var needed for url-part
-				$this->id = session_get('login')->id;     // neded for hidden field
-				$this->useView='login.renew'; // view with double new password + Request chack both the same
 			}
 			else {
-				$this->msg = '<p style="color:red;">An invalid or no hash was provided to renew password.<br>Submit a new request</p>';
-				$this->useView='login.forgot'; // view with double new password + Request chack both the same
+				$this->useView='login.forgot';
+			}
+
+		}
+		
+		public function changePass(Request $request, NewpassRequest $validator, User $user)
+		{
+			$request->all();
+			///// // renew password for user with valid account
+			if(!empty(session_get('login')) )
+			{
+				$this->id = session_get('login')->id;
+				if(!empty($request->post->submit))
+				{
+					$validator->validator($request->post, 'newpass'); // call FruitRequest for data-validation
+					$hashedPass= sha1($request->post->password1);
+					if(empty($validator->fails)) {
+						$hashedPass= sha1($request->post->password2);
+						$user->update(['password'=>$hashedPass], $this->id);
+						header('Location: '.url('/'));
+					}
+				}
+				else {  // validation failed
+					$this->populate = $request;
+					$this->failMessages = (object) $validator->fails['fail'];  // push validation-errors to view
+				}
+				$this->useView  = 'login.renew'; // view with double new password + Request chack both the same
+			}
+			
+			//// // renew password without login
+			if(!empty($request->get->p1)) { $this->hash = $request->get->p1; }
+			else {  $this->hash = ''; }
+			$resultFind = $user->select()->where('forgot_hash', $this->hash)->get();
+			$this->id = $resultFind->id;
+			if(!empty($this->hash) && $resultFind == true)  {
+				if(!empty($request->post->submit))
+				{   // submit received
+					$this->id = $request->post->id;
+					$validator->validator($request->post, 'newpass'); // call FruitRequest for data-validation
+					if(empty($validator->fails)) {
+						$hashedPass= sha1($request->post->password2);
+						(new User())->update(['forgot_hash'=> null, 'password'=>$hashedPass], $this->id); // !! new object
+						header('Location: '.url('/'));
+					}
+					elseif(!empty($validator->fails) && !empty($request->post->id))    {  // validation failed
+						$this->populate=$request;
+						$this->failMessages=(object)$validator->fails['fail'];  // push validation-errors to view
+					}
+					elseif(empty($resultFind))
+					{   // no valid Hash, login-session OR hash matched
+						$this->msg      = '<p style="color:red;">An invalid or no hash was provided to renew password.<br>Submit a new request</p>';
+						$this->useView  = 'login.forgot';
+					}
+				}
+				$this->useView='login.renew'; // view with double new password + Request chack both the same
 			}
 		}
 	}
