@@ -89,7 +89,7 @@ INSERT INTO `nav` (`id`, `label`, `href`, `profile`) VALUES
 (2, 'articles index', 'articles', NULL),
 (3, 'articles show id=1', 'article/1', 1);
 (4, 'photos', 'gallery', 1);
-(5, 'fruit index', 'fruits/var_value1/var_value2', 1);
+(5, 'fruit index', 'fruits', 1);
 (6, 'fruity index', 'fruity', 1);
 (7, 'login', 'login', NULL);
 
@@ -103,6 +103,7 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `username` varchar(50) NOT NULL,
   `password` varchar(100) NOT NULL,
+  `forgot_hash` varchar(60) NULL,
   `profile` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -112,7 +113,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `username`, `password`, `profile`) VALUES
 (1, 'admin@app.com', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 'admin'),
-(2, 'prutser@app.com', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8\r\n', 'user');
+(2, 'user@app.com', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 'user');
 
 --
 -- Indexen voor geëxporteerde tabellen
