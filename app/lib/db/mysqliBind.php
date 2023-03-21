@@ -65,25 +65,31 @@
 			if(empty($dataArray))   {   // no data given to bind
 				return true;
 			}
-			
-			$fieldnameString = '';
-			$valueString = '';
-			$questionMarkString = '';
 
+			$fieldnameString    = '';
+			$valueString        = '';
+			$questionMarkString = '';
+			$this->types        = '';   // clean up value on earlier requests
 			foreach((array) $dataArray as $key => $value)
 			{
 				$fieldnameString    .= '`'.$key.'`, ';
 				$valueString        .= $value.',';
 				$questionMarkString .= '?,';
 				$this->valueArrayN[] = $value;
-				
-				if(is_int($value) || $key == 'id' ) {    // Integer
+
+				if(is_int( (int)$value) && $key == 'id' ) {    // Integer
 					$this->types .= 'i';
-				} elseif(is_float($value)) {   // Double
+				}
+				elseif(is_int( $value)) {    // Integer
+					$this->types .= 'i';
+				}
+				elseif(is_float($value)) {   // Double
 					$this->types .= 'd';
-				} elseif($key != 'id' && is_string($value) ) {  // String
+				}
+				elseif(is_string($value) ) {  // String
 					$this->types .= 's';
-				} else {    // Blob and Unknown
+				}
+				else {    // Blob and Unknown
 					$this->types .= 'b';
 				}
 			}
@@ -91,7 +97,7 @@
 			$this->fieldnames  = rtrim( $fieldnameString, ' ,' );
 			$this->values      = rtrim($valueString,' ,' );
 			$this->qMarkString = rtrim($questionMarkString,' ,' );
-
+			
 			if(is_array($this->valueArrayN) &&  is_string($this->types))    {
 				return true;
 			}
@@ -103,23 +109,21 @@
 			$stmt = $this->conn->prepare($prepairedStmt);
 
 			if(!empty($this->valueArrayN))   {   // bind params only when they are provided
-
+			
 			$params = array_merge([$this->types], $this->valueArrayN);
+
 			call_user_func_array(array($stmt, 'bind_param'), $params);
 //				$stmt->bind_param($this->types, $params);
 			}
-			$this->conn->query("START TRANSACTION");
 			
+			$this->conn->query("START TRANSACTION");
 			$stmt->execute();
-
 			$result = $stmt->get_result();
 			$this->conn->query("COMMIT");
-			
 
-			$this->error_list = $stmt->error_list;  // errors or empty array
-			
-			
-			$this->queryString = $prepairedStmt;
+			$this->error_list   = $stmt->error_list;  // errors or empty array
+			$this->queryString  = $prepairedStmt;
+			$this->num_rows     = $result->num_rows;
 			
 			if($result->num_rows > 0 ) {
 				$data = [];
@@ -131,11 +135,10 @@
 					$data = $data[0];   // return single data-set of one record without key 0
 				}
 				
-				$this->num_rows = $result->num_rows;
-				$this->field_count = $result->field_count;
-				$this->fieldsInfo =  $result->fetch_fields();
+				$this->field_count  = $result->field_count;
+				$this->fieldsInfo   =  $result->fetch_fields();
 				foreach($this->fieldsInfo as $field){
-					$fieldnames[] = $field->name;
+					$fieldnames[]   = $field->name;
 				}
 				$this->fieldnamesArray = $fieldnames;
 
