@@ -240,7 +240,7 @@
 		
 		protected function is_Same($value, $sameAs)       // lowest value is (int) 0
 		{
-			if($value != request()->post->$sameAs || $value != request()->get->$sameAs)    { // for numbers
+			if($value != request()->post->$sameAs)    { // for numbers
 				$this->failMessage = 'field must be the same as the value of field: '.$sameAs;
 				return false;
 			}
