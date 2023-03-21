@@ -67,11 +67,10 @@
 			
 			if(SMTP['preview'] == false) {
 				if($this->mail->send())   {
-					return true;
+					return true;            // email send
 				}
 				return  false;
 			}
-			echo $this->mail->Body;        // open emailBody in new browser-tab
-			die;
+			return $this->mail->Body;        // open emailBody in new browser-tab
 		}
 	}
