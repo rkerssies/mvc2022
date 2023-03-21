@@ -71,13 +71,13 @@
 			if(! $this->dbObject->PrepereParams($this->dbObject->valueArray)){
 				die('Failed: prepairing to bind params for MySqli !');
 			}
-
-
+			
 			$dataResult =  $this->dbObject->QueryBindParams($this->queryString, $this->getList);// with BIND_PARAMS
 
 			if($this->dbObject->num_rows > 0 ){
 				$this->num_rows = $this->dbObject->num_rows;        // num rows
 			}
+
 			if(is_numeric($this->dbObject->inserted_id )){
 				$this->inserted_id = $this->dbObject->inserted_id;  // last inserted ID
 			}
@@ -299,6 +299,7 @@
 			if($operator != '=' &&  ! in_array($operator, ['=', '<>', '!=', '<=', '>=', '<', '>', 'IS', 'IS NOT' ])) {
 				$this->queryString = '<br>FAIL! INVALID comparison operator, third param in method Where<br>';
 			}
+
 			$params = array_merge((array)$dataArray, [$whereField => $findValue]);
 
 			if(! $this->dbObject->PrepereParams($params))   {
@@ -306,7 +307,6 @@
 			}
 
 			$set = '';
-			
 			foreach($dataArray as $key => $value) {
 				if( empty($key)  &&  empty($value)) {
 					$this->queryString = '<br>FAIL! given key: '.$key.' has no value<br>';
@@ -314,15 +314,16 @@
 				$set .= '`'.$key.'` = ?, ';
 			}
 			$set =rtrim($set, ' ,');
-			
+
 			$stmt = 'UPDATE `'.$this->table.'` SET '.$set.' WHERE `'.$whereField.'` '.$operator.' ? ';
 			$this->sqlString = $stmt;
-			
+
 			$result = $this->dbObject->QueryBindParams($stmt);
-			$this->error_list = $this->dbObject->error_list;
+			
+			$this->error_list    = $this->dbObject->error_list;
 			$this->affected_rows = $this->dbObject->affected_rows;
-			//dd($this->affected_rows);
-			if($result == true){
+
+			if($result == true) {
 				return true;
 			}
 			
@@ -350,7 +351,6 @@
 						'queryString' =>$this->dbObject->queryString
 					]]
 				);
-				
 				return $result;
 			}
 			return false;
