@@ -9,9 +9,9 @@ Learing a framework can be overweling in the amount of folders, files and possib
 Junior developers  'can't see the forest for the trees'.
 In this framework the processes and functuonality beneeth it all are les abstract and easier to track and learn. 
 
-NB: clean-url's is required for this framework
+> NB: <b>clean-url's</b> and <b>domain-name</b> usage are required for this framework.
 
-<b>features in this MVC-framework:</b>
+<b>Features in this MVC-framework:</b>
 <ul>
 	<li>Controller
 		<ul>
@@ -29,16 +29,33 @@ NB: clean-url's is required for this framework
                 <li>all</li><li>find</li><li>andWhere</li><li>CRUD-Mmethods</li>
                 <li>Min,Max,Sum,Avg-aggretates</li><li>raw</li>
             </ul>
-			<li>Database interaction with class for MySQLi basic usage, full MySqli params-bind or PDO</li>
-			<li>Database connection-info stored in config.ini file</li>
+			<li>Database connection for full MySqli params-bind, MySQLi basic usage or PDO</li>
+            <li>Database connection-info stored in config.ini file</li>
 		</ul>
 	</li>
 	<li>
 		Views and Layouts
 		<ul>
 			<li>Views handle all var-types from controller-action </li>
-			<li>Layout by setting in config.ini</li>
-			<li>Layout optional changed by a schedule</li>
+			<li>Layout selection between multiple layouts with key in config.ini file</li>
+			<li>Swithing between layouts is possible on a custom schedule</li>
+			<li>Provide d with a responsive layout from <a href="http://www.initializr.com">Initializr</a></li>
+		</ul>
+	</li>
+    <li>
+		Some build-in feautures
+		<ul>
+			<li>Login-form</li>
+			<li>Password renewal for logged-on users</li>
+			<li>Password-forgot-form</li>
+			<li>Administration example on the `fruit-table`</li>
+            <ul>
+                <li>Overview of all records, ordered (index)</li>
+                <li>Adding a record (add) with input-validation</li>
+                <li>Altering records (update)with input-validation</li>
+                <li>Deleting a records (delete)</li>
+            </ul>
+			<li>Deliverd with a basic gallery</li>
 		</ul>
 	</li>
 	<li>Security
@@ -49,10 +66,13 @@ NB: clean-url's is required for this framework
 			<li>Classes, Traits and Inheritance namespaced by an autoloader on the app-folder</li>
 			<li>Unqiue encryption depending on: App-key</li>
 			<li>Salt ecryption and decryption</li>
-			<li>Config in INI-file and accessable via a defintion</li>
+			<li>Config in INI-file and accessable via a definition</li>
 			<li>Session fingerprint-protected with IP-check</li>
 			<li>Forms for adding and updating protected with csrf-token</li>
-			<li>Submitted form-datavalidation by FormRequests</li>
+			<li>Form-data validation FormRequestson on pipe-line seperated strings multiple checks, like:</li>
+                <ul>
+                    <li>required, nullable, between, same, string, min, max, reg_ex, alphanum, and more.</li>
+                </ul>
 			<li>Single-point of entry by index-file in public-folder</li>
 			<li>Public content in public-folder, eq: css, js and images</li>
 		</ul>
@@ -79,12 +99,14 @@ NB: clean-url's is required for this framework
 	</li>
     <li>Smtp-mailer
 		<ul>
-			<li>Sending email with a view-template</li>
+			<li>Sending smtp-email with a view-template</li>
+            <li>WEB-server configuration in ini-file</li>
+            <li>Email-preview on screen-dump on flag in ini-file</li>
 		</ul>
 	</li>
     <li>Artibuild
 		<ul>
-			<li>An Artisan (basic) alike terminal-command to create all kinds of MVC2022-classfiles and views </li>
+			<li>An (basic) Artisan-alike terminal-command to create all kinds of MVC2022 controllers, models and views </li>
 		</ul>
 	</li>
 </ul>

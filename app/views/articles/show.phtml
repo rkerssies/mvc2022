@@ -18,8 +18,9 @@ The ID in the url as param0 (p0) is: <b><?= ($id ? $id : 'not provided as url-pa
 Data by id from given array; <b><i><?= $data ?></i></b>
 <hr>
 <br>
-<div class="red">NB: clean-url's and domainname usage are required for this framework.</div>
+<div class="red">NB: clean-url's and domain-name usage are required for this framework.</div>
 <br><br>
+<b>Features in this MVC-framework:</b>
 <ul>
 	<li>Controller
 		<ul>
@@ -32,8 +33,12 @@ Data by id from given array; <b><i><?= $data ?></i></b>
 		<ul>
 			<li>Models with fillables</li>
 			<li>Models with defining custom tablename (other than modelname + s)</li>
-			<li>Chainable methods to build database queries like Eloquent</li>
-			<li>Database interaction with MySQLi and PDO</li>
+			<li>Chainable methods to build database queries like Eloquent, like:</li>
+			<ul>
+				<li>all</li><li>find</li><li>andWhere</li><li>CRUD-Mmethods</li>
+				<li>Min,Max,Sum,Avg-aggretates</li><li>raw</li>
+			</ul>
+			<li>Database connection for full MySqli params-bind, MySQLi basic usage or PDO</li>
 			<li>Database connection-info stored in config.ini file</li>
 		</ul>
 	</li>
@@ -41,8 +46,25 @@ Data by id from given array; <b><i><?= $data ?></i></b>
 		Views and Layouts
 		<ul>
 			<li>Views handle all var-types from controller-action </li>
-			<li>Layout by setting in config.ini</li>
-			<li>Layout optional changed by a schedule</li>
+			<li>Layout selection between multiple layouts with key in config.ini file</li>
+			<li>Swithing between layouts is possible on a custom schedule</li>
+			<li>Provide d with a responsive layout from <a href="http://www.initializr.com">Initializr</a></li>
+		</ul>
+	</li>
+	<li>
+		Some build-in feautures
+		<ul>
+			<li>Login-form</li>
+			<li>Password renewal for logged-on users</li>
+			<li>Password-forgot-form</li>
+			<li>Administration example on the `fruit-table`</li>
+			<ul>
+				<li>Overview of all records, ordered (index)</li>
+				<li>Adding a record (add) with input-validation</li>
+				<li>Altering records (update)with input-validation</li>
+				<li>Deleting a records (delete)</li>
+			</ul>
+			<li>Deliverd with a basic gallery</li>
 		</ul>
 	</li>
 	<li>Security
@@ -53,10 +75,13 @@ Data by id from given array; <b><i><?= $data ?></i></b>
 			<li>Classes, Traits and Inheritance namespaced by an autoloader on the app-folder</li>
 			<li>Unqiue encryption depending on: App-key</li>
 			<li>Salt ecryption and decryption</li>
-			<li>Config in INI-file and accessable via a defintion</li>
+			<li>Config in INI-file and accessable via a definition</li>
 			<li>Session fingerprint-protected with IP-check</li>
 			<li>Forms for adding and updating protected with csrf-token</li>
-			<li>Submitted form-datavalidation by FormRequests</li>
+			<li>Form-data validation FormRequestson on pipe-line seperated strings multiple checks, like:</li>
+			<ul>
+				<li>required, nullable, between, same, string, min, max, reg_ex, alphanum, and more.</li>
+			</ul>
 			<li>Single-point of entry by index-file in public-folder</li>
 			<li>Public content in public-folder, eq: css, js and images</li>
 		</ul>
@@ -81,9 +106,16 @@ Data by id from given array; <b><i><?= $data ?></i></b>
 			<li>Calling Services before views (eq: nav, meta-tags for seo, css-linktag and js-tags)</li>
 		</ul>
 	</li>
+	<li>Smtp-mailer
+		<ul>
+			<li>Sending smtp-email with a view-template</li>
+			<li>WEB-server configuration in ini-file</li>
+			<li>Email-preview on screen-dump on flag in ini-file</li>
+		</ul>
+	</li>
 	<li>Artibuild
 		<ul>
-			<li>An Artisan (basic) alike terminal-command to create all kinds of MVC2022-classfiles and views </li>
+			<li>An (basic) Artisan-alike terminal-command to create all kinds of MVC2022 controllers, models and views </li>
 		</ul>
 	</li>
 </ul>
