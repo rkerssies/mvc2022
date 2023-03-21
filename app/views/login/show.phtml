@@ -12,13 +12,13 @@
 		<form action="<?= url('/login') ?>" method="post">
 			<?= csrf() ?>
 			<input type="text" name="username" placeholder="username"
-				   class="<?= ( $failMessages->username ) ? 'bg-danger ' : '' ?>><br>
+				   class="<?= ( $failMessages->username ) ? 'bg-danger ' : '' ?>"><br>
 			<input type="password" name="password" placeholder="password"
-				   class="<?= ( $failMessages->password ) ? 'bg-danger ' : '' ?>><br>
+				   class="<?= ( $failMessages->password ) ? 'bg-danger ' : '' ?>"><br>
 			<input type="submit" name="submit" value="LOGIN">
 		</form>
 		<a href="<?= url('/forgot')?>">forgot password</a>
-
+		<?php if(isset($msg)) { echo $msg; } ?>
 		<ul>
 			<?php
 				foreach( $failMessages  as $fails) {

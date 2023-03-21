@@ -11,10 +11,10 @@
 	<form action="<?= url('/renew/'.$hash) ?>" method="post">
 		<?= csrf() ?>
 		Enter your new password twice to  reset it;<br>
-		<input type="hidden" name="id" value="<?= $id ?>>"><br>
-		<input type="password" name="password1" placeholder="new password"
+		<input type="hidden" name="id" value="<?= $id ?>"><br>
+		<input type="password" name="password1" placeholder="new password" value="<?= populate('password1', $populate) ?>"
 			   class="<?= ( $failMessages->password1 ) ? 'bg-danger ' : '' ?>"><br>
-		<input type="password" name="password2" placeholder="retype"
+		<input type="password" name="password2" placeholder="retype" value="<?= populate('password2', $populate) ?>"
 			   class="<?= ( $failMessages->password2 ) ? 'bg-danger ' : '' ?>"><br>
 		<br>
 		<input type="submit" name="submit" value="new password">

@@ -8,7 +8,7 @@
 	?>
 
 		<h2>Forgot password</h2>
-		<form action="<?= url('/forgot/'.$hash) ?>" method="post">
+		<form action="<?= url('/forgot') ?>" method="post">
 			<?= csrf() ?>
 			enter username to receive an email that lets you reset your password;<br>
 			<input type="text" name="username" placeholder="username"><br>
