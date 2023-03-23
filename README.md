@@ -112,8 +112,10 @@ In this framework the processes and functuonality beneeth it all are les abstrac
 </ul>
 <br>
 <br>
-<img title="example homepage" alt="example homepage" src="ReadMe_Images/01 home.png">
-<img title="example gallery" alt="example gallery" src="ReadMe_Images/02 gallery.png">
-<img title="example beheer" alt="example beheer" src="ReadMe_Images/03 beheer.png">
-<img title="example login" alt="example login" src="ReadMe_Images/04 login.png">
-<img title="example app-login" alt="example app-login" src="ReadMe_Images/05 app-login.png">
+<img title="example homepage" alt="example homepage" height="150px" src="ReadMe/images/01 home.png">
+<img title="example gallery" alt="example gallery" height="150px" src="ReadMe/images/02 find by id.png">
+<img title="example gallery" alt="example gallery" height="150px" src="ReadMe/images/03 gallery.png">
+<img title="example beheer" alt="example beheer" height="150px" src="ReadMe/images/04 administration.png">
+<img title="example login" alt="example login" height="150px" src="ReadMe/images/05 app-hamburgermenu.png">
+<img title="example app-login" alt="example app-login" height="150px" src="ReadMe/images/06 app-login.png">
+<img title="example app-login" alt="example app-login" height="150px" src="ReadMe/images/07 email dump-example.png">
