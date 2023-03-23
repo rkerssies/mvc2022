@@ -43,7 +43,7 @@ In this framework the processes and functuonality beneath it all are less abstra
   * Login-form
   * Password renewal for logged-on users
   * Password-forgot-form
-  * Administration example on the `fruit-table`
+  * Administration example on the 'fruit-table'
     * Overview of all records, ordered (index)
     * Adding a record (add) with input-validation
     * Altering records (update)with input-validation
