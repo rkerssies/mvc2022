@@ -43,7 +43,7 @@
 				{
 					$hasSession	 = 'text-danger';
 				}
-				$response .= '<a class="navbar-item '.$hasSession.'" href="'.url($item['href']).'">'.$item['label'].'</a> |';
+				$response .= '<a class="navbar-item '.$hasSession.'" href="'.url($item['href']).'">'.$item['label'].'</a>';
 			}
 			return $response;
 		}
