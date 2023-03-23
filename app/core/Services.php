@@ -31,13 +31,13 @@
 				];
 		}
 		
-		public function handler($params = null)
+		public function handler($params = null, $layoutName= null)
 		{
 			$services = (object)  [];
 			foreach($this->register() as $service)
 			{
 				$nsService = 'services\\'.$service.'Service';
-				$result = (new $nsService())->call($params);
+				$result = (new $nsService($layoutName))->call($params);
 				$services->$service =  $result;  // nb: if containing html-tags, use: htmlspecialchars($html_string)
 
 				if(empty($services->$service)) {

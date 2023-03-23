@@ -12,6 +12,11 @@
 
 	class cssService
 	{
+		public function __construct($layoutName)
+		{
+			$this->layoutName = $layoutName;
+		}
+		
 		public function call()
 		{
 			// activities to create a string with all required css-links from folder and/or array with online-sources
@@ -38,13 +43,21 @@
 					$css.='>';
 				}
 			}
+			
+			//read css-files in root css-folder
 			$files = (new getFiles())->files('css', 'css');
 			foreach($files as $file){
 				$file = ltrim($file, './');
 				$css .= '<link href="'.url($file).'" type="text/css" rel="stylesheet" />';
 			}
-
+			
+			// read css-files in sub-folder with chozen templatename
+			$files = (new getFiles())->files('css/'.strtolower($this->layoutName), 'css');
+			foreach($files as $file){
+				$file .= ltrim($file, '/');
+				$css .= '<link href="'.url($file).'" type="text/css" rel="stylesheet" />';
+			}
+			
 			return (string) $css;
-
 		}
 	}

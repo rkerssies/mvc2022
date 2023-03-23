@@ -12,9 +12,9 @@
 	{
 		public function files($path ='/', $ext = null)
 		{
-			if( is_dir('./'.$path) && is_string($ext))
+			if( is_dir($path) && is_string($ext))
 			{
-				return (array) glob('./'.$path.'/*.{'.$ext.'}',GLOB_BRACE);
+				return (array) glob($path.'/*.{'.$ext.'}',GLOB_BRACE);
 			}
 			return [];
 		}

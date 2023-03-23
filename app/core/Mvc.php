@@ -73,11 +73,6 @@ class mvc
 			error('404');       //die('<h1>404</h1> invalid url');
 		}
 		
-		// call Services
-		if(! $this->services()) {
-			die($this->message);
-		}
-		
 		// call down-methods on used MiddleWare (auto and called)
 		$middlewareObj = new MiddleWare($this->middlewareArray);
 		if(!$middlewareObj->run())    {                        // all MiddleWare-classes in ./middleware/auto automatically UP-method
@@ -93,6 +88,7 @@ class mvc
 			die($middlewareObj->failed->message);
 		}
 
+		
 		// get the required view-file and the params to pass to the view from the controller-action
 		$this->useView($this->obj->useView);
 		$this->params = $this->obj; // object-params available in view-method
@@ -189,10 +185,10 @@ class mvc
 	/*
 	 *      Method 'services' is calling the needed service-class
 	 */
-	private function services()
+	private function services($layoutName)
 	{
 		$serviceHandler= ( new Services());
-		$services = $serviceHandler->handler($this->obj) ;
+		$services = $serviceHandler->handler($this->obj, $layoutName) ;
 		if(empty($services))   {
 			$this->message = 'running Services failed on:'.$serviceHandler->failMessage;
 			return false;
@@ -288,15 +284,6 @@ class mvc
 	 */
 	private function layout()
 	{
-	// convert object-properties to variables, eq: '$this->view' becomes '$view' in the view/layout-file
-		foreach((array) $this->services as $key => $service){
-			if($this->services->$key->scalar){
-				$$key = $this->services->$key->scalar;
-			}
-			else {
-				$$key = $this->services->$key;
-			}
-		}
 	
 	// get required layout-set, bij default in config.ini ore schedueled
 		$layoutName = $this->config->layoutName;
@@ -315,6 +302,23 @@ class mvc
 				}
 			}
 		}
+		$this->layoutName = $layoutName;
+		
+		// call Services
+		if(! $this->services($layoutName)) {
+			die($this->message);
+		}
+		
+		// convert object-properties to variables, eq: '$this->view' becomes '$view' in the view/layout-file
+		foreach((array) $this->services as $key => $service){
+			if($this->services->$key->scalar){
+				$$key = $this->services->$key->scalar;
+			}
+			else {
+				$$key = $this->services->$key;
+			}
+		}
+		
 		if(file_exists('../app/layouts/'.$layoutName.'/layout.phtml'))
 		{   // load layout
 			Response::class()->status = 200;
