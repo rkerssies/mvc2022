@@ -20,7 +20,7 @@ In this framework the processes and functuonality beneath it all are less abstra
   * Views are custom called in controller-action by folder and filename
 
 * Models like Laravel
-  * Models with fillables
+  * Models with fillables and optional hidden
   * Models with defining custom tablename (other than modelname + s)
     * Chainable methods to build database queries like Eloquent, like:
       * all
