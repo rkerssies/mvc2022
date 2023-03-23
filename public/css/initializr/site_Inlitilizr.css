@@ -15,18 +15,19 @@
 	z-index: 			20;
 }
 .navbar-toggle:hover > span {
-	color: 			#9acfea;
+	color: #afdef5;
 }
 
 .navbar-item {
 	padding: 			4px;
 	font-size: 			larger;
+	color: 				#84c3e1;
 	text-decoration: 	none;
 }
 .navbar-item:hover {
 	text-decoration: 	none;
 	border-radius: 		10px;
-	color: 				#9acfea;
+	color: #2991c7;
 	background-color: 	silver;
 }
 @media screen and (max-width: 600px) {
