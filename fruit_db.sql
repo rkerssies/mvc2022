@@ -64,7 +64,7 @@ INSERT INTO `fruits` (`id`, `name`, `color`, `sweetness`) VALUES
 (2, 'pear', 'green', NULL),
 (3, 'banaan', 'yellow', 1),
 (4, 'meloen', 'geel', 1),
-(5, 'lemon', 'yellow', 0),
+(5, 'lemon', 'yellow', 0);
 
 
 -- --------------------------------------------------------
@@ -72,10 +72,9 @@ INSERT INTO `fruits` (`id`, `name`, `color`, `sweetness`) VALUES
 --
 -- Tabelstructuur voor tabel `nav`
 --
-
 CREATE TABLE `nav` (
   `id` int(11) NOT NULL,
-  `label` varchar(50) NOT NULL,
+  `label` varchar(60) NOT NULL,
   `href` varchar(100) NOT NULL,
   `profile` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -87,10 +86,10 @@ CREATE TABLE `nav` (
 INSERT INTO `nav` (`id`, `label`, `href`, `profile`) VALUES
 (1, 'home', 'index.php', NULL),
 (2, 'articles index', 'articles', NULL),
-(3, 'articles show id=1', 'article/1', 1);
-(4, 'photos', 'gallery', 1);
-(5, 'fruit index', 'fruits', 1);
-(6, 'fruity index', 'fruity', 1);
+(3, 'articles show id1', 'article/1', 1),
+(4, 'photos', 'gallery', 1),
+(5, 'fruit index', 'fruits', 1),
+(6, 'fruity index', 'fruity', 1),
 (7, 'login', 'login', NULL);
 
 -- --------------------------------------------------------
