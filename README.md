@@ -66,11 +66,11 @@ In this framework the processes and functuonality beneath it all are less abstra
    * Single-point of entry by index-file in public-folder
    * Public content in public-folder, eq: css, js and images
 
-  * Heper-functions
+  * Helper-functions
     * Request-dataobject and Response-dataobject
-        * Dump 'n Die (dd)
-        * Url, back and redirect
-      * Set var in session and retrieving it
+    * Dump 'n Die (dd)
+    * Url, back and redirect
+    * Set var in session and retrieving it
 
 * Middleware
   * Middleware called on routes (optional calling multiple classes)
