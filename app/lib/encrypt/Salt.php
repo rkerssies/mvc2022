@@ -22,8 +22,14 @@
 			
 			// ($this->generateAppKey(33)); // generate a new key og 33 chars based on the string in: app/config/.privateKey
 			if($privateKey == null){
-				$privateKey  = file_get_contents('../app/config/.privateKey');
-				if(strlen($privateKey) <= 20) { die('Failed ! length privateKey in ../app/config/.privateKey must be longer than 20 char\'s ');}
+				if(file_exists('../app/config/.privateKey')) {
+					$file = '../app/config/.privateKey';
+				}
+				elseif(file_exists('app/config/.privateKey')) { // for artibuild to generate an app_key
+					$file = 'app/config/.privateKey';
+				}
+				$privateKey  = file_get_contents($file);
+				if(strlen($privateKey) < 20) { die('Failed ! length privateKey in ../app/config/.privateKey must be longer than 20 char\'s ');}
 			}
 			$this->key = hash('sha256', $privateKey);
 			$this->ivalue = substr(hash('sha256', $this->secretKey), 0, 16); // sha256 is hash_hmac_algo
@@ -69,8 +75,13 @@
 				$index = rand(0, strlen($characters) - 1);
 				$randomString .= $characters[$index];
 			}
-			
-			$myfile = fopen('../app/config/.privateKey', "w");     // !!!   read-write RIGHTS on file
+			if(file_exists('../app/config/.privateKey')) {
+				$file = '../app/config/.privateKey';
+			}
+			elseif(file_exists('app/config/.privateKey')) { // for artibuild to generate an app_key
+				$file = 'app/config/.privateKey';
+			}
+			$myfile = fopen($file, "w");     // !!!   read-write RIGHTS on file
 
 			fwrite($myfile, $randomString);
 			if(fclose($myfile))
