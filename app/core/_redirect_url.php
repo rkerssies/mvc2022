@@ -18,8 +18,7 @@
 			if(CONFIG['base_path'] != '/'){
 				$out .= rtrim(ltrim( rtrim(CONFIG['base_path'],'/'),'/'),'/').'/';
 			}
-			$out .= ltrim($path, './');
-
+			$out .= ltrim($path, '/');
 			return $out;
 	}
 	
