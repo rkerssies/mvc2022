@@ -27,7 +27,7 @@ In this framework the processes and functuonality beneath it all are less abstra
       * find
       * andWhere
       * CRUD-Mmethods
-      * Min,Max,Sum,Avg-aggretates
+      * min,max,sum,avg-aggretates
       * raw
    * Database connection for full MySqli params-bind, MySQLi basic usage or PDO
    * Database connection-info stored in config.ini file
@@ -62,7 +62,7 @@ In this framework the processes and functuonality beneath it all are less abstra
     * Session fingerprint-protected with IP-check
     * Forms for adding and updating protected with csrf-token
     * Form-data validation FormRequestson on pipe-line seperated strings multiple checks, like:
-      *  required, nullable, between, same, string, min, max, reg_ex, alphanum, and more.
+      *  eq: required, nullable, between, same, string, min, max, reg_ex, alphanum, and more.
    * Single-point of entry by index-file in public-folder
    * Public content in public-folder, eq: css, js and images
 
@@ -79,12 +79,10 @@ In this framework the processes and functuonality beneath it all are less abstra
 
 * Services
   * Calling Services before views (eq: nav, meta-tags for seo, css-linktag and js-tags)
-         
   * Smtp-mailer
        * Sending smtp-email with a view-template
        * WEB-server configuration in ini-file
        * Email-preview on screen-dump on flag in ini-file
-
   * Artibuild
       * An (basic) Artisan-alike terminal-command to create all kinds of MVC2022 controllers, models and views </li>
 <br>
