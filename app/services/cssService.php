@@ -40,15 +40,10 @@
 			}
 			$files = (new getFiles())->files('css', 'css');
 			foreach($files as $file){
-				$css .= '<link href="http';
-				if( isset($_SERVER['HTTPS'] ) ){
-					$css .= 's';
-				}
-				$css.= '://'.$_SERVER['SERVER_NAME'].'/'.
-					rtrim( rtrim(ltrim(CONFIG['base_path'],'/'), '/'),'/').'/'.
-					ltrim($file, './').'" type="text/css" rel="stylesheet" />';
+				$file = ltrim($file, './');
+				$css .= '<link href="'.url($file).'" type="text/css" rel="stylesheet" />';
 			}
-			
+
 			return (string) $css;
 
 		}
