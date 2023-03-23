@@ -89,6 +89,7 @@ In this framework the processes and functuonality beneath it all are less abstra
       * An (basic) Artisan-alike terminal-command to create all kinds of MVC2022 controllers, models and views </li>
 <br>
 <br>
+<div style="display:inline-block;">
 <img title="example homepage" alt="example homepage" height="150px" src="ReadMe/images/01 home.png">
 <img title="example gallery" alt="example gallery" height="150px" src="ReadMe/images/02 find by id.png">
 <img title="example gallery" alt="example gallery" height="150px" src="ReadMe/images/03 gallery.png">
@@ -96,3 +97,4 @@ In this framework the processes and functuonality beneath it all are less abstra
 <img title="example login" alt="example login" height="150px" src="ReadMe/images/05 app-hamburgermenu.png">
 <img title="example app-login" alt="example app-login" height="150px" src="ReadMe/images/06 app-login.png">
 <img title="example app-login" alt="example app-login" height="150px" src="ReadMe/images/07 email dump-example.png">
+</div>
