@@ -54,7 +54,7 @@
 			// read css-files in sub-folder with chozen templatename
 			$files = (new getFiles())->files('css/'.strtolower($this->layoutName), 'css');
 			foreach($files as $file){
-				$file .= ltrim($file, '/');
+				$file = ltrim($file, './');
 				$css .= '<link href="'.url($file).'" type="text/css" rel="stylesheet" />';
 			}
 			
