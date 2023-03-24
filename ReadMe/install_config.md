@@ -4,7 +4,7 @@ v2.1 (renewed @ 2023-03)
 
 ## Installation- & configuration-guide
 
-To get mvc20022 on your own domain, take the following steps:
+To get <b>mvc20022</b> on your own domain, take the following steps:
 
 1. Download the complete project from git-hub to place it in your desired location.<br>
     The project Github-link: <a href="https://github.com/InCubics/mvc2022">mvc2022</a>
@@ -59,7 +59,7 @@ NB: uri-parts with curlybraces ( {} ) need to be altered with actual path.
 
 5. Change the value for the following keys in ./app/config/config.ini for a basic project-setup;
     * domain (our doamianname with http or https as value in this key)
-    * app_key (A very long string of charakters is required. This for eq. creating a private-key to secure sessions)
+    * app_key (a very long string of charakters is required. This for eq. creating a private-key to secure sessions)
     * (optional) Checkout and change other key-values for more customisations. 
 
 
@@ -67,7 +67,7 @@ NB: uri-parts with curlybraces ( {} ) need to be altered with actual path.
 ```bash
    php artibuild appkey:generate
 ```
-You have now a unique 30 character string as a private-key, stored in ./app/config/.private.key
+You have now a unique 40 character string as a private-key, stored in ./app/config/.private.key
 
 
 7. Remove the folder: ReadMe and the README.md file.
