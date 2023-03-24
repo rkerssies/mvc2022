@@ -99,6 +99,7 @@ Your site is running and will look like the picture below:
 ```
 
 * Optional:<br>
-Change the layoput schedule in ./app/config/layoutSchedule.php, 
-    Make sure that key 'ScheduledLayout' in  ./app/config/config.ini is set on: true.
-    The layoutnames in layoutSchedule.php must match the foldernames (and there design) in ./app/layouts.
+    * Change the layoput schedule in ./app/config/layoutSchedule.php. <br> 
+        Make sure that key 'ScheduledLayout' in  ./app/config/config.ini is set on: true.
+        The layoutnames in layoutSchedule.php must match the foldernames (and there design) in ./app/layouts.
+    * Configuere your CDN-libraries within app/configure/css_cdn_resources.php or app/configure/js_cdn_resources.php  

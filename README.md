@@ -38,6 +38,7 @@ In this framework the processes and functuonality beneath it all are less abstra
   * Layout selection between multiple layouts with key in config.ini file
   * Build in responsive layout by [Initializr](http://www.initializr.com) HTML5 with Bootsrap
   * Swithing between layouts is possible on a custom schedule
+  * External CSS and JS scripts via CDN are configurable in confog-files
 
 * Some build-in feautures;
   * Login-form
