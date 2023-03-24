@@ -22,22 +22,22 @@ In this framework the processes and functuonality beneath it all are less abstra
 * Models like Laravel
   * Models with fillables and optional hidden
   * Models with defining custom tablename (other than modelname + s)
-    * Chainable methods to build database queries like Eloquent, like:
-      * all
-      * find
-      * andWhere
-      * CRUD-Mmethods
-      * min,max,sum,avg-aggretates
-      * raw
-   * Database connection for full MySqli params-bind, MySQLi basic usage or PDO
-   * Database connection-info stored in config.ini file
+  * Chainable methods to build database queries like Eloquent, like:
+    * all
+    * find
+    * andWhere
+    * CRUD-methods
+    * min,max,sum,avg-aggregates
+    * raw
+  * Database connection for full MySqli params-bind, MySQLi basic usage or PDO
+  * Database connection-info stored in config.ini file
 	
 
 * Views and Layouts
   * Views handle all var-types from controller-action
   * Layout selection between multiple layouts with key in config.ini file
-  * Build in responsive layout by [Guid for installation- and configuration](ReadMe/install_config.md) [Initializr](http://www.initializr.com) HTML5 with Bootsrap
-  * Swithing between layouts is possible on a custom schedule</li>
+  * Build in responsive layout by [Initializr](http://www.initializr.com) HTML5 with Bootsrap
+  * Swithing between layouts is possible on a custom schedule
 
 * Some build-in feautures;
   * Login-form
@@ -58,10 +58,10 @@ In this framework the processes and functuonality beneath it all are less abstra
     * Classes, Traits and Inheritance namespaced by an autoloader on the app-folder
     * Unqiue encryption depending on: App-key
     * Salt ecryption and decryption
-    * Config in INI-file and accessable via a definition
+    * Config in INI-file and accessible via a definition
     * Session fingerprint-protected with IP-check
     * Forms for adding and updating protected with csrf-token
-    * Form-data validation FormRequestson on pipe-line seperated strings multiple checks, like:
+    * Form-data validation FormRequests on pipe-line seperated strings multiple checks, like:
       *  eq: required, nullable, between, same, string, min, max, reg_ex, alphanum, and more.
    * Single-point of entry by index-file in public-folder
    * Public content in public-folder, eq: css, js and images
@@ -84,7 +84,7 @@ In this framework the processes and functuonality beneath it all are less abstra
        * WEB-server configuration in ini-file
        * Email-preview on screen-dump on flag in ini-file
   * Artibuild
-      * An (basic) Artisan-alike terminal-command to create all kinds of MVC2022 controllers, models and views </li>
+      * An (basic) Artisan-alike terminal-command to create all kinds of MVC2022 controllers, models and views
 <br>
 <br>
 <div style="display:inline-block;">
