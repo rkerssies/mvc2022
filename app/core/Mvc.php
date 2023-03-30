@@ -69,6 +69,14 @@ class mvc
 	/* Main front-entrance of the application */
 	public function site()
 	{
+		if(session_isset('messagebar'))
+		{    // places message for the messageBar in top of the screen in session-key
+			 // into response (only available for this single request), see app/views/components/messagebar.phtml
+			response_set('messagebar', session_get('messagebar'));
+			sessionkey_unset('messagebar');
+		}
+		
+		
 		if($this->route() == false) {
 			error('404');       //die('<h1>404</h1> invalid url');
 		}
@@ -93,10 +101,14 @@ class mvc
 		$this->useView($this->obj->useView);
 		$this->params = $this->obj; // object-params available in view-method
 		
+
+
+		
 		// call configured layout according to config.ini
 		 if(! $this->layout())  {
 			 die($this->message);
 		 }
+
 	}
 	
 	///////////////////////////////////////////////////////

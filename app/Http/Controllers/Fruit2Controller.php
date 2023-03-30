@@ -26,19 +26,18 @@
 		
 		public function index(Fruit $fruit){
 				$this->bla2 = 'query with BindParams';  // if "bla" is passed by router, then it has a value. eq:    /fruit/value/sasa
-			
+
 		/* //////// some EXAMPLES with eloquent-alike data-queries    /////////// */
-			
-			//	dd((new Fruit())->find(25)->get()); // OK  finding id !
-			//	dd(((new Fruit())->raw('SELECT * FROM `fruits` WHERE `id` = ?', ['id'=> 25]))->meta); // OK  finding id on RAW !
-			// dd((new Fruit())->select()->where('sweetness', 1)->get()); // ok
-			/*dd((new Fruit())->select(['avg'=>'sweetness',
-									'sum'=> 'sweetness',
-									'min'=> 'sweetness',
-									'max'=> 'sweetness'])->where('color', 'yellow')->get()); // ok*/
-			//	dd((new Fruit())->all()->limit(3,4)->get()); // OK all
-			//	dd((new Fruit())->all()->get()); // OK all
-			//	dd((new Fruit())->all()->toJson()->get()); // OK all
+					//	dd((new Fruit())->find(25)->get()); // OK  finding id !
+					//	dd(((new Fruit())->raw('SELECT * FROM `fruits` WHERE `id` = ?', ['id'=> 25]))->meta); // OK  finding id on RAW !
+					// dd((new Fruit())->select()->where('sweetness', 1)->get()); // ok
+					/*dd((new Fruit())->select(['avg'=>'sweetness',
+											'sum'=> 'sweetness',
+											'min'=> 'sweetness',
+											'max'=> 'sweetness'])->where('color', 'yellow')->get()); // ok*/
+					//	dd((new Fruit())->all()->limit(3,4)->get()); // OK all
+					//	dd((new Fruit())->all()->get()); // OK all
+					//	dd((new Fruit())->all()->toJson()->get()); // OK all
 		/* ///////////////////////////////////////////////////////////////////// */
 			$this->data = (new Fruit())->select()->orderby('name')->get(); // ok orderBy
 			$this->useView='fruity.index';
@@ -54,7 +53,8 @@
 				{
 					if($fruit->insert($request->getFillable(['name', 'color', 'sweetness'])))
 					{
-						redirect("/fruity");   // redirect
+						$message = ['type'=>'success', 'strong'=>'Success!', 'message'=>'Record added to \'Fruits\''];
+						redirect("/fruity", $message);   // redirect
 					}
 				}
 				else
@@ -73,8 +73,10 @@
 				$validator->validator($request->post, 'fruit'); // call FruitRequest for data-validation
 				if(empty($validator->fails))    {
 					$fruit->update($request->getFillable(['name', 'color', 'sweetness']), $id);
-					if($fruit->affected_rows >0)    {
-						redirect("/fruity");   // redirect
+					if($fruit->affected_rows > 0)    {
+							// set info messagebar after redirect
+						$message = ['type'=>'success', 'strong'=>'Success!', 'message'=>'Record with the name: <i><b>'.$request->post->name.'</b></i> is updated in \'Fruits\''];
+						redirect("/fruity", $message);   // redirect
 					}
 				}
 				else    {   // validation failed
@@ -93,7 +95,8 @@
 		public function delete(Fruit $fruit, $id)
 		{
 			if(is_numeric($id) && $fruit->delete($id))  {
-				redirect("/fruity");
+				$message = ['type'=>'success', 'strong'=>'Success!', 'message'=>'Record is deleted from \'Fruits\''];
+				redirect("/fruity", $message);   // redirect
 			}
 			else    {
 				$this->arrayMessages = [['info'=>'id <b>'.$id.'</b> doesn\'t exist']];

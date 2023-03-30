@@ -1,0 +1,28 @@
+<?php
+	/* How to use:
+		Showing message in an animated show-hide bar at the top of the content (css-class: .jumbotron)
+		
+		Place a message with a redirect, eq:
+						$message = ['type'=>'success', 'strong'='Yes!', message'=>'Record with the name: <i><b>'.$request->post->name.'</b></i> is updates'];
+						redirect("/fruity", $message);   // redirect
+		or eq.:
+						session_set('messagebar', ['type'=>'info', 'strong'=>null, 'message'=>'Welcome '.session_get('username')])
+						redirect('/');
+	
+		The message in the session will be places in the response-object and then deleted in the session.
+		In this way the message for the message-bar lives only the current request.
+	
+	
+		key 'type' based on Bootstrap class for look n feel, eq:
+		  primary, secondary, success, danger, warning, info, light, dark || white
+		or your own css-classname.
+	*/
+	
+	if( response_isset('messagebar'))
+	{
+		echo '<div id="hideMeAfter5Seconds" class="alert-'.response('messagebar')->type.'  overlay col-6">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				<strong>'.ucfirst(response('messagebar')->strong).'</strong> '.response('messagebar')->message.'
+			</div>';
+	}
+

@@ -1,6 +1,73 @@
+/*.overlay {*/
+
+/*}*/
+#hideMeAfter5Seconds {
+	position: 		absolute;
+	top: 			86px;
+	left: 			0px;
+	width: 			100%;
+	height: 		50px;
+	z-index: 		3000;
+	vertical-align: center;
+	color:	 		#283f3f;
+	text-align: 	center;
+	padding:		5px;
+	z-index: 		300;
+	display: 		block;
+	overflow:		hidden;
+	animation: hideMe 2s forwards;
+	animation-delay: 3s;
+}
+@keyframes hideMe{
+	0%{
+		opacity: 		1;
+		height: 		50px;
+	}
+	100%{
+		opacity: 		0;
+		height: 		0px;
+	}
+}
+
+/*#hideMeAfter5Seconds {		!* slidupBar 4 messages *!*/
+/*	!*transition: width 2s, height 4s;*!*/
+/*	!*-webkit-animation: seconds 1.0s forwards;*!*/
+/*	!*-webkit-animation-iteration-count: 1;*!*/
+/*	!*-webkit-animation-delay: 3s;*!*/
+/*	animation: seconds 1.0s forwards;*/
+/*	!*animation-iteration-count: 1;*!*/
+/*	animation-delay: 3s;*/
+/*}*/
+
+/*@-webkit-keyframes seconds {*/
+/*	0% {*/
+/*		opacity: 1;*/
+/*	}*/
+/*	100% {*/
+/*		opacity: 0;*/
+/*	}*/
+/*}*/
+/*@keyframes seconds {*/
+/*	0% {*/
+/*		opacity: 1;*/
+/*	}*/
+/*	100% {*/
+/*		opacity: 0;*/
+/*	}*/
+/*}*/
+/*@keyframes hideMeAfter5Seconds {*/
+/*	from {*/
+/*	}*/
+/*	to {*/
+/*		visibility: hidden;*/
+/*		width: 0;*/
+/*		height: 0;*/
+/*	}*/
+
+/* //////////////////////// */
 
 .navbar-brand {
-	font-size: 			xxx-large;
+	font-size: 			22px;
 	margin: 			auto;
 }
 
@@ -44,6 +111,10 @@
 		color: 			snow;border-radius: 12px;
 		background-color: #2b669a;
 		text-align: 	center;
+	}
+
+	#hideMeAfter5Seconds {
+		top: 62px;
 	}
 }
 

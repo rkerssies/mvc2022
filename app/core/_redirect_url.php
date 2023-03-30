@@ -22,8 +22,11 @@
 			return $out;
 	}
 	
-	function redirect($path = '/')
+	function redirect($path = '/', $messageBar = [])
 	{
+		if(!empty($messageBar) && is_array($messageBar)){
+			$_SESSION['messagebar'] = $messageBar;
+		}
 		header('Location: '.url($path));
 	}
 	

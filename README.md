@@ -38,7 +38,8 @@ In this framework the processes and functuonality beneath it all are less abstra
   * Layout selection between multiple layouts with key in config.ini file
   * Build in responsive layout by [Initializr](http://www.initializr.com) HTML5 with Bootsrap
   * Swithing between layouts is possible on a custom schedule
-  * External CSS and JS scripts via CDN are configurable in confog-files
+  * External CSS and JS scripts via CDN are configurable in config-files
+  * Showing a message in a show-hide animated bar at the top of the screen
 
 * Some build-in feautures;
   * Login-form
@@ -96,4 +97,5 @@ In this framework the processes and functuonality beneath it all are less abstra
 <img title="example login" alt="example login" height="150px" src="ReadMe/images/05 app-hamburgermenu.png">
 <img title="example app-login" alt="example app-login" height="150px" src="ReadMe/images/06 app-login.png">
 <img title="example app-login" alt="example app-login" height="150px" src="ReadMe/images/07 email dump-example.png">
+<img title="example app-login" alt="example app-login" height="150px" src="ReadMe/images/08 messagebar.png">
 </div>

@@ -8,7 +8,7 @@
 	
 	
 	function response($key = null)
-	{
+	{   // get key-value from response-object
 		if(empty($key)) {
 			return (new \core\Response())::class();
 		}
@@ -18,6 +18,15 @@
 	function response_set(string $key, $value)
 	{
 		if( \core\Response::class()->$key = $value)
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	function response_isset(string $key)
+	{
+		if( isset(\core\Response::class()->$key))
 		{
 			return true;
 		}

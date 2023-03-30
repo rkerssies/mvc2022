@@ -40,8 +40,8 @@
 				$result = (new $nsService($layoutName))->call($params);
 				$services->$service =  $result;  // nb: if containing html-tags, use: htmlspecialchars($html_string)
 
-				if(empty($services->$service)) {
-					$this->failMessage = $nsService. ' response';
+				if(empty($services) ) { // && empty($services->$service)
+					$this->failMessage = $nsService. ' response ';
 					return false;
 				}
 			}
