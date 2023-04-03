@@ -19,7 +19,7 @@
 			$help .= "\t".'============================================='."\n\r" ;
 			$help .= "\t".'php artibuild --help                                >> shows all possibilities  '."\r";
 			$help .= "\t".'php artibuild --h                                   >> shows all possibilities  '."\n\r";
-			$help .= "\t".'php artibuild --v                             >> shows versien MVC2022 and Artibuild'."\n\r";
+			$help .= "\t".'php artibuild --v                                   >> shows versien MVC2022 and Artibuild'."\n\r";
 			$help .= "\t".'php artibuild --version                             >> shows versien MVC2022 and Artibuild'."\n\r";
 			$help .= "\t".'php artibuild appkey:generate                       >> creates a private appkey '."\n\r";
 			$help .= "\t".'php artibuild make:controller <Name>Controller      >> creates a controller '."\n\r";
