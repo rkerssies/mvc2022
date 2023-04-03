@@ -49,6 +49,30 @@
 			return $this;
 		}
 		
+		public function pagination(int $amount=null)
+		{
+			if(empty($amount)) {
+				$this->amount = CONFIG['pagination']['amount'];
+			}
+			else {
+				$this->amount = $amount;
+			}
+			
+			if(empty(request()->get->page)) {
+				$this->page = 0;
+			}
+			else    {
+				$this->page = request()->get->page;
+			}
+			
+			$from = (($this->page * $this->amount));
+			
+			$this->queryString = str_replace('FROM',
+				', (SELECT COUNT(`id`) FROM `'.$this->table.'`) AS `total` FROM', $this->queryString);
+			$this->queryString .= ' LIMIT '.$from.', '.$this->amount;
+			return $this;
+		}
+		
 		public function find($id)
 		{
 			if(is_numeric( $id))
@@ -60,10 +84,11 @@
 			return $this;
 		}
 		
-		public function get($arrayFieldnames = [], $getList = false)
+		public function get($arrayFieldnames = [],  $mode = false)
 		{
-			if(!empty($getList))    {
-				$this->getList = $getList;
+//dd($this->queryString);
+			if(!empty($mode == true))    {
+				$this->getList = true;
 			}
 			// this method is at the end of each method-chain on a Model (not find or all) to send the query to the server
 			if(!$this->fillables) { die('Error: No fillables defined in model: '.ucfirst(rtrim($this->table, 's')));}
@@ -71,7 +96,7 @@
 			if(! $this->dbObject->PrepereParams($this->dbObject->valueArray)){
 				die('Failed: prepairing to bind params for MySqli !');
 			}
-			
+
 			$dataResult =  $this->dbObject->QueryBindParams($this->queryString, $this->getList);// with BIND_PARAMS
 
 			if($this->dbObject->num_rows > 0 ){
@@ -109,9 +134,9 @@
 				if(!empty($this->hidden) && is_array($this->hidden)) { // remove hidden fields from
 					$arrayFieldnames = array_diff($arrayFieldnames, $this->hidden);
 				}
-
 				
-				if($this->dbObject->num_rows > 1 || $this->getList == true) { // filter-out hidden fields of multiple records data
+				
+				if(($this->dbObject->num_rows > 1 || $this->getList == true) ) { // filter-out hidden fields of multiple records data
 					foreach($dataResult as $record) {
 						foreach($record as $key => $data)   {
 							if(in_array($key, $arrayFieldnames) || $key == 'id') {
@@ -136,6 +161,16 @@
 				$dataResponse = fillableArray((array) $dataResult, (array) $this->fillables);     // return only fillable fields defined in used Model.
 			}
 			
+			if(is_array($dataResponse))
+			{
+				response_set('query', (object) ['total' => $dataResponse[0]->total,  // for pagination
+										'amount' => $this->amount,                  // for pagination
+										'num_rows'=> $this->num_rows,
+										'affected_rows' => $this->affected_rows,
+										'inserted_id' => $this->inserted_id,
+										'db_table' => $this->table,
+										'object' => $this->dbObject]);
+			}
 			
 			if(!empty($dataResponse) && $this->toJson == true)    {
 				return json_encode($dataResult, JSON_PRETTY_PRINT);
@@ -148,11 +183,17 @@
 		}
 		
 		//////////
-		public function select($arrayFieldNames = '*')
+		public function select($arrayFieldNames = '*', $distinct = false)
 		{
+			if($distinct == false){
+				$selectPart = 'SELECT';
+			}
+			else {
+				$selectPart = 'SELECT DISTINCT';
+			}
+			
 			if($arrayFieldNames != '*' && is_array($arrayFieldNames))   {
 				$fields ='';
-				$i = 0;
 				foreach($arrayFieldNames as $key => $fieldName)
 				{
 					$agg = strtolower(substr($key,0, 3));
@@ -171,16 +212,26 @@
 			else    {
 				$fields = '* ';
 			}
-			$this->queryString = ' SELECT '.$fields.' FROM `'.$this->table.'` ';
+			$this->queryString = $selectPart.' '.$fields.' FROM `'.$this->table.'` ';
 			return $this;
 		}
 		
-		public function orderby($fieldname)
+		public function orderby($fieldname)     //  array for multiple ordering || string eith single ordering
 		{
-			if(is_string($fieldname) && !is_numeric($fieldname))    {
-				$this->queryString .= 'ORDER BY `'.$fieldname.'` ';
+			$this->queryString .= 'ORDER BY ';
+			if(is_array($fieldname))
+			{
+				$string = '';
+				foreach($fieldname as $field){
+					$string .= '`'.$field.'`, ';
+				}
+				$this->queryString .= rtrim( $string, ', ');
+			}
+			elseif(is_string($fieldname) && !is_numeric($fieldname))    {
+				$this->queryString .= '`'.$fieldname.'` ';
 			}
 			else { $this->queryString = '<br>FAIL!  ORDER BY fieldname "'.$fieldname.'" is not a string <br>';}
+			
 			return $this;
 		}
 		
@@ -239,11 +290,12 @@
 		}
 		
 		public function groupby($fieldname)
-		{
+		{   //TODO argument usage as an string & array
 			if(is_string($fieldname) && !is_numeric($fieldname))    {
-				$this->queryString = 'GROUP BY `'.$fieldname.'` ';
+				$this->queryString .= 'GROUP BY `'.$fieldname.'` ';
 			}
 			else { $this->queryString = '<br>FAIL! GOUP BY fieldname "'.$fieldname.'" is not a string <br>';}
+
 			return $this;
 		}
 		
@@ -356,6 +408,93 @@
 			return false;
 		}
 		
+		
+		/////// Relations - JOIN ////  1-to-many /// many-to-many ///  /////////////////////
+		
+		public function join(string $foreinKeyThisTable , string $primKeyOtherTable, string $otherTable, $typeClause = 'INNER')
+		{
+			if(strtoupper($typeClause)!='INNER')
+			{
+				if(!in_array($typeClause, ['INNER', 'OUTER', 'LEFT', 'RIGHT', 'CROSS']))
+				{
+					$this->queryString='<br>FAIL! to '.$typeClause.' JOIN table: `'.$this->table.'` with `'.$primKeyOtherTable.'` <br>';
+				}
+			}
+			$this->queryString .= $typeClause.' JOIN `'.$otherTable.'` ON `'.$this->table.'`.`'.$foreinKeyThisTable.'`  ON `'.$otherTable.'`.'.$primKeyOtherTable.'` ';
+			
+			return $this;
+		}
+		
+		public function oneOnMany(string $foreinKeyThisTable , string $primKeyOtherTable, string $otherTable)
+		{   // this method is chainable for several joins in the query-string
+			$this->queryString .= 'INNER JOIN `'.$otherTable.'` ON `'.$this->table.'`.`'.$foreinKeyThisTable.'` = `'.$otherTable.'`.`'.$primKeyOtherTable.'` ';
+
+			return $this;
+		}
+		
+		public function manyOnMany( string $othetModelName)
+		{
+			/// other-Model
+			///
+			////////check if model exists
+			$ns = 'Http\\Models\\'.$othetModelName;
+			$otherModel = (new $ns());
+			if(!empty($otherModel->table)){
+				$otherTableName = $otherModel->table;
+			}
+			else {
+				$otherTableName  = rtrim(strtolower($othetModelName), 's');
+			}
+			
+			if(!empty($otherModel->primary)){
+				$primKeyOtherTable = $otherModel->primary;
+			}
+			else {
+				$primKeyOtherTable = 'id';
+			}
+			
+			/// this-Model
+			if(!empty($this->table)){
+				$thisTable = $this->table;
+			}
+			else {
+				$thisTable = rtrim(strtolower($othetModelName), 's');
+			}
+			
+			if(!empty($this->primary)){
+				$thisTableId = $this->primary;
+			}
+			else {
+				$thisTableId = 'id';
+			}
+
+			/// Pivot-table ////
+			///  eq: model User with primary = 'id' & other model Fruit with primary = 'nr'
+			///  pivot tablename must be :  user_fruit
+			///  with fields :  `id `  and   `nr` ==> together they are primary
+			$pivot = $thisTable.'_'.$otherTableName;
+			$pivotThisId  = rtrim($thisTable, 's').'_'.$thisTableId;
+			$pivotOtherId = rtrim($otherTableName, 's').'_'.$primKeyOtherTable;
+			
+			$this->queryString .= ' inner   JOIN `'.$pivot.'`
+								ON `'.$this->table.'`.`'.$thisTableId.'` = `'.$pivot.'`.`'.$pivotThisId.'` ';
+			$this->queryString .= 'inner JOIN `'.$otherTableName.'`
+								ON `'.$pivot.'`.`'.$pivotOtherId.'` = `'.$otherTableName.'`.`'.$primKeyOtherTable.'` ';
+			
+			return $this;
+			
+			
+/*			SELECT `users`.* ,
+CAST(GROUP_CONCAT(`users_fruits`.`user_id`, DATA_SUBDELIMITER,
+	`users_fruits`.`likes`, DATA_SUBDELIMITER, `users_fruits`.`comment`
+) AS CHAR) AS related
+ FROM `users`
+ JOIN `users_fruits` ON `users`.`id` = `users_fruits`.`user_id`*/
+		
+		}
+
+		
+		/////// json /// /////////////////////
 		public function toJson()
 		{   // change flag to return a data in json-format
 			$this->toJson = true;

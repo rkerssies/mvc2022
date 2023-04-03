@@ -95,12 +95,7 @@ class mvc
 		if(!$middlewareObj->run('down'))   {        // called MiddleWare-classes DOWN-method called by requested route
 			die($middlewareObj->failed->message);
 		}
-
-		
-		// get the required view-file and the params to pass to the view from the controller-action
-		$this->useView($this->obj->useView);
-		$this->params = $this->obj; // object-params available in view-method
-		
+//		view removed
 
 
 		
@@ -210,6 +205,7 @@ class mvc
 		foreach( (array) $services as $sName => $serviceValue)  {
 			$this->services->$sName = (object) $serviceValue;  // response Service avaliable in Mvc-object ($this->var) and all views/layout ($var)
 		}
+		
 		return true;
 	}
 	
@@ -321,6 +317,15 @@ class mvc
 			die($this->message);
 		}
 		
+		if(!empty($this->services->pagination->scalar))
+		{
+			$this->pagination = $this->services->pagination->scalar;
+		}
+		
+		// get the required view-file and the params to pass to the view from the controller-action
+		$this->useView($this->obj->useView);
+		$this->params = $this->obj; // object-params available in view-method
+		
 		// convert object-properties to variables, eq: '$this->view' becomes '$view' in the view/layout-file
 		foreach((array) $this->services as $key => $service){
 			if($this->services->$key->scalar){
@@ -350,6 +355,7 @@ class mvc
 	 */
 	public function useView($pathView = null)   // method to call a view in a controller-action
 	{
+
 		if(!empty ($pathView))
 		{
 			$pathView=ltrim($pathView, '.');
@@ -363,9 +369,11 @@ class mvc
 	 */
 	public function view()
 	{
+		$pagination = $this->pagination;
 		foreach( (array) $this->params as $key => $value) {   // simplifying var-names for use the in view-file
 			$$key = $value;
 		}
+		$pagination = $this->pagination;
 
 		if( file_exists('../app/views/'.$this->viewPath.'.phtml'))  {
 			include('../app/views/'.$this->viewPath.'.phtml');	// load view

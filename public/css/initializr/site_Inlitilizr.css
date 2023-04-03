@@ -94,7 +94,7 @@
 .navbar-item:hover {
 	text-decoration: 	none;
 	border-radius: 		10px;
-	color: #2991c7;
+	color: 				#2991c7;
 	background-color: 	silver;
 }
 @media screen and (max-width: 600px) {

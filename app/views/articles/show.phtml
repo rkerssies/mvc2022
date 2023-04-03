@@ -33,10 +33,11 @@ Data by id from given array; <b><i><?= $data ?></i></b>
 		<ul>
 			<li>Models with fillables</li>
 			<li>Models with defining custom tablename (other than modelname + s)</li>
-			<li>Chainable methods to build database queries like Eloquent, like:</li>
+			<li>Chainable methods to build database queries Eloquent-alike, eq:</li>
 			<ul>
 				<li>all</li><li>find</li><li>andWhere</li><li>CRUD-methods</li>
 				<li>min,max,sum,avg-aggregates</li><li>raw</li>
+				<li>oneOnMany, manyOnMany</li>
 			</ul>
 			<li>Database connection for full MySqli params-bind, MySQLi basic usage or PDO</li>
 			<li>Database connection-info stored in config.ini file</li>
@@ -51,6 +52,7 @@ Data by id from given array; <b><i><?= $data ?></i></b>
 			<li>Swithing between layouts is possible on a custom schedule</li>
 			<li>External CSS and JS scripts via CDN are configurable in config-files</li>
 			<li>Showing a message in a show-hide animated bar at the top of the screen</li>
+			<li>Pagination with chained query on Models and buttons by paginatorService</li>
 			
 		</ul>
 	</li>

@@ -28,6 +28,7 @@
 					'css',
 					'js',
 					'meta',
+					'pagination',
 				];
 		}
 		

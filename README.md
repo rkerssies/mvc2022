@@ -22,13 +22,14 @@ In this framework the processes and functuonality beneath it all are less abstra
 * Models like Laravel
   * Models with fillables and optional hidden
   * Models with defining custom tablename (other than modelname + s)
-  * Chainable methods to build database queries like Eloquent, like:
+  * Chainable methods to build database queries Eloquent-alike, eq:
     * all
     * find
     * andWhere
     * CRUD-methods
     * min,max,sum,avg-aggregates
     * raw
+    * oneOnMany, manyOnMany
   * Database connection for full MySqli params-bind, MySQLi basic usage or PDO
   * Database connection-info stored in config.ini file
 	
@@ -40,6 +41,7 @@ In this framework the processes and functuonality beneath it all are less abstra
   * Swithing between layouts is possible on a custom schedule
   * External CSS and JS scripts via CDN are configurable in config-files
   * Showing a message in a show-hide animated bar at the top of the screen
+  * Pagination with chained query on Models and buttons by paginatorService 
 
 * Some build-in feautures;
   * Login-form

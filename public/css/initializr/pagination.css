@@ -1,0 +1,71 @@
+.center {
+	/*text-align: center;*/
+}
+
+.pagination {
+	display: 		inline-block;
+
+}
+
+.pagination a:hover {
+	background-color: #2991c7;
+}
+
+.pagination a {
+	color: 			black;
+	float: 			left;
+	padding: 		4px 10px;
+	text-decoration: none;
+	font-size: x-small;
+	transition: 	background-color .3s;
+	border: 		1px solid #1a1919;
+	margin: 		0 2px;
+	withd: 			15px;
+	border-radius: 	2px;
+	-moz-border-radius: 2px;
+
+}
+
+.pagination a.active {
+	background-color: #84c3e1;
+	color: 			white;
+	border: 		1px solid #84c3e1;
+}
+
+.pagination .bggrey {
+	background-color: #9d9d9d;
+}
+
+.pagination .grey {
+	border: 			darkgray 1px solid;
+	color: 				darkgray;
+}
+
+.pagination .grey:hover {
+	background-color: 	silver;
+}
+
+.pagination .currentPage {
+	color:				#F5F5F5FF;
+	background-color: indianred;
+}
+
+.pagination .paggyLeft {
+	border-radius: 			8px 0px 0px 8px;
+	-moz-border-radius-topleft: 	8px;
+	-moz-border-radius-bottomleft: 	8px;
+}
+
+.pagination .paggyRight {
+	border-radius: 			0px 8px 8px 0px;
+	-moz-border-radius-topright: 	8px;
+	-moz-border-radius-bottomright: 8px;
+}
+
+.paginatorComments {
+	margin-left: 			4px;
+	width:					160px;
+	display:	 			inline-block;
+	color:					darkgrey;
+	font-size: 				8px;
+}
