@@ -40,6 +40,13 @@
 		return ( str_replace(rtrim(CONFIG['base_path'],'/'), '', rtrim($_SERVER['REQUEST_URI'],'/')) );
 	}
 	
+	
+	function currentPath()
+	{
+		return $_SERVER['REQUEST_URI'];
+	}
+	
+	
 	function error( $statusCode = '404')
 	{
 		if(!is_numeric($statusCode) && $statusCode < 100  && $statusCode >= 600)   {
