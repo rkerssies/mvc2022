@@ -38,13 +38,13 @@
 
 	//// relations
 //		    dd((new User())->select()->oneOnMany('id','user_id','users_fruits')->get()); //OK
-//	        dd((new User())->select()->manyOnMany('Fruit')->get());
-			
-			$this->data = (new Fruit())->select()->all()->pagination(5)->get();
+	        dd((new User())->select()->manyOnMany('Fruit')->get());
+
+//			$this->data = (new Fruit())->select()->all()->pagination(5)->get();
 			
 					//	dd((new Fruit())->all()->limit(3,4)->get()); // OK all
 					//	dd((new Fruit())->all()->get()); // OK all
-					//	dd((new Fruit())->all()->toJson()->get()); // OK all
+//						dd((new Fruit())->all()->toJson()->get()); // OK all
 		/* ///////////////////////////////////////////////////////////////////// */
 //			$this->data = (new Fruit())->select()->orderby(['name', 'color'])->get(); // ok orderBy
 			$this->useView='fruity.index';

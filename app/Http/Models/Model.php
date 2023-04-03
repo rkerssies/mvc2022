@@ -173,7 +173,9 @@
 			}
 			
 			if(!empty($dataResponse) && $this->toJson == true)    {
-				return json_encode($dataResult, JSON_PRETTY_PRINT);
+				header('Content-Type: application/json; charset=utf-8');
+				echo json_encode($dataResult, JSON_PRETTY_PRINT);
+				die;
 			}
 			elseif(!empty($dataResponse)){
 				return $dataResponse;
@@ -410,7 +412,6 @@
 		
 		
 		/////// Relations - JOIN ////  1-to-many /// many-to-many ///  /////////////////////
-		
 		public function join(string $foreinKeyThisTable , string $primKeyOtherTable, string $otherTable, $typeClause = 'INNER')
 		{
 			if(strtoupper($typeClause)!='INNER')
@@ -434,10 +435,11 @@
 		
 		public function manyOnMany( string $othetModelName)
 		{
-			/// other-Model
-			///
-			////////check if model exists
 			$ns = 'Http\\Models\\'.$othetModelName;
+			if (!class_exists($ns)) {
+				die('Failed: Relation with Model-class not possible, class: '.$ns.' not found!');
+			}
+			
 			$otherModel = (new $ns());
 			if(!empty($otherModel->table)){
 				$otherTableName = $otherModel->table;
