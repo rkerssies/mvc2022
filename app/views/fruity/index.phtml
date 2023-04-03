@@ -21,9 +21,10 @@
 		{
 			foreach($data as $row)
 			{
-				echo '<tr>';
-				echo '<td>'.$row->name.'</td>';
-				echo '<td> <a href="'.url('/fruity_update/'.$row->id).'">
+				echo '<tr style="padding-right:5px;">';
+				echo '<td style="padding-right:5px;">'.$row->name.'</td>';
+				echo '<td style="padding-right:5px;">'.$row->color.'</td>';
+				echo '<td style="padding-right:6px;"> <a href="'.url('/fruity_update/'.$row->id).'">
 								update
 							</a> </td>';
 				echo '<td> <a href="'.url('/fruity_delete/'.$row->id).'">
@@ -45,3 +46,4 @@
 			?>
 		</ul>
 	</table>
+	<?= $pagination ?>
