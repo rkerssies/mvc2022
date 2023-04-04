@@ -24,8 +24,8 @@
 			//
 		}
 		
-		public function index(Fruit $fruit){
-		
+		public function index(Fruit $fruit)
+		{
 			$this->data = (new Fruit())->select()->all()->pagination(5)->get(); // paginate 5 records per page, override config.ini setting
 			$this->useView='fruity.index';
 		}
