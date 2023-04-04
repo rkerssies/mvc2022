@@ -21,6 +21,7 @@
 		public $affected_rows = null;
 		public $num_rows = null;
 		public $aggregateKeys = [];
+		public $toNested        = false;
 		public $toJson        = false;
 		
 		public function __construct()
@@ -171,16 +172,45 @@
 										'db_table' => $this->table,
 										'object' => $this->dbObject]);
 			}
+
+			if($this->toNested == true)
+			{
+				$collection = [];
+				$keysThisModel = array_merge(['id'], (array)$this->fillables );
+				$i = 0;
+				foreach($dataResponse as $recordNr => $record)
+				{
+					$idField = rtrim($this->table, 's').'_id';
+					$id = $record->$idField;
+					
+					$related = (array) $record;
+					foreach($record as $key => $value)
+					{
+						if(in_array($key, $keysThisModel))
+						{
+							if($key == 'id') {
+								$value = $record->$idField;
+							}
+							 $collection[$id][$key] = $value;
+							 unset($related[$key]);
+						}
+					}
+					$collection[$id]['related'][$i++] = (object) $related;
+				}
+				$dataResponse = $collection;
+			}
 			
 			if(!empty($dataResponse) && $this->toJson == true)    {
+
 				header('Content-Type: application/json; charset=utf-8');
-				echo json_encode($dataResult, JSON_PRETTY_PRINT);
+				echo json_encode($dataResponse, JSON_PRETTY_PRINT);
 				die;
 			}
-			elseif(!empty($dataResponse)){
-				return $dataResponse;
-			}
-
+//			elseif(!empty($dataResponse))
+//			{
+//				return $dataResponse;
+//			}
+			
 			return $dataResponse;    // return if Boolean; true || false
 		}
 		
@@ -206,26 +236,33 @@
 						$this->aggregateKeys[] = $fieldNameArgg;
 					}
 					else    {       // adding a single record-field to selection
-						$fields.='`'.$fieldName.'`, ';
+						$fields.= '`'.$this->table.'`.`'.$fieldName.'`, ';
 					}
 				}
 				$fields = rtrim($fields, ', ');
 			}
 			else    {
-				$fields = '* ';
+				$fields = ' * ';
 			}
 			$this->queryString = $selectPart.' '.$fields.' FROM `'.$this->table.'` ';
 			return $this;
 		}
 		
-		public function orderby($fieldname)     //  array for multiple ordering || string eith single ordering
+		public function orderby($fieldname)     //  array for multiple ordering || string for single ordering
 		{
 			$this->queryString .= 'ORDER BY ';
 			if(is_array($fieldname))
 			{
 				$string = '';
 				foreach($fieldname as $field){
-					$string .= '`'.$field.'`, ';
+					$parts = explode('|', $field);
+					if(!empty($parts[1]) && in_array(strtoupper($parts[1]),['ASC', 'DESC'])) {
+						$orderDirection = ' '.strtoupper($parts[1]);
+					}
+					else {
+						$orderDirection = '';
+					}
+					$string .= '`'.$parts[0].'`'.$orderDirection.', ';
 				}
 				$this->queryString .= rtrim( $string, ', ');
 			}
@@ -268,7 +305,7 @@
 				}
 			
 			if(isset($fieldname) && isset($value))  {
-				$this->queryString .= 'AND `'.$fieldname.'`'.$operator.' ? ';
+				$this->queryString .= 'AND `'.$fieldname.'` '.$operator.' ? ';
 				$this->dbObject->valueArray = array_merge($this->dbObject->valueArray,  [$fieldname=> $value]);  // collect all params orderd to bind later in get-method: QueryBindParams
 			}
 			else { $this->queryString = '<br>FAIL! AND fieldname "'.$fieldname.'" is not a string <br>';}
@@ -484,17 +521,15 @@
 								ON `'.$pivot.'`.`'.$pivotOtherId.'` = `'.$otherTableName.'`.`'.$primKeyOtherTable.'` ';
 			
 			return $this;
-			
-			
-/*			SELECT `users`.* ,
-CAST(GROUP_CONCAT(`users_fruits`.`user_id`, DATA_SUBDELIMITER,
-	`users_fruits`.`likes`, DATA_SUBDELIMITER, `users_fruits`.`comment`
-) AS CHAR) AS related
- FROM `users`
- JOIN `users_fruits` ON `users`.`id` = `users_fruits`.`user_id`*/
 		
 		}
-
+		
+		/////// create Nested object (nesting related records) /// /////////////////////
+		public function toNested()
+		{   // change flag to return a data in json-format
+			$this->toNested = true;
+			return $this;
+		}
 		
 		/////// json /// /////////////////////
 		public function toJson()

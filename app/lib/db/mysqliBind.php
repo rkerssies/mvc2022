@@ -65,14 +65,12 @@
 			if(empty($dataArray))   {   // no data given to bind
 				return true;
 			}
-
-			$fieldnameString    = '';
 			$valueString        = '';
 			$questionMarkString = '';
 			$this->types        = '';   // clean up value on earlier requests
+
 			foreach((array) $dataArray as $key => $value)
 			{
-				$fieldnameString    .= '`'.$key.'`, ';
 				$valueString        .= $value.',';
 				$questionMarkString .= '?,';
 				$this->valueArrayN[] = $value;
@@ -94,7 +92,6 @@
 				}
 			}
 			
-			$this->fieldnames  = rtrim( $fieldnameString, ' ,' );
 			$this->values      = rtrim($valueString,' ,' );
 			$this->qMarkString = rtrim($questionMarkString,' ,' );
 			
@@ -120,7 +117,8 @@
 			$stmt->execute();
 			$result = $stmt->get_result();
 			$this->conn->query("COMMIT");
-
+			
+			$this->fieldnames  = $result->fetch_fields();
 			$this->error_list   = $stmt->error_list;  // errors or empty array
 			$this->queryString  = $prepairedStmt;
 			$this->num_rows     = $result->num_rows;

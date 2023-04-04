@@ -19,6 +19,9 @@
 				[   'href' => 'article/1',
 					'label' => 'articles show id=1'
 				],
+				[   'href' => 'article/2',
+					'label' => 'articles show id=2'
+				],
 				[   'href' => 'gallery',
 					'label' => 'photo\'s'
 				],

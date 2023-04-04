@@ -1,0 +1,54 @@
+<?php
+	/**
+	 * Project: MVC2022.
+	 * Author:  InCubics
+	 * Date:    29/06/2022
+	 * File:    show.phtml
+	 */
+?>
+<h2>
+	<?= $title ?> SHOW - 2
+</h2>
+<br>
+<a href="<?= url('/articles')?>">articles index</a><br>
+<hr>
+<?= $string ?><br>
+The ID in the url as param0 (p0) is: <b><?= ($id ? $id : 'not provided as url-param') ?></b>
+<br><br>
+Data by id from given array; <b><i><?= $data ?></i></b>
+<hr>
+<h3>Some query-examples in this MVC-framework</h3>
+Eloquent-alike data-queries;<br><br>
+<li><b>Some example queries</b></li>
+<ul>
+	<li>(new Fruit())->all()->get();
+	<li>(new Fruit())->all()->limit(3,4)->get();
+	<li> (new Fruit())->select()->all()->pagination(5)->get();
+	<li>(new Fruit())->find(25)->get();  	&emsp;// id 25 must exist
+	<li>(new Fruit())->select(['name','color'], )->orderby(['name', 'color'])->get();
+	<li>(new Fruit())->select()->orderby(['name', 'color'])->get();
+	<li>(new Fruit())->select()->orderby('name')->get();
+	<li>(new Fruit())->select()->orderby(['name', 'color|DESC'])->get());
+	<li>(new Fruit())->select()->orderby(['name|DESC', 'color|ASC'])->get());
+	<li>(new Fruit())->select(['name','color'], true)->where('sweetness', 1)->get()); 		$emsp; // distinct on true and specific selection of fieldnames
+	<li>((new Fruit())->raw('SELECT * FROM `fruits` WHERE `id` = ?', ['id'=> 25]))->meta; 	&emsp; // meta-info on raw-query with bind-params on data-array
+	<li>(new Fruit())->select()->where('sweetness', 1)->get();
+	<li>(new Fruit())->select(['avg'=>'sweetness',<br>
+			&emsp;'sum'=> 'sweetness',<br>
+			&emsp;'min'=> 'sweetness',<br>
+			&emsp;'max'=> 'sweetness'])->where('color', 'yellow')->get();   &emsp;// aggregate examples <br>
+	<li>(new Fruit())->select(['color','sweetness'], true)->where('color', 'green')->get();
+	<>(new Fruit())->all()->toJson()->get();
+</ul>
+<li><b>Relations</b></li>
+	<ul>
+		<li>(new User())->select()->oneOnMany('id','user_id','users_fruits')->get();
+		<li>(new User())->select()->oneOnMany('id','user_id','users_fruits')->toNested()->get();
+		<li>(new User())->select()->manyOnMany('Fruit')->get();
+		<li>(new User())->select()->manyOnMany('Fruit')->toNested()->get();
+		<li>(new User())->select()->manyOnMany('Fruit')->toNested()->toJson->get();
+		<li>(new User())->select()->manyOnMany('Fruit')->get();
+	</ul>
+
+</ul>
+

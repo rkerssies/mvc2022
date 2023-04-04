@@ -21,8 +21,15 @@
 			$this->id=$request->all()->get->p1; // param0 from url, eq: article/1
 			$this->data=['apple', 'pear', 'lemon', 'peach'][$this->id];  // test array naar view
 			$this->string="Hello show-view of articles";     // test string naar view
-			$this->title='one article';
-			$this->useView='articles.show';
+			$this->title='One Article';
+//			dd($this->id);
+			if($this->id != 1) {
+				$this->useView='articles.show2';
+			}
+			else {
+				$this->useView='articles.show';
+			}
+			
 		}
 		
 		public function add()
