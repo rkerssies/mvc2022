@@ -46,7 +46,7 @@ Eloquent-alike data-queries;<br><br>
 		<li>(new User())->select()->oneOnMany('id','user_id','users_fruits')->toNested()->get();
 		<li>(new User())->select()->manyOnMany('Fruit')->get();
 		<li>(new User())->select()->manyOnMany('Fruit')->toNested()->get();
-		<li>(new User())->select()->manyOnMany('Fruit')->toNested()->toJson->get();
+		<li>(new User())->select()->manyOnMany('Fruit')->toNested()->toJson()->get();
 		<li>(new User())->select()->manyOnMany('Fruit')->get();
 	</ul>
 
