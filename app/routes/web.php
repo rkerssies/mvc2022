@@ -49,7 +49,7 @@
 	
 	
 	//////////////////////////////////////////////////////////////////////
-	///// examples of routes (not implemented to work in framework) /////
+	///// examples of routes (not implemented to be working in this framework) /////
 	//		'get@/fruits'		        => ['fruit','index'],
 	//      'get@/fruits/$bla/$bla2?'   => ['fruit','index',['login', 'rbac' ]], // middleware; login and rbac are called
 	//		'get@/fruits/#/%/*'		    => ['fruit','index'],        // test with variety of params with wild-cards
