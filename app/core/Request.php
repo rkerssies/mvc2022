@@ -27,6 +27,17 @@
 			return self::$instance;
 		}
 		
+		public function setGET($key, $value)
+		{
+			$this->obj = self::getInstance();
+			
+			if($this->obj->get->$key = $value)
+			{
+				return true;
+			}
+			return false;
+		}
+		
 		public function all()
 		{
 			$this->obj = self::getInstance();
