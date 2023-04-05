@@ -117,8 +117,12 @@
 			$stmt->execute();
 			$result = $stmt->get_result();
 			$this->conn->query("COMMIT");
+
+			if(!is_bool($result) && is_array($result->fetch_fields()))
+			{   // when update or insert, db-fields not provided
+				$this->fieldnames  = $result->fetch_fields();
+			}
 			
-			$this->fieldnames  = $result->fetch_fields();
 			$this->error_list   = $stmt->error_list;  // errors or empty array
 			$this->queryString  = $prepairedStmt;
 			$this->num_rows     = $result->num_rows;
