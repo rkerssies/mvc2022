@@ -4,14 +4,14 @@ v2.1 (renewed @ 2023-03)
 
 ## Installation- & configuration-guide
 
-To get <b>mvc20022</b> on your own domain, take the following steps:
+To get <b>MVC20022</b> on your own domain, take the following steps:
 
 1. Download the complete project from git-hub to place it in your desired location.<br>
     The project Github-link: <a href="https://github.com/InCubics/mvc2022">mvc2022</a>
 
 
 2. For a local installation (not online);
-    * Add an extra line in the vhosts / hosts-file with custom (local) domainname.
+    * Add an extra line in the vhosts / hosts-file with custom (local) domain-name.
     With the console for Mac : sudo nano /etc/hosts
     With the terminal for Windows (Admin-mode): C:\Windows\System32\drivers\etc\hosts 
    
@@ -26,7 +26,7 @@ To get <b>mvc20022</b> on your own domain, take the following steps:
            ::1  {{mvc2022.rk}} 
 ```           
 
-* Configure the webserver with the (loacal) domainname and pointer to your projectfolder
+* Configure the webserver with the (loacal) domain-name and pointer to your projectfolder
     For Mac: /Applications/XAMPP/xamppfiles/etc/extra/httpd-vhosts.conf
     For Windows: C:\XAMPP\apache\conf\extra\httpd-vhosts.conf
 
@@ -41,8 +41,8 @@ To get <b>mvc20022</b> on your own domain, take the following steps:
     </Directory>
 </VirtualHost>
 ```
-NB: enter your domainname withun the dubble curybraces ( {{{} ). This must be matching with the domain in de hostfile and the doamin in the config-file.
-NB: uri-parts with curlybraces ( {} ) need to be altered with actual path.
+NB: enter your domain-name within the dubble curly braces ( {{{} ). This must be matching with the domain in de host-file and the domain in the config-file.
+NB: uri-parts with curly braces ( {} ) need to be altered with actual path.
 * REBOOT your webserver
 
 3. For an online installation
@@ -58,9 +58,11 @@ NB: uri-parts with curlybraces ( {} ) need to be altered with actual path.
 
 
 5. Change the value for the following keys in ./app/config/config.ini for a basic project-setup;
-    * domain (our doamianname with http or https as value in this key)
-    * app_key (a very long string of charakters is required. This for eq. creating a private-key to secure sessions)
+    * domain (our domain-name with http or https as value in this key)
+    * app_key (a very long string of characters is required. This for eq. creating a private-key to secure sessions)
     * (optional) Checkout and change other key-values for more customisations. 
+    * chanhe the rights on app/.PrivateKey and app/config/config.ini to: 640<br> 
+      (for the administrator the file is still readable and editable)   
 
 
 6. Open the terminal and run:
@@ -85,10 +87,10 @@ Your site is running and will look like the picture below:
 
 
 ### Some guidlines for your own developement
-* Modifications of url-paths and the controller-actions they call, can be changed in:  
+* Modifications of url-paths and the controller-actions they call.This can be changed in:  
     ./app/routs/web.php
 * Controllers are stored in ./app/Http/Controllers.
-* In a controller-method oyther classes ar instatiable with namespandes, for example Models and Lib-classes
+* In a controller-method other classes an object can be made with namespaces and the class-name, for example Models and Lib-classes
 * Controllers-methods call a specific view, from a subfolder in with the controllername 
  in the folder .app/views/. Views that injected in a layout.
 * With a Model all kinds of data-queries can be made with chainable methods on that model-object.
@@ -101,5 +103,5 @@ Your site is running and will look like the picture below:
 * Optional:<br>
     * Change the layoput schedule in ./app/config/layoutSchedule.php. <br> 
         Make sure that key 'ScheduledLayout' in  ./app/config/config.ini is set on: true.
-        The layoutnames in layoutSchedule.php must match the foldernames (and there design) in ./app/layouts.
-    * Configuere your CDN-libraries within app/configure/css_cdn_resources.php or app/configure/js_cdn_resources.php  
+        The layout-names in layoutSchedule.php must match the folder-names (and there design) in ./app/layouts.
+    * Configure your CDN-libraries within app/configure/css_cdn_resources.php or app/configure/js_cdn_resources.php  
