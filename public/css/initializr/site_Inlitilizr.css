@@ -95,7 +95,7 @@
 	text-decoration: 	none;
 	border-radius: 		10px;
 	color: 				#2991c7;
-	background-color: 	silver;
+	background-color: 	#C0C0C0FF;
 }
 @media screen and (max-width: 600px) {
 	/* hamburger menu when in app-modus*/
@@ -121,11 +121,27 @@
 .jumbotron {
 	margin-top:			11px;
 }
-.indextable td a {
-	padding: 			2px;
+.indextable td a, a {
+	text-decoration: 	none; !important;
+	padding: 			3px;
 }
-.indextable td a:hover {
-	background-color: 	silver;
+.indextable td a:hover, a:hover {
+	background-color: #d5d4d4;
+	border-radius: 		5px;
+}
+.indextable tr .leftCel {
+	padding-left:		6px;
+}
+
+.indextable tr .rightCel {
+	padding-right:		6px;
+}
+.indextable tr td {
+	padding: 			3px;
+}
+.indextable tr:hover {
+	background-color: 	#9acfea;
+	border-radius: 		30px;
 }
 
 .photoimg {
@@ -147,11 +163,20 @@ label {
 }
 
 .lightblue {
-	color: #9acfea;
+	color: 				#9acfea;
+}
+
+.darkblue {
+	color: 				#0c88b4;
 }
 
 .author {
 	font: 			10px Arial ;
 	color: 			#9acfea;
 	text-align: 	center;
+}
+
+.tableHead120 {
+	width: 			120px;
+	margin-right: 	3px;
 }
