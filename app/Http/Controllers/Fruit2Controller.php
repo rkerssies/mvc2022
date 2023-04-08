@@ -35,17 +35,15 @@
 			if(isset($request->all()->post->submit))
 			{
 				$validator->validator($request->all()->post, 'fruit'); // call FruitRequest for validation
-				if(!is_array($validator->fails))                // dd($validator->fails);
-				{
-					if($fruit->insert($request->all()->getFillable(['name', 'color', 'sweetness'])))
-					{
+				if(!is_array($validator->fails))   {                        // validation succes
+					if($fruit->insert($request->all()->getFillable(['name', 'color', 'sweetness'])))    {
 						$message = ['type'=>'success', 'strong'=>'Success!', 'message'=>'Record added to \'Fruits\''];
 						redirect("/fruity", $message);   // redirect
 					}
 				}
-				else
-				{   // validation failed
+				else    {   // validation failed
 					$this->failMessages = (object)$validator->fails['fail'];  // push validation-errors to view
+					$this->populate     = request()->post;
 				}
 			}
 			$this->useView = 'fruity.add';
@@ -53,42 +51,49 @@
 		
 		public function update(Fruit $fruit, Request $request, FruitRequest $validator, $id)
 		{
-			$method = strtolower(request()->method);
+			$method = strtolower(request()->method);    // possibility for: put, patch or post
 			if(isset($request->all()->$method->submit))
 			{ //  submitted, chack validation-form and sql-update
 				$validator->validator($request->all()->$method, 'fruit'); // call FruitRequest for data-validation
 				
-				if(empty($validator->fail))    {
-					$fruit->update($request->all()->getFillable(['name', 'color', 'sweetness']), $id);
-					if($fruit->affected_rows > 0)    {
+				if(empty($validator->fails))    {
+					$result = $fruit->update($request->getFillable($fruit->getFillables()), $id);
+					if($result == true && $fruit->affected_rows == -1)      {    // NOT EXISTING id
+						$message = ['type'=>'warning', 'strong'=>'Warning!', 'message'=>'Record to update with id: <i>'
+									.$id. '</i> in \'Fruits\' has NO changes'];
+						redirect("/fruity", $message);   // redirect
+					}
+					elseif($result == true && $fruit->affected_rows == 1)    {
 						// set info messagebar after redirect
-						$message = ['type'=>'success', 'strong'=>'Success!', 'message'=>'Record with the name: <i><b>'
-							.$request->post->name.'</b></i> is updated in \'Fruits\''];
+						$message = ['type'=>'success', 'strong'=>'Success!', 'message'=>'Record to update with the name: <i><b>'
+							.$request->$method->name.'</b></i> is updated in \'Fruits\''];
 						redirect("/fruity", $message);   // redirect
 					}
 				}
 				else    {   // validation failed
-					$this->failMessages = (object)$validator->failMessage;  // push validation-errors to view
+					$this->failMessages = (object) $validator->fails['fail'];  // push validation-errors to view
+					$this->populate     = request()->$method;
 					back();
 				}
 			}
-			elseif(empty($request->$method))
-			{            // geen submit, dan select=sql --> gekregen waarden in POST zetten
+			elseif(empty($request->$method))    {              // geen submit yet, query data and place in form-fields
 				$this->populate = $fruit->find($id)->get();    // $id  == $request->get->p1
-				// $this->populate = $fruit->find($id)->get(['id','name','color','sweetness']); // $id  == $request->get->p1
 			}
 			$this->useView = 'fruity.update';
 		}
 		
 		public function delete(Fruit $fruit, $id)
 		{
-			if(is_numeric($id) && $fruit->delete($id))  {
-				$message = ['type'=>'success', 'strong'=>'Success!', 'message'=>'Record is deleted from \'Fruits\''];
-				redirect("/fruity", $message);   // redirect
-			}
-			else    {
-				$this->arrayMessages = [['info'=>'id <b>'.$id.'</b> doesn\'t exist']];
-				$this->data = $fruit->select()->orderby('name')->get();
+			if(is_numeric($id) && $result = $fruit->delete($id))
+			{
+				if($result == true && $fruit->affected_rows == -1)      {    // NOT EXISTING id
+					$message = ['type'=>'warning', 'strong'=>'Warning!', 'message'=>'Record to delete with id: <i>'.$id. '</i> doen\'t exist in \'Fruits\''];
+					redirect("/fruity", $message);   // redirect
+				}
+				elseif($result == true && $fruit->affected_rows == 1)  {    // DELETED
+					$message = ['type'=>'success', 'strong'=>'Success!', 'message'=>'Record with id: <i>'.$id.'</i> is deleted from \'Fruits\''];
+					redirect("/fruity", $message);   // redirect
+				}
 			}
 			$this->useView = 'fruity.index';
 		}
