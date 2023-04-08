@@ -1,7 +1,4 @@
 <?php
-	
-
-	
 	/**
 	 * Project: PhpStorm.
 	 * Author:  InCubics
@@ -71,7 +68,7 @@
 					'inserted_id'   =>$this->inserted_id,      // last id on insert
 					'paginate'      =>$this->paginate,
 					'page'          =>$this->page,
-		//		'whoami'=>['email'=>(!empty($user->email)) ? $user->email : null, 'id'=>(!empty($user->id)) ? $user->id : null],    // Who Am I
+					//'whoami'=>['email'=>(!empty($user->email)) ? $user->email : null, 'id'=>(!empty($user->id)) ? $user->id : null],    // Who Am I
 					];
 		}
 	}

@@ -183,24 +183,24 @@
 		
 		public function checkCsrf($postData = [])
 		{
+			$method = strtolower(request()->method);
 			$saltObject = new Salt('customCSRF_4_privateKey'.CONFIG['app_key']);
 			$csrfSession = (array) json_decode($saltObject->decryptSalt($_SESSION['csrf']));
 			
 			if(empty($postData)) {
-				$postData = request()->all();
+				$postData = request();
 			}
-//			$method = strtolower(request()->method);
-			if(!array_key_exists(request()->post->csrf, $csrfSession))
-			{
-				error('400');   // unauthorized ! no or invalid csrf-token found in session
+
+			if(! array_key_exists(request()->$method->csrf, $csrfSession))  {
+				error('403');   // Unauthorized! None or an invalid csrf-token found in session
 			}
-			$to_time = strtotime(date('Y-m-d H:i:s'));
-			$from_time = strtotime($csrfSession[$postData->post->csrf]);
 			
+			$to_time = strtotime(date('Y-m-d H:i:s'));
+			$from_time = strtotime($csrfSession[$postData->$method->csrf]);
+
 			if(round(abs($to_time - $from_time) / 60,0) > 60000)   {   // form is older than 60 minutes
 				back();    // if create own response on rexpired csrf-token
 			}
-			
 			return true;
 		}
 		

@@ -46,7 +46,6 @@ use lib\db\mysqliBind as mysqliDB;
 		/*
 		 *      Methods that can be called in a specific Model because they inherit this Model-class with ist methods
 		 */
-		
 		public function all()
 		{
 			$this->queryString = 'SELECT * FROM `'.$this->table.'`';
