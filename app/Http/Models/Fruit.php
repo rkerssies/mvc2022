@@ -13,7 +13,7 @@
 		//protected $table = 'other_tablename_than_fruits';        /* default: tablename = modelname in small-case appended with an 's' */
 		protected $fillables    = ['name', 'color', 'sweetness'];
 //		protected $hidden       = []; // eq: 'sweetness', 'minSweetness'
-//		protected $primary      = 'somePrimatyKeyId';
+//		protected $primary      = 'somePrimaryKeyId';
 		public $inserted_id     = null;
 		public $affected_rows     = null;
 		public $queryString     = null;
