@@ -14,7 +14,6 @@
 	
 	class ApiResponses
 	{
-
 		protected $objModel = null;
 		protected $request  = null;
 		protected $validatedRequest = null;
