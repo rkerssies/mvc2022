@@ -128,18 +128,19 @@ CREATE TABLE `users` (
   `username` varchar(50) NOT NULL,
   `password` varchar(100) NOT NULL,
   `forgot_hash` varchar(60) DEFAULT NULL,
-  `profile` varchar(10) NOT NULL
+  `profile` varchar(10) NOT NULL,
+  `token` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Gegevens worden geëxporteerd voor tabel `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password`, `forgot_hash`, `profile`) VALUES
-(1, 'admin@app.com', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', NULL, 'admin'),
-(2, 'user@app.com', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', NULL, 'user'),
-(3, 'user1@app.com', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', NULL, 'user'),
-(4, 'user2@app.com', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', NULL, 'user');
+INSERT INTO `users` (`id`, `username`, `password`, `forgot_hash`, `profile`, `token`) VALUES
+(1, 'admin@app.com', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', NULL, 'admin', NULL),
+(2, 'user@app.com', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', NULL, 'user', NULL),
+(3, 'user1@app.com', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', NULL, 'user', NULL),
+(4, 'user2@app.com', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', NULL, 'user', NULL);
 
 -- --------------------------------------------------------
 

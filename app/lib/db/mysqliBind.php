@@ -106,7 +106,6 @@
 			$stmt = $this->conn->prepare($prepairedStmt);
 
 			if(!empty($this->valueArrayN))   {   // bind params only when they are provided
-			
 			$params = array_merge([$this->types], $this->valueArrayN);
 
 			call_user_func_array(array($stmt, 'bind_param'), $params);
@@ -122,10 +121,13 @@
 			{   // when update or insert, db-fields not provided
 				$this->fieldnames  = $result->fetch_fields();
 			}
-			
+
 			$this->error_list   = $stmt->error_list;  // errors or empty array
 			$this->queryString  = $prepairedStmt;
 			$this->num_rows     = $result->num_rows;
+			$this->field_count  = $result->field_count;
+			$this->affected_rows= $stmt->affected_rows;
+			$this->error_list   = $stmt->error_list;
 			
 			if($result->num_rows > 0 ) {
 				$data = [];
@@ -150,12 +152,16 @@
 				if(!empty($stmt->insert_id) && is_numeric($stmt->insert_id)) {  // last inserted ID
 					$this->inserted_id = $stmt->insert_id;
 				}
-				if(!empty($stmt->affected_rows)) {                              // amount changed records
-					$this->affected_rows = $stmt->affected_rows;
-				}
+	
+
 				$this->erven = $result;
 				return true;
 			}
+			if(empty($stmt->affected_rows) && $stmt->field_count == 0 && empty($stmt->error_list)) {
+				$this->affected_rows = "-1";
+				return true;
+			}
+			
 			return false;
 		}
 	}

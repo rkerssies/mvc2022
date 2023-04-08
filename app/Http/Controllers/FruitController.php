@@ -44,8 +44,7 @@
 		{
 			$request->all();
 			
-
-/*			if(isset($request->post->submit))
+			if(isset($request->post->submit))
 			{
 				$validator->validator($request->post, 'fruit'); // call FruitRequest for validation
 				//dd($validator->fails);
@@ -61,7 +60,7 @@
 				{   // validation failed
 					$this->failMessages=(object)$validator->fails['fail'];  // push validation-errors to view
 				}
-			}*/
+			}
 			if(isset($request->post->submit))
 			{
 				$validator->validator($request->post, 'fruit'); // call FruitRequest for validation

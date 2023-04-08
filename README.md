@@ -20,7 +20,8 @@ In this framework the processes and functuonality beneath it all are less abstra
   * Views are custom called in controller-action by folder and filename
 
 * Models like Laravel
-  * Models with fillables and optional hidden
+  * Models that get just the fillable fieldnames
+  * Optional hidden fields that ar taken out from the response
   * Models with defining custom tablename (other than modelname + s)
   * Chainable methods to build database queries Eloquent-alike, eq:
     * all
@@ -30,9 +31,10 @@ In this framework the processes and functuonality beneath it all are less abstra
     * min,max,sum,avg-aggregates
     * raw
     * oneOnMany, manyOnMany
+    * optional get all realted data within a nested-key 
+    * optional change output to json-format
   * Database connection for full MySqli params-bind, MySQLi basic usage or PDO
   * Database connection-info stored in config.ini file
-	
 
 * Views and Layouts
   * Views handle all var-types from controller-action
@@ -47,6 +49,7 @@ In this framework the processes and functuonality beneath it all are less abstra
   * Login-form
   * Password renewal for logged-on users
   * Password-forgot-form
+  * Usage of extra globals PUT, PATCH and DELETE
   * Administration example on the 'fruit-table'
     * Overview of all records, ordered (index)
     * Adding a record (add) with input-validation

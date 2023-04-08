@@ -12,14 +12,16 @@
 	{
 		public function up()
 		{
-			if( strtolower(request()->method) == 'post'
-				|| strtolower(request()->method) == 'put'
-				|| strtolower(request()->method) == 'patch')
-			{
-				request()->checkCsrf(); // continues or error-400
+			if(request()->get->p0 != 'api') {
+
+				if( strtolower(request()->method) == 'post'
+					|| strtolower(request()->method) == 'put'
+					|| strtolower(request()->method) == 'patch')
+				{
+					request()->checkCsrf(); // continues or error-400
+				}
 			}
-			
-			// NO return required
+//			// NO return required
 		}
 		
 		public function down()
