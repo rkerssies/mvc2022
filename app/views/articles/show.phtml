@@ -31,13 +31,16 @@ Data by id from given array; <b><i><?= $data ?></i></b>
 	</li>
 	<li>Models like Laravel
 		<ul>
-			<li>Models with fillables</li>
+			<li>Models that get just the fillable fieldnames</li>
+			<li>Optional hidden fields that ar taken out from the response</li>
 			<li>Models with defining custom tablename (other than modelname + s)</li>
 			<li>Chainable methods to build database queries Eloquent-alike, eq:</li>
 			<ul>
 				<li>all</li><li>find</li><li>andWhere</li><li>CRUD-methods</li>
 				<li>min,max,sum,avg-aggregates</li><li>raw</li>
 				<li>oneOnMany, manyOnMany</li>
+				<li>optional get all realted data within a nested-key</li>
+				<li>optional change output to json-format </li>
 			</ul>
 			<li>Database connection for full MySqli params-bind, MySQLi basic usage or PDO</li>
 			<li>Database connection-info stored in config.ini file</li>

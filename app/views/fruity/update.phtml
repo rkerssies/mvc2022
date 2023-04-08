@@ -11,6 +11,7 @@
 
 <form action="<?= url('/fruity_update/'.$id) ?>" method="post">
 	<?=  csrf() ?>
+	<input type="hidden" name="_method" value="PUT">
 	<label class="formLabel">name</label>
 	<input name="name" type="text" placeholder="vul in"
 		   value="<?= populate('name', $populate) ?>"

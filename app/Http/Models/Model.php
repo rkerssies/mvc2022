@@ -18,7 +18,10 @@
 		public $queryString = null;
 		public $getList     = false;
 		public $inserted_id = null;
-		public $affected_rows = null;
+		
+		public $fieldnames    = [];
+		protected $affected_rows = null;
+
 		public $num_rows = null;
 		public $aggregateKeys = [];
 		public $toNested        = false;
@@ -34,7 +37,7 @@
 				$name = end($array);
 				$this->table = strtolower($name.'s');
 			}
-
+			response_set('model', $name);
 			$this->dbObject = new mysqliDB();
 		}
 		
@@ -87,7 +90,7 @@
 		
 		public function get($arrayFieldnames = [],  $mode = false)
 		{
-//dd($this->queryString);
+			//dd($this->queryString);
 			if(!empty($mode == true))    {
 				$this->getList = true;
 			}
@@ -121,21 +124,25 @@
 			
 
 			if(isset($this->fillables) ) //// && is_array($arrayFieldnames) //Not with aggregates
-			{   // get out only "fillables" keys mentioned in Model, remove other
-				/*$dataResponse = [];*/
+			{   // select only "fillable" keys mentioned in Model, remove all other keys
 				
 				// select the needed fields
+				if(!empty($this->dbObject->fieldnames )){
+					$this->fieldnames = $this->dbObject->fieldnames;    // names of returned fields
+				}
 				if(empty($arrayFieldnames) && !empty($this->dbObject->fieldnamesArray)) {  // specific fields requested
 					$arrayFieldnames = $this->dbObject->fieldnamesArray;
+					$this->fieldnames = $this->dbObject->fieldnamesArray;
 				}
+				
 				if(!empty($this->aggregateKeys)) {  // add aggregate keys and values
 					$arrayFieldnames =  array_merge($arrayFieldnames, $this->aggregateKeys);
 				}
 
-				if(!empty($this->hidden) && is_array($this->hidden)) { // remove hidden fields from
+				if(!empty($this->hidden) && is_array($this->hidden)) { // remove all hidden fields mentioned in Model
 					$arrayFieldnames = array_diff($arrayFieldnames, $this->hidden);
+					response_set('hiddenfields', $this->hidden);
 				}
-				
 				
 				if(($this->dbObject->num_rows > 1 || $this->getList == true) ) { // filter-out hidden fields of multiple records data
 					foreach($dataResult as $record) {
@@ -206,11 +213,6 @@
 				echo json_encode($dataResponse, JSON_PRETTY_PRINT);
 				die;
 			}
-//			elseif(!empty($dataResponse))
-//			{
-//				return $dataResponse;
-//			}
-			
 			return $dataResponse;    // return if Boolean; true || false
 		}
 		
@@ -274,12 +276,13 @@
 			return $this;
 		}
 		
-		public function limit($from, $count)
+		public function limit($from, $amount)
 		{
-			if(is_numeric($from) && $from > 0 && is_numeric($count) && $count > 0 )    {
-				$this->queryString .= 'LIMIT '.$from.', '.$count. ' ';
+			if(is_numeric($from) && $from >= 0 && is_numeric($amount) && $amount > 0 )    {
+				$this->queryString .= 'LIMIT '.$from.', '.$amount. ' ';
 			}
 			else { $this->queryString = '<br>FAIL!  LIMIT requires numbers is not a string <br>';}
+
 			return $this;
 		}
 		
@@ -356,11 +359,17 @@
 			if(! $this->dbObject->PrepereParams($dataArray)){
 				die('Failed: prepairing to bind params for MySqli !');
 			}
-			$stmt = 'INSERT INTO '.$this->table.' ('.$this->dbObject->fieldnames.') VALUES ( '.$this->dbObject->qMarkString.' )';
+			$fieldString = '';
+			foreach($this->getFillables() as $field){
+				$fieldString .= $field.', ';
+			}
+			$stmt = 'INSERT INTO '.$this->table.' ('.rtrim($fieldString,', ').') VALUES ( '.$this->dbObject->qMarkString.' )';
 			$this->sqlString = $stmt;
+
 			if($this->dbObject->QueryBindParams($stmt))
 			{
 				$this->inserted_id = $this->dbObject->inserted_id;
+				$this->queryString = $this->dbObject->queryString;
 				return true;
 			}
 			return false;
@@ -371,7 +380,6 @@
 			if($operator != '=' &&  ! in_array($operator, ['=', '<>', '!=', '<=', '>=', '<', '>', 'IS', 'IS NOT' ])) {
 				$this->queryString = '<br>FAIL! INVALID comparison operator, third param in method Where<br>';
 			}
-//			$this->dbObject->valueArray = array_merge($this->dbObject->valueArray,  [$whereField=> $findValue]);
 			if(! $this->dbObject->PrepereParams([$whereField => $findValue])){
 				die('Failed: prepairing to bind params for MySqli !');
 			}
@@ -392,7 +400,6 @@
 			}
 
 			$params = array_merge((array)$dataArray, [$whereField => $findValue]);
-
 			if(! $this->dbObject->PrepereParams($params))   {
 				die('Failed: prepairing to bind params for MySqli !');
 			}
@@ -404,20 +411,18 @@
 				}
 				$set .= '`'.$key.'` = ?, ';
 			}
-			$set =rtrim($set, ' ,');
+			$set =rtrim($set, ', ');
 
 			$stmt = 'UPDATE `'.$this->table.'` SET '.$set.' WHERE `'.$whereField.'` '.$operator.' ? ';
 			$this->sqlString = $stmt;
 
 			$result = $this->dbObject->QueryBindParams($stmt);
 			
-			$this->error_list    = $this->dbObject->error_list;
+			$this->error_list    = $this->dbObject->errorlist;
 			$this->affected_rows = $this->dbObject->affected_rows;
-
 			if($result == true) {
 				return true;
 			}
-			
 			return false;
 		}
 		

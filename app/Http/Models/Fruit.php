@@ -12,9 +12,16 @@
 	{
 		//protected $table = 'other_tablename_than_fruits';        /* default: tablename = modelname in small-case appended with an 's' */
 		protected $fillables    = ['name', 'color', 'sweetness'];
-//		protected $hidden       = []; // 'sweetness', 'minSweetness'
-
+//		protected $hidden       = []; // eq: 'sweetness', 'minSweetness'
 //		protected $primary      = 'somePrimatyKeyId';
+		public $inserted_id     = null;
+		public $affected_rows     = null;
+		public $queryString     = null;
+		
+		public function getFillables()
+		{
+			return $this->fillables;
+		}
 		
 		public function fruitsOrdered()     // models may contain methods to create callable queries for reuse
 		{

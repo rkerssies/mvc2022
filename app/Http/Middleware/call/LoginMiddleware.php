@@ -3,7 +3,7 @@
 	 * Project: MVC2022.
 	 * Author:  InCubics
 	 * Date:    28/06/2022
-	 * File:    MyMiddleware.php
+	 * File:    LoginMiddleware.php
 	 */
 	
 	namespace Http\middleware\call;

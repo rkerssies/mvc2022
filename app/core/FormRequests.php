@@ -34,6 +34,7 @@
 					else { $v_item_value = null; }
 					
 					$validator_methodName = 'is_'.ucfirst($v_item_array[0]);
+					
 					if(! $this->$validator_methodName($request->$fieldName, $v_item_value))
 					{
 						$fails[$fieldName][]  = $fieldName.'-'.$this->failMessage;

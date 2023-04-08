@@ -10,6 +10,7 @@
 	
 	use core\Session;
 	use core\Response;
+	use core\Request;
 	use lib\files\getFiles;
 	use lib\encrypt\Salt;
 	
@@ -19,8 +20,9 @@ class mvc
 	public $controller          = null;     // updates in route-method
 	public $action              = null;     // updates in route-method
 	public $route               = [];       // updates in route-method
+	public $api                 = null;
 	public $url                 = null;     // updates in route-method
-	public $path                 = null;     // updates in route-method
+	public $path                = null;     // updates in route-method
 	private $middlewareArray    = [];       // updates in route-method
 	private $params;                        // used for getting params into view-files and the layout
 	private $requestParams      = [];
@@ -64,6 +66,7 @@ class mvc
 		if(! (new Session())->run())    {
 			die('FATAL !  Session hijack');
 		}
+		
 	}
 
 	/* Main front-entrance of the application */
@@ -75,10 +78,10 @@ class mvc
 			response_set('messagebar', session_get('messagebar'));
 			sessionkey_unset('messagebar');
 		}
-		
+		(new \core\Request())->make();      // Initate request-object
 		
 		if($this->route() == false) {
-			error('404');       //die('<h1>404</h1> invalid url');
+			error('404');         //die('<h1>404</h1> invalid url');
 		}
 		
 		// call down-methods on used MiddleWare (auto and called)
@@ -86,7 +89,6 @@ class mvc
 		if(!$middlewareObj->run())    {                        // all MiddleWare-classes in ./middleware/auto automatically UP-method
 			die($middlewareObj->failed->message);
 		}
-		
 		if(! $this->controller()) {
 			die($this->message);
 		}
@@ -95,9 +97,13 @@ class mvc
 		if(!$middlewareObj->run('down'))   {        // called MiddleWare-classes DOWN-method called by requested route
 			die($middlewareObj->failed->message);
 		}
-//		view removed
-
-
+		//	view is placed within the layout-method
+		
+		if($this->api == true)
+		{
+			echo json_encode(['No json-data response received from the ApiCointroller-action !']);
+			die;
+		}
 		
 		// call configured layout according to config.ini
 		 if(! $this->layout())  {
@@ -124,47 +130,65 @@ class mvc
 	 */
 	private function route()
 	{
-		$routes  = include('../app/routes/web.php');
+		if(request()->get->p0 == 'api'){    // api-routes
+			$this->api = true;
+			$routes  = include('../app/routes/api.php');
+		}
+		else    {                           // web-routes
+			$routes=include('../app/routes/web.php');
+		}
+		
 		$routesValues = array_keys($routes);
 
 		$path = str_replace( (string) $this->config->base_path, '/', (string)  $_SERVER['REQUEST_URI']);
 		$this->url =$this->config->domain. $_SERVER['REQUEST_URI'];
+		$path = str_replace('/api', '', $path);   // remove prefix:  /api   from path
 		$this->path = $path;
+
 		Response::class()->route = (object) ['domain'=> $this->config->domain];
 		Response::class()->route->url =   $this->url;
 		Response::class()->route->path =  $this->path;
 		
 		$path = explode('?', $path)[0]; // remove QSA from path, if is set. Eq: /fruits/var_value1/var_value2?page=3
 		$givenPathToCheck = ltrim($path, '/');
-
+		$methodFound = null;
+		
 		foreach($routesValues as $route)
 		{
-			$routePart      = ltrim(explode('@', $route)[1], '/');
+			$routePatternToCheck = null;
 			$methodsToCheck = ltrim(explode('@', $route)[0], '/');
-
+			$routePart      = ltrim(explode('@', $route)[1], '/');
 			
 			// alter patterns based on route-part to check on path in request-url;
-			$routePatternToCheck = preg_replace(',/\$[a-zA-Z0-9_-]+\?,', '[/]?[a-zA-Z0-9_-]*', $routePart);
-			$routePatternToCheck = preg_replace(',/\$[a-zA-Z0-9_-]+,', '/[a-zA-Z0-9_-]+', $routePatternToCheck);
+			$ArrayMethodsToCheck = explode('-', $methodsToCheck);
+			if(in_array(strtolower(request()->method), $ArrayMethodsToCheck))   {
+				$methodFound = strtolower(request()->method);
+			}
+			if(empty($this->path)) { $this->path = '/'; }   // exception when url-path is just a slash ( / )
+			$routePatternToCheck = preg_replace(',[$][a-zA-Z0-9_-]+[\?],', '[/]?[a-zA-Z0-9_-]*', $routePart);
+			$routePatternToCheck = preg_replace(',[$][a-zA-Z0-9_-]+,', '[/]?[a-zA-Z0-9_-]+', $routePatternToCheck);
 			$routePatternToCheck = str_replace('/*\?,', '[/]?[a-zA-Z_-0-9]*', $routePatternToCheck); // find astrix before adding atrixes in reg-expressions
-			$routePatternToCheck = str_replace('/*', '/[a-zA-Z_-0-9]+', $routePatternToCheck);
+			$routePatternToCheck = str_replace('/*', '[/]?[a-zA-Z_-0-9]+', $routePatternToCheck);
 			$routePatternToCheck = str_replace('/#?', '[/]?[0-9]*', $routePatternToCheck);
-			$routePatternToCheck = str_replace('/#', '/[0-9]+', $routePatternToCheck);
+			$routePatternToCheck = str_replace('/#', '[/]?[0-9]+', $routePatternToCheck);
 			$routePatternToCheck = str_replace('/%?', '[/]?[a-zA-Z]*', $routePatternToCheck);
-			$routePatternToCheck = str_replace('/%', '/[a-zA-Z]+', $routePatternToCheck);
+			$routePatternToCheck = str_replace('/%', '[/]?[a-zA-Z]+', $routePatternToCheck);
+			//$routePatternToCheck = str_replace('/[a-zA-Z0-9-_]+', '[/]?[a-zA-Z0-9-_]+', $routePatternToCheck);
+			
+			// check created patern on url-path with optional QSA
+			if(preg_match(',^[/]?'.$routePatternToCheck.'[?]?[a-z0-9&-_=&]*$,', $this->path, $pathFound))   {
+				$pathFound = $pathFound[0];
+			}
 
-			// get vars with value from path and get var-name from matched-route
-			if(preg_match(',^'.$routePatternToCheck.'[\/]?$,' ,  $givenPathToCheck))
-			{
-				
-				$requestParam = array();
-				// check if request-method can be found in route-methods (before @-sign)
-				if(! preg_match('~'.strtolower(request()->method).'~', strtolower($methodsToCheck) ) )   {
+			if ( !empty($pathFound))  {
+				if(empty($methodFound))  {   // method not found with preg_match on chars before @-sign
 					error('405');   //die('<h1>405</h1> method not supported on route-request');
 				}
-
-				if(strpos($route, '$'))     {     // if $ in route, then put var-name and value from url in var.
+				$requestParam = array();
+				
+				if(strpos($route, '$'))     {     // if $ in route, then create var-name and its value from url in var.
 					$pathParts = explode('/',$givenPathToCheck);
+					
 					foreach(explode('/', $routePart) as $key => $route_param)
 					{
 						if(substr($route_param, 0,1) == '$')    {
@@ -173,7 +197,9 @@ class mvc
 							$requestParam[$k] = $v;
 						}
 					}
+					response_set('requestParams', (object) $requestParam);
 				}
+				$this->method           = $methodFound;
 				$this->requestParams    = $requestParam;
 				$this->controller       = $routes[$route][0];
 				$this->action           = $routes[$route][1];
@@ -181,6 +207,7 @@ class mvc
 				return true;          // match found, stop looking for other matches
 			}
 		}
+		
 		// set corresponding controller and action for found route
 		if( empty($this->controller) || empty($this->action))  {  // no matching route found
 			error('404');   //die('<h1>404</h1>');
@@ -205,7 +232,6 @@ class mvc
 		foreach( (array) $services as $sName => $serviceValue)  {
 			$this->services->$sName = (object) $serviceValue;  // response Service avaliable in Mvc-object ($this->var) and all views/layout ($var)
 		}
-		
 		return true;
 	}
 	
@@ -213,27 +239,34 @@ class mvc
 	 *      Method 'controller' calling in the MVC-process
 	 */
 	private function controller()
-	
 	{
 		if(! is_file('../app/Http/Controllers/'.ucfirst($this->controller).'Controller.php'))    {
-			$this->message =  'controller-file not found; '.'../app/Http/Controllers/'.ucfirst($this->controller).'Controller.php';
+			if(request()->get->p0 != 'api') {
+				$this->message =  'controller-file not found; '.'../app/Http/Controllers/'.ucfirst($this->controller).'Controller.php';
+			}
+			else {
+				$this->message =  'API-service on the MVC2022-project by InCubics.net (c)'.date('Y').'-'.(date('Y')+1);
+				
+			}
+			Response::class()->status = 404;
+			Response::class()->message = $this->message;
+			return false;
+		}
+
+		// initiate controller-class
+		include_once('../app/Http/Controllers/'.ucfirst($this->controller).'Controller.php');
+		$controller = '\Http\Controllers\\'.ucfirst($this->controller).'Controller';
+		if(class_exists($controller))   {
+			$this->obj       = new $controller();		// make an instance (object) of the controller-class
+		}
+		else    {
+			$this->message  = 'class-name <b>'.$controller.'</b> not correct defined in file: '
+								.'../app/Http/controllers/'.ucfirst($this->controller).'Controller.php';
 			Response::class()->status = 404;
 			Response::class()->message = $this->message;
 			return false;
 		}
 		
-		// initiate controller-class
-		include_once('../app/Http/Controllers/'.ucfirst($this->controller).'Controller.php');
-		$controller = 'Http\Controllers\\'.ucfirst($this->controller).'Controller';
-		if(class_exists($controller))   {
-			$this->obj       = new $controller();		// make an instance (object) of the controller-class
-		}
-		else    {
-			$this->message = 'class-name <b>'.$controller.'</b> not correct defined in file: '.'../app/Http/controllers/'.ucfirst($this->controller).'Controller.php';
-			Response::class()->status = 404;
-			Response::class()->message = $this->message;
-			return false;
-		}
 		// call action on controller-class
 		if(is_object($this->obj) && method_exists($this->obj, $this->action))
 		{
@@ -242,7 +275,8 @@ class mvc
 			$parameters = $ReflectionMethod->getParameters();
 			
 			if(count($parameters) > 5){
-				$this->message = 'action <b>'.$this->action.'</b> can\'t contain more than 5 params in file: '.'../app/Http/Controllers/'.ucfirst($this->controller).'Controller.php';
+				$this->message = 'action <b>'.$this->action.'</b> can\'t contain more than 5 params in file: '
+								.'../app/Http/Controllers/'.ucfirst($this->controller).'Controller.php';
 				Response::class()->status = 404;
 				Response::class()->message = $this->message;
 				return false;
@@ -260,15 +294,14 @@ class mvc
 					$ns = $parameter->getType()->getName();
 					if (! class_exists($ns)) {  // make instace of known namespace
 						$this->message =  'The class '.$ns.'() doen\'t exists';
-						Response::class()->status = 404;
-						Response::class()->message = $this->message;
+						Response::class()->status   = 404;
+						Response::class()->message  = $this->message;
 						return false;
 					}
 					$$p_name = new $ns();
 				}
 				$i++;
 			}
-			
 			// function to call controller-action with (optional type-hinted params)
 			call_user_func_array(array($this->obj,$this->action), [$param0,$param1,$param2,$param3,$param4,$param5,$param6]);
 			// alternative way to call action on controller with type-hinted params: $this->obj->$method($param0,$param1,$param2,$param3,$param4 );// call the action on the controller-object
@@ -278,8 +311,13 @@ class mvc
 			Response::class()->route->action            =  $this->action;
 			Response::class()->route->routeMiddleware   =  $this->middlewareArray;
 		}
+		elseif(is_object($this->obj) && empty($this->action) && request()->get->p0 == 'api')    // base
+		{
+		die('api action GO');
+		}
 		else    {
-			$this->message = 'action <b>'.$this->action.'</b> doesn\'t exist in class '.$controller. ' in file: '.'../app/Http/ontrollers/'.ucfirst($this->controller).'Controller.php';
+			$this->message = 'action <b>'.$this->action.'</b> doesn\'t exist in class '.$controller. ' in file: '
+							.'../app/Http/ontrollers/'.ucfirst($this->controller).'Controller.php';
 			Response::class()->status   = 404;
 			Response::class()->message  = $this->message;
 			return false;
@@ -313,12 +351,11 @@ class mvc
 		$this->layoutName = $layoutName;
 		
 		// call Services
-		if(! $this->services($layoutName)) {
+		if(! $this->services($layoutName))  {
 			die($this->message);
 		}
 		
-		if(!empty($this->services->pagination->scalar))
-		{
+		if(!empty($this->services->pagination->scalar))     {
 			$this->pagination = $this->services->pagination->scalar;
 		}
 		
@@ -335,7 +372,7 @@ class mvc
 				$$key = $this->services->$key;
 			}
 		}
-		
+
 		if(file_exists('../app/layouts/'.$layoutName.'/layout.phtml'))
 		{   // load layout
 			Response::class()->status = 200;

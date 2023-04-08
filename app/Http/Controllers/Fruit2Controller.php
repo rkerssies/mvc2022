@@ -32,13 +32,12 @@
 		
 		public function add(Fruit $fruit, Request $request, FruitRequest $validator)      // core\Request $request
 		{
-			$request->all();
-			if(isset($request->post->submit))
+			if(isset($request->all()->post->submit))
 			{
-				$validator->validator($request->post, 'fruit'); // call FruitRequest for validation
+				$validator->validator($request->all()->post, 'fruit'); // call FruitRequest for validation
 				if(!is_array($validator->fails))                // dd($validator->fails);
 				{
-					if($fruit->insert($request->getFillable(['name', 'color', 'sweetness'])))
+					if($fruit->insert($request->all()->getFillable(['name', 'color', 'sweetness'])))
 					{
 						$message = ['type'=>'success', 'strong'=>'Success!', 'message'=>'Record added to \'Fruits\''];
 						redirect("/fruity", $message);   // redirect
@@ -54,25 +53,26 @@
 		
 		public function update(Fruit $fruit, Request $request, FruitRequest $validator, $id)
 		{
-			$request->all();
-			if(isset($request->post->submit))
+			$method = strtolower(request()->method);
+			if(isset($request->all()->$method->submit))
 			{ //  submitted, chack validation-form and sql-update
-				$validator->validator($request->post, 'fruit'); // call FruitRequest for data-validation
-				if(empty($validator->fails))    {
-					$fruit->update($request->getFillable(['name', 'color', 'sweetness']), $id);
+				$validator->validator($request->all()->$method, 'fruit'); // call FruitRequest for data-validation
+				
+				if(empty($validator->fail))    {
+					$fruit->update($request->all()->getFillable(['name', 'color', 'sweetness']), $id);
 					if($fruit->affected_rows > 0)    {
-							// set info messagebar after redirect
+						// set info messagebar after redirect
 						$message = ['type'=>'success', 'strong'=>'Success!', 'message'=>'Record with the name: <i><b>'
 							.$request->post->name.'</b></i> is updated in \'Fruits\''];
 						redirect("/fruity", $message);   // redirect
 					}
 				}
 				else    {   // validation failed
-					$this->failMessages = (object)$validator->fails['fail'];  // push validation-errors to view
+					$this->failMessages = (object)$validator->failMessage;  // push validation-errors to view
 					back();
 				}
 			}
-			elseif(empty($request->post))
+			elseif(empty($request->$method))
 			{            // geen submit, dan select=sql --> gekregen waarden in POST zetten
 				$this->populate = $fruit->find($id)->get();    // $id  == $request->get->p1
 				// $this->populate = $fruit->find($id)->get(['id','name','color','sweetness']); // $id  == $request->get->p1

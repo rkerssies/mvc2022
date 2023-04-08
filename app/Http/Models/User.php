@@ -11,7 +11,13 @@
 	class User extends Model
 	{
 		//protected $table = 'other_tablename_than "fruits"';
-		protected $hidden       = ['password'];
-		protected $fillables    = ['username', 'password', 'profile', 'forgot_hash'];
-
+		protected $hidden       = ['password', 'token'];
+		protected $fillables    = ['username', 'password', 'profile', 'forgot_hash', 'token'];
+		
+		
+		public function getFillables()
+		{
+			return $this->fillables;
+		}
+		
 	}

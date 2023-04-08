@@ -21,6 +21,8 @@
 * route definde by array: controller-name, action and optional array with middleware-classnames
  **/
 	
+	/// make url-paths without params/options/wildcards must be UNIQUE !
+
 	return
 	[
 		'get@/articles'			        => ['article','index'],
@@ -28,16 +30,17 @@
 		
 		'get@/gallery'			        => ['gallery','photos'],
 		
-		'get@/fruits'                   => ['fruit','index', ['login', 'rbac' ]], // middleware; login and rbac are called
-		'get@/fruits2'                  => ['fruit','index2', ['login', 'rbac'=> ['value1', 'value2'] ]],
-		'get-post@/fruit_add'           => ['fruit','add',   ['login' ]],
-		'get-post@/fruit_update/$id'    => ['fruit','update',['login' ]],
-		'get@/fruit_delete/$id'	        => ['fruit','delete',['login' ]],
-		
-		'get@/fruity'                   => ['fruit2', 'index'],      // usage of Eloquent-alike with bind-params
+
 		'get-post@/fruity_add'          => ['fruit2','add'],         // usage of Eloquent-alike with bind-params and csrf
-		'get-post@/fruity_update/$id'   => ['fruit2','update'],
+		'get-put@/fruity_update/$id'    => ['fruit2','update'],
 		'get@/fruity_delete/$id'	    => ['fruit2','delete'],
+		'get@/fruity'                   => ['fruit2', 'index'],      // usage of Eloquent-alike with bind-params
+		
+		'get-post@/fruit_add'           => ['fruit','add',   ['login' ]],
+		'get-put@/fruit_update/$id'    => ['fruit','update',['login' ]],
+		'get@/fruit_delete/$id'	        => ['fruit','delete',['login' ]],
+		'get@/fruits2'                  => ['fruit','index2', ['login', 'rbac'=> ['value1', 'value2'] ]],
+		'get@/fruits'                   => ['fruit','index', ['login', 'rbac' ]], // middleware; login and rbac are called
 		
 		'get@/user'	                    => ['user','show', ['login']],
 		'get-post@/login'	            => ['login','show'],
@@ -45,6 +48,7 @@
 		'get-post@/forgot'	            => ['login','forgotPass'],        // forgot password
 		
 		'get@/'					        => ['article','index'],     // last option and request on root domain-url
+		
 	];
 	
 	
