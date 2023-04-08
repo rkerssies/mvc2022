@@ -29,13 +29,11 @@
 				$this->Model = new $this->nsModel();
 			}
 			$this->model    = response()->requestParams->model;
-			
 			$this->method   = request()->method;
-			
 		}
 		
 		//TODO if RBAC on route , then check if valid!
-		//TODO check on rollen, als rol inresponse staat dan is deze gebruikt - check als rol (RBAC) is ok
+		//TODO check on rolles and permissions with RBAC
 		
 		public function all()
 		{
