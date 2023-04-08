@@ -64,7 +64,7 @@
 					'status'        =>$this->status,           // html response-status
 					'message'       =>$this->message,          // readable message
 					'model'         =>$this->model,
-					'hiddenkeys'        => response('hiddenfields'),    // fields marked to be hidden in model
+					'hiddenkeys'    =>request()->hiddenfields,    // fields marked to be hidden in model
 					'validation'    =>$this->validation,       // if invalid data is submitted
 					'count'         =>$this->count,            // count of records requested
 					'total'         =>$this->total,            // count of all posible records in request

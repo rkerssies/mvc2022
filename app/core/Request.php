@@ -20,6 +20,7 @@
 //		public $patch;
 //		public $delete;
 		public $message;
+		public $hiddenfields      = null;
 		
 		
 		public static function getInstance() { // no constructor in Singleton
@@ -200,6 +201,13 @@
 				back();    // if create own response on rexpired csrf-token
 			}
 			
+			return true;
+		}
+		
+		public function setKey($key, $value)
+		{
+			$this->obj = self::getInstance();
+			$this->obj->$key = $value;
 			return true;
 		}
 	}

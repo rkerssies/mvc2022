@@ -127,7 +127,6 @@
 					$this->sendResponse();
 				}
 			}
-
 			$this->data         = false;
 			$this->status       = 400;
 			$this->message      = 'No record inserted into Model: '.ucfirst(response()->requestParams->model);
@@ -137,19 +136,25 @@
 		
 		public function delete()
 		{
-//TODO CHECK IF RECORD EXISTS ????!!!!
-			if($this->Model->delete(request()->delete->id))
-			{
+			$result = $this->Model->delete(request()->delete->id);
+			if($result == true && $this->Model->affected_rows == 1) {   // record found and deleted
 				$this->data     = true;
 				$this->success  = true;
 				$this->status   = 201;
 				$this->message  ='Record deleted from Model: '.ucfirst(response()->requestParams->model).' with id: '.request()->get->p3;
 				$this->affected = 1;
 			}
-			else {
-				$this->data         = false;
-				$this->status       = 400;
-				$this->message      = 'No record deleted from Model: '.ucfirst(response()->requestParams->model).' with id: '.request()->get->p3;
+			elseif($result == true && $this->Model->affected_rows == -1)  {     // non existing record to delete
+				$this->data     = false;
+				$this->success  = false;
+				$this->status   = 400;
+				$this->message  ='No record found to deleted on Model: '.ucfirst(response()->requestParams->model).' with id: '.request()->get->p3;
+				$this->affected = 0;
+			}
+			else    {
+				$this->data      = false;
+				$this->status    = 400;
+				$this->message   = 'No record deleted from Model: '.ucfirst(response()->requestParams->model).' with id: '.request()->get->p3;
 			}
 			$this->sendResponse();
 		}
@@ -170,7 +175,7 @@
 
 				if($this->Model->update($request->getFillable($this->Model->getFillables()), request()->get->p3))
 				{
-					if($this->Model->affected_rows == -1)   {   // nothing changed
+					if($this->Model->affected_rows == -1)   {   // nothing changed; submitted-data corresponds with the stored-data
 						$this->success  = true;
 						$this->status       = 200;
 						$this->message      = 'No changes to update on record in Model: '.ucfirst(response()->requestParams->model).' with id: '.request()->get->p3;
@@ -185,7 +190,6 @@
 					$this->sendResponse();
 				}
 			}
-
 			$this->status       = 400;
 			$this->message      = 'No record updated in Model: '.ucfirst(response()->requestParams->model).' with id: '.request()->get->p3;
 			$this->validation = (object)$validator->fails;
@@ -232,10 +236,5 @@
 			$this->message  = 'Unauthorized, invalid API-account provided';
 			$this->validation = (object)$validator->fails['fail'];
 			$this->sendResponse();
-		}
-		
-		public function base()
-		{
-			die('end');
 		}
 	}

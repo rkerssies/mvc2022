@@ -9,7 +9,8 @@
 	namespace Http\Models;
 	
 //	use lib\db\mysqliDB;
-	use lib\db\mysqliBind as mysqliDB;
+use core\Request;
+use lib\db\mysqliBind as mysqliDB;
 	
 	class Model
 	{
@@ -141,7 +142,7 @@
 
 				if(!empty($this->hidden) && is_array($this->hidden)) { // remove all hidden fields mentioned in Model
 					$arrayFieldnames = array_diff($arrayFieldnames, $this->hidden);
-					response_set('hiddenfields', $this->hidden);
+					request()->setKey('hiddenfields',  $this->hidden);
 				}
 				
 				if(($this->dbObject->num_rows > 1 || $this->getList == true) ) { // filter-out hidden fields of multiple records data
