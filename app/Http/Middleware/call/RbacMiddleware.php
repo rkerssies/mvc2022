@@ -16,7 +16,7 @@
 			// dd( $param .' - '.$param2 );
 			// (optional: params received from route-middleware,
 			// called like: ['controller','action', ['mw-name'=> ['value1', 'value2'] ]],
-			
+			response_set('params MiddleWare given from Route-file', ['param1'=>$param, 'param2'=>$param2]);
 			
 			// NO return required
 		}

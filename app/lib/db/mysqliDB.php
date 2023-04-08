@@ -12,12 +12,12 @@
 	{
 		private static $instance = null;
 		private $conn;
-		public $num_rows=null;
-		public $affected_rows=null;
-		public $fieldnames = null;
-		public  $valueArray = [];
-		public  $values = null;  ///
-		public $inserted_id = null;
+		public $num_rows        =null;
+		public $affected_rows   = null;
+		public $fieldnames      = null;
+		public  $valueArray     = [];
+		public  $values         = null;  ///
+		public $inserted_id     = null;
 		
 		
 		public function __construct($host = null, $user = null, $pass = null, $dbname = null)
@@ -62,34 +62,31 @@
 			
 			$result=$this->conn->query($sql);
 
-			$this->num_rows=0;
+			$this->num_rows     = 0;
 			if(!is_bool($result))
 			{
-				$this->num_rows=mysqli_num_rows($result);
+				$this->num_rows     = mysqli_num_rows($result);
 			}
-			if(is_bool($result))
-			{
-				$this->affected_rows=mysqli_affected_rows($this->conn);
+			if(is_bool($result))    {
+				$this->affected_rows = mysqli_affected_rows($this->conn);
 				if($this->affected_rows == 0) {
 					return false;
 				}
 				return $result;     // true or false from; select and CRUD
 			}
-			elseif($this->num_rows>=0)
-			{
+			elseif($this->num_rows>=0)      {
 				$collection=[];
-				while($row=$result->fetch_assoc())
+				while($row = $result->fetch_assoc())
 				{
-					$collection[]=(object)$row;
+					$collection[]   = (object)$row;
 				}
-				if($this->num_rows==1 && $list == false)  // return also a singel record
+				if($this->num_rows == 1 && $list == false)  // return also a singel record
 				{
 					return $collection[0];
 				}
 				return $collection;
 			}
-			else
-			{
+			else    {
 				error(422);     // header('Location:views/errors/422.html');
 			}
 			return false;
