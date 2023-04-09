@@ -1,5 +1,5 @@
 # mvc2022 
-v2.2 (renewed and stable @ 2023-04-10)  <img title="new release" alt="new version relase" height="15px" src="ReadMe/images/new.png">
+v2.2 (renewed and stable @ 2023-04-10)  <img title="new release" alt="new version relase" height="25px" src="ReadMe/images/new.png">
 
 
 ## Basic MVC-framework for educational purposes
