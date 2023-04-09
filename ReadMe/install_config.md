@@ -41,7 +41,7 @@ To get <b>MVC20022</b> on your own domain, take the following steps:
     </Directory>
 </VirtualHost>
 ```
-NB: enter your domain-name within the dubble curly braces ( {{{} ). This must be matching with the domain in de host-file and the domain in the config-file.
+NB: enter your domain-name within the dubble curly braces ( {{ }} ). This must be matching with the domain in de host-file and the domain in the config-file.
 NB: uri-parts with curly braces ( {} ) need to be altered with actual path.
 * REBOOT your webserver
 
