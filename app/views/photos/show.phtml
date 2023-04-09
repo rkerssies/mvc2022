@@ -6,14 +6,93 @@
 	 * File:    show.phtml
 	 */
 ?>
+
+<link rel="stylesheet" href="<?=url('css/gallery_w3.css')?>">
+
 <h3><?= $title ?></h3>
 <hr>
 <style>.photoimg {height: 200px;}</style>
 <?php
 //	print_r($data);
-	foreach($data as $image_url)
-	{
-		echo '<img class="photoimg" src="'.$image_url.'" >';
-	}
-	
+//	foreach($data as $image_url)
+//	{
+//		echo '<img class="photoimg" src="'.$image_url.'" >';
+//	}
 ?>
+
+    <div class="gallerycontainer">
+		
+<?php
+	$i = 1;
+	$gallery = '';
+        foreach($data as $file)
+		{
+			if(pathinfo($file)['filename'] != '.'){
+				echo '<div class="mySlides">';
+					echo '<div class="numbertext">'.$i++.'/'.count($data).'</div>';
+				echo '<label class="imageName">'.str_replace('_', ' ', pathinfo($file)['filename']).'</label>';
+				
+				echo '<img class="bigPreview" src="'.url($file).'" style="width:100%">';
+				echo '</div>';
+			}
+        }
+		echo '<a class="prev no-underline text-decoration-none" onclick="plusSlides(-1)">';
+			echo '<span class="glyphicon glyphicon-chevron-left"></span>';
+		echo '</a>';
+	
+		echo '<a class="next text-decoration-none" onclick="plusSlides(1)">';
+			echo '<span class="glyphicon glyphicon-chevron-right"></span>';
+		echo '</a>';
+		
+		if(!empty($data)){
+            echo '<div class="caption-container">';
+                echo '<p id="caption"></p>';
+            echo '</div>';
+
+            echo '<div class="gallery_row">';
+		$i = 1;
+		foreach($data as $thumbPath)
+		{
+			if(pathinfo($thumbPath)['filename'] != '.')
+			{
+                echo '<div class="column">';
+                echo '<img class="demo cursor" src="'.url($thumbPath).'" '.		// optional add folder with thumb-images
+					'style="width:100%;   height:120px; object-fit: cover;" onclick="currentSlide('.$i++.')" alt="'.ucfirst($thumbPath->name).'">';
+                echo '</div>';
+			}
+        }
+			echo '</div>';
+		}
+	echo '</div>';
+?>
+
+<script>
+	var slideIndex = 1;
+	showSlides(slideIndex);
+
+	function plusSlides(n) {
+		showSlides(slideIndex += n);
+	}
+
+	function currentSlide(n) {
+		showSlides(slideIndex = n);
+	}
+
+	function showSlides(n) {
+		var i;
+		var slides = document.getElementsByClassName("mySlides");
+		var dots = document.getElementsByClassName("demo");
+		var captionText = document.getElementById("caption");
+		if (n > slides.length) {slideIndex = 1}
+		if (n < 1) {slideIndex = slides.length}
+		for (i = 0; i < slides.length; i++) {
+			slides[i].style.display = "none";
+		}
+		for (i = 0; i < dots.length; i++) {
+			dots[i].className = dots[i].className.replace(" active", "");
+		}
+		slides[slideIndex-1].style.display = "block";
+		dots[slideIndex-1].className += " active";
+		captionText.innerHTML = dots[slideIndex-1].alt;
+	}
+</script>

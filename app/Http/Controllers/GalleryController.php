@@ -13,9 +13,9 @@
 	{
 		public function photos(getFiles $oFile)
 		{
-			//			$oFile = new getFiles();  // same as initiated in params of this method
-			$this->data=$oFile->files('img', 'jpg');
-			$this->title='Gallery !';
-			$this->useView='photos.show';
+			//			$oFile = new getFiles();  // alternative to make object without call objct in method-param
+			$this->data     = $oFile->files('img', 'jpg,jpeg,gif,png');
+			$this->title    = 'Gallery';
+			$this->useView  = 'photos.show';
 		}
 	}
