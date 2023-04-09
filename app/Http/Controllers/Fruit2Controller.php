@@ -27,6 +27,7 @@
 		public function index(Fruit $fruit)
 		{
 			$this->data = (new Fruit())->select()->all()->pagination(5)->get(); // paginate 5 records per page, override config.ini setting
+			$this->meta = (object) ['keywords'=> 'fruity, index, example, paginated, overview', 'description' => 'CRUD overview of paginated records in the fruity database-table.'];
 			$this->useView='fruity.index';
 		}
 		
@@ -46,6 +47,7 @@
 					$this->populate     = request()->post;
 				}
 			}
+			$this->meta = (object) ['keywords'=> 'fruity, adding, example', 'description' => 'CRUD add-form with validation for the fruity database-table.'];
 			$this->useView = 'fruity.add';
 		}
 		
@@ -79,6 +81,7 @@
 			elseif(empty($request->$method))    {              // geen submit yet, query data and place in form-fields
 				$this->populate = $fruit->find($id)->get();    // $id  == $request->get->p1
 			}
+			$this->meta = (object) ['keywords'=> 'fruity, updating, example', 'description' => 'CRUD update-form with validation for the fruity database-table.'];
 			$this->useView = 'fruity.update';
 		}
 		
@@ -95,6 +98,7 @@
 					redirect("/fruity", $message);   // redirect
 				}
 			}
+			$this->meta = (object) ['keywords'=> 'fruity, deleting, example', 'description' => 'CRUD deleting-proces with no confirm-modal for the fruity database-table.'];
 			$this->useView = 'fruity.index';
 		}
 	}

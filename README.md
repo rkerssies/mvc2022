@@ -87,7 +87,8 @@ In this framework the processes and functionality beneath it all are less abstra
   * Structural calling Middleware after controller-action finished
 
 * Services
-  * Calling Services before views (eq: nav, meta-tags for seo, css-linktag and js-tags)
+  * Calling Services before views (eq: nav, meta-tags for seo, css link-tag and js-tags)
+  * Appending meta-tags in head-tag for keyword and description into the layout from the controller-action
   * Smtp-mailer
        * Sending smtp-email with a view-template
        * WEB-server configuration in ini-file

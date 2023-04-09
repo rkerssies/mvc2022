@@ -87,7 +87,7 @@
 			}
 			if($proces == 'up'){
 				Response::class()->middleware = (object) ['middlewareAuto'=> $this->arrayMWauto];
-				//Response::class()->middleware->middlewareCallable =   $this->arrayMWcall;
+//				Response::class()->middleware->middlewareCallable =   $this->arrayMWcall;
 				Response::class()->middleware->middlewareRouteCalled =   $mwRoute;
 				Response::class()->middleware->$proces = true;
 			}

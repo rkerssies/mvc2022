@@ -13,24 +13,20 @@
 	
 	class metaService
 	{
+		public $meta = [];
 		public function call($controllerObj)
 		{
 			// create object with html-header meta-values for SEO-support
-			
 			$meta = (object) [];
 			
+			$meta->keywords = CONFIG['keywords'];
 			if($controllerObj->meta->keywords) {
-				$meta->keywords = CONFIG['keywords'].', '.$controllerObj->meta->keywords;
-			}
-			else {
-				$meta->keywords = CONFIG['keywords'];
+				$meta->keywords .= ', '.$controllerObj->meta->keywords;
 			}
 			
+			$meta->description = CONFIG['description'];
 			if($controllerObj->meta->description) {
-				$meta->description = CONFIG['description'].'. '.$controllerObj->meta->description;
-			}
-			else {
-				$meta->description = CONFIG['description'];
+				$meta->description .= '. '.$controllerObj->meta->description;
 			}
 			
 			if($controllerObj->meta->html_lang) {

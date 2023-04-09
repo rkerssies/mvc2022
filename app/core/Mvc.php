@@ -99,8 +99,7 @@ class mvc
 		}
 		//	view is placed within the layout-method
 		
-		if($this->api == true)
-		{
+		if($this->api == true)      {
 			echo json_encode(['No json-data response received from the ApiCointroller-action !']);
 			die;
 		}
