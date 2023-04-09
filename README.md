@@ -20,7 +20,7 @@ In this framework the processes and functuonality beneath it all are less abstra
   * Views are custom called in controller-action by folder and filename
 
 * Models like Laravel
-  * Models that get just the fillable fieldnames
+  * Models that receives just the fillable fieldnames
   * Optional hidden fields that ar taken out from the response
   * Models with defining custom tablename (other than modelname + s)
   * Chainable methods to build database queries Eloquent-alike, eq:
@@ -90,8 +90,16 @@ In this framework the processes and functuonality beneath it all are less abstra
        * Sending smtp-email with a view-template
        * WEB-server configuration in ini-file
        * Email-preview on screen-dump on flag in ini-file
-  * Artibuild
-      * An (basic) Artisan-alike terminal-command to create all kinds of MVC2022 controllers, models and views
+* API
+  * Model-name in url triggers controller-method
+  * Action: all, find by id, insert, update and delting records
+  * Optional: pagination
+  * Validation on submitted-data by fillable keys in Models 
+  * oAuth width JWT-token, check token by middleware in route
+  * API-response has one structure with request-data, response-date and meta-data 
+
+* Artibuild
+  * An (basic) Artisan-alike terminal-command to create all kinds of MVC2022 controllers, models and views
 <br>
 <br>
 <div style="display:inline-block; margin: 3px;">
@@ -99,15 +107,14 @@ In this framework the processes and functuonality beneath it all are less abstra
 <img title="example gallery" alt="example gallery" height="150px" src="ReadMe/images/02 find by id.png">
 <img title="example gallery" alt="example gallery" height="150px" src="ReadMe/images/03 gallery.png">
 <img title="example beheer" alt="example beheer" height="150px" src="ReadMe/images/04 administration.png">
-<img title="example login" alt="example login" height="150px" src="ReadMe/images/05 app-hamburgermenu.png">
+<img title="example login" alt="hamburgermenu" height="150px" src="ReadMe/images/05 app-hamburgermenu.png">
 <img title="example app-login" alt="example app-login" height="150px" src="ReadMe/images/06 app-login.png">
-<img title="example app-login" alt="example app-login" height="150px" src="ReadMe/images/07 email dump-example.png">
-<img title="example app-message-bar" alt="example app-login" height="150px" src="ReadMe/images/08 messagebar - pagination.png">
-<img title="example api JWT-token" alt="example app-login" height="150px" src="ReadMe/images/10 api - get token.png">
-<img title="example api paginated results" alt="example app-login" height="150px" src="ReadMe/images/11 api - get paginated.png">
-<img title="example api find by id" alt="example app-login" height="150px" src="ReadMe/images/12 api - get by id.png">
-<img title="example api inserting" alt="example app-login" height="150px" src="ReadMe/images/13 app - inserting record.png">
-<img title="example api meta-structure" alt="example app-login" height="150px" src="ReadMe/images/14 api - meta-data.png">
-<img title="example api validation on insert-update" alt="example app-login" height="150px" src="ReadMe/images/15 api- validation.png">
-
+<img title="example app-login" alt="example email forgotten" height="150px" src="ReadMe/images/07 email dump-example.png">
+<img title="example app-message-bar" alt="example messagebar pagination" height="150px" src="ReadMe/images/08 messagebar - pagination.png">
+<img title="example api JWT-token" alt="example token jwt" height="150px" src="ReadMe/images/10 api - get token.png">
+<img title="example api paginated results" alt="example paginating" height="150px" src="ReadMe/images/11 api - get paginated.png">
+<img title="example api find by id" alt="example api find" height="150px" src="ReadMe/images/12 api - get by id.png">
+<img title="example api inserting" alt="example api inserting" height="150px" src="ReadMe/images/13 app - inserting record.png">
+<img title="example api meta-structure" alt="example api meta" height="150px" src="ReadMe/images/14 api - meta-data.png">
+<img title="example api validation on insert-update" alt="example api validation" height="150px" src="ReadMe/images/15 api- validation.png">
 </div>
