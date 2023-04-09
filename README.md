@@ -1,13 +1,13 @@
 # mvc2022 
-v2.1 (renewed @ 2023-03)
+v2.2 (renewed and stable @ 2023-04-10)  <img title="new release" alt="new version relase" height="15px" src="ReadMe/images/new.png">
 
 
 ## Basic MVC-framework for educational purposes
 
 This small framework contains many features that Laravel has as well.
-Learing a framework can be overweling in the amount of folders, files and possibilities.
+Learing a framework can be overwhelming in the amount of folders, files and possibilities.
 Junior developers  'can't see the forest for the trees'.
-In this framework the processes and functuonality beneath it all are less abstract and easier to track and learn. 
+In this framework the processes and functionality beneath it all are less abstract and easier to track and learn. 
 
 > Need help to set up your own project websote?<br> Read the helppage: [Guid for installation- and configuration](ReadMe/install_config.md)
 
@@ -55,7 +55,7 @@ In this framework the processes and functuonality beneath it all are less abstra
     * Adding a record (add) with input-validation
     * Altering records (update)with input-validation
     * Deleting a records (delete)
-  * Deliverd with a basic gallery
+  * Deliverd with a basic gallery; [W3 slideshow](https://www.w3schools.com/howto/howto_js_slideshow_gallery.asp)
 
 
 * Security
@@ -63,8 +63,8 @@ In this framework the processes and functuonality beneath it all are less abstra
   * Routes protected with URL-whitelist 
     * Middleware protection on routes (optional for eq: authentication and authorization)
     * Classes, Traits and Inheritance namespaced by an autoloader on the app-folder
-    * Unqiue encryption depending on: App-key
-    * Salt ecryption and decryption
+    * Unique encryption depending on: App-key
+    * Salt encryption and decryption
     * Config in INI-file and accessible via a definition
     * Session fingerprint-protected with IP-check
     * Forms for adding and updating protected with csrf-token
@@ -80,8 +80,8 @@ In this framework the processes and functuonality beneath it all are less abstra
     * Set var in session and retrieving it
 
 * Middleware
-  * Middleware called on routes (optional calling multiple classes)
-  * Structural calling Middleware before initiaating controllers
+  * Middleware called on routes (calling multiple classes with optional params)
+  * Structural calling Middleware before initiating controllers
   * Structural calling Middleware after controller-action finished
 
 * Services
