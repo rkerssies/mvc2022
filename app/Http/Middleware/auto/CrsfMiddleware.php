@@ -12,6 +12,7 @@
 	{
 		public function up()
 		{
+
 			if(request()->get->p0 != 'api') {
 
 				if( strtolower(request()->method) == 'post'
@@ -19,6 +20,7 @@
 					|| strtolower(request()->method) == 'patch')
 				{
 					request()->checkCsrf(); // continues or error-400
+					
 				}
 			}
 //			// NO return required

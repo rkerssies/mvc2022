@@ -15,24 +15,22 @@
 	
 	class LoginController
 	{
-		public function show(LoginRequest $validator, Request $request, User $user)
+		public function show(LoginRequest $validator, Request $request, User $user) //
 		{
-			$request->all();
-			if($request->post->logoff)
+			if($request->all()->post->logoff)
 			{
 				session_destroy();
 				redirect('/');
 			}
-			elseif($request->post->submit)
+			elseif($request->all()->post->submit)
 			{
-				
 				$validator->validator($request->post, 'login'); // call FruitRequest for validation
 				if(!is_array($validator->fails))    {
 					//TODO check for validation on login-form
 				}
-				$userFound=$user->select()
-					->where('username', $request->post->username)
-					->andWhere('password', sha1($request->post->password))
+				$userFound = $user->select()
+					->where('username', $request->all()->post->username)
+					->andWhere('password', sha1($request->all()->post->password))
 					->get(['id','username', 'profile', 'password']); // password is hidden when using models
 				if(isset($userFound->username))
 				{
@@ -56,9 +54,9 @@
 		{
 			$request->all();
 
-			if(!empty($request->post->username))
+			if(!empty($request->all()->post->username))
 			{
-				$this->userFound = $user->select()->where('username',$request->post->username )->get();
+				$this->userFound = $user->select()->where('username',$request->all()->post->username )->get();
 				
 				if( !empty($this->userFound->id ))
 				{
@@ -88,17 +86,16 @@
 		
 		public function changePass(Request $request, NewpassRequest $validator, User $user)
 		{
-			$request->all();
 			///// // renew password for user with valid account
 			if(!empty(session_get('login')) )
 			{
 				$this->id = session_get('login')->id;
-				if(!empty($request->post->submit))
+				if(!empty($request->all()->post->submit))
 				{
-					$validator->validator($request->post, 'newpass'); // call FruitRequest for data-validation
-					$hashedPass= sha1($request->post->password1);
+					$validator->validator($request->all()->post, 'newpass'); // call FruitRequest for data-validation
+					$hashedPass= sha1($request->all()->post->password1);
 					if(empty($validator->fails)) {
-						$hashedPass= sha1($request->post->password2);
+						$hashedPass= sha1($request->all()->post->password2);
 						$user->update(['password'=>$hashedPass], $this->id);
 						header('Location: '.url('/'));
 					}
@@ -111,23 +108,23 @@
 			}
 			
 			//// // renew password without login
-			if(!empty($request->get->p1)) { $this->hash = $request->get->p1; }
+			if(!empty($request->all()->get->p1)) { $this->hash = $request->all()->get->p1; }
 			else {  $this->hash = ''; }
 			$resultFind = $user->select()->where('forgot_hash', $this->hash)->get();
 			$this->id = $resultFind->id;
 			if(!empty($this->hash) && $resultFind == true)  {
-				if(!empty($request->post->submit))
+				if(!empty($request->all()->post->submit))
 				{   // submit received
-					$this->id = $request->post->id;
-					$validator->validator($request->post, 'newpass'); // call FruitRequest for data-validation
+					$this->id           = $request->all()->post->id;
+					$validator->validator($request->all()->post, 'newpass'); // call FruitRequest for data-validation
 					if(empty($validator->fails)) {
-						$hashedPass= sha1($request->post->password2);
+						$hashedPass     = sha1($request->all()->post->password2);
 						(new User())->update(['forgot_hash'=> null, 'password'=>$hashedPass], $this->id); // !! new object
 						header('Location: '.url('/'));
 					}
 					elseif(!empty($validator->fails) && !empty($request->post->id))    {  // validation failed
-						$this->populate=$request;
-						$this->failMessages=(object)$validator->fails['fail'];  // push validation-errors to view
+						$this->populate     = $request->all()->post;
+						$this->failMessages = (object)$validator->fails['fail'];  // push validation-errors to view
 					}
 					elseif(empty($resultFind))
 					{   // no valid Hash, login-session OR hash matched

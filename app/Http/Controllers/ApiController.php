@@ -15,21 +15,30 @@
 	
 	class ApiController extends ApiResponses
 	{
-		public $model   = null;
-		
+		public $model ;
 		public function __construct()
 		{
-			$this->nsModel = 'Http\\Models\\'.ucfirst(response()->requestParams->model);
+			$this->model = strtolower(response()->requestParams->model);
+			$method = strtolower(request()->method);
+			$this->method   = $method;
+			
+			$this->nsModel = 'Http\\Models\\'.ucfirst($this->model);
 			if(request()->get->p1 != 'token' && !class_exists($this->nsModel) && request()->get->p0 != 'api')
 			{
 				$this->message  = 'Requested Model unknown: '.$this->nsModel ;
 				$this->sendResponse();
 			}
-			if(request()->get->p1 != 'token'){
+			if(request()->get->p1 != 'token')
+			{       // path /token doens't sreact for a peticular model in url ( $model )
 				$this->Model = new $this->nsModel();
 			}
-			$this->model    = response()->requestParams->model;
-			$this->method   = request()->method;
+			
+			// setting response-data get && choice of post, put, patch or delete
+			$this->requestData = (object) [];
+			$this->requestData->get = request()->get;
+			if($method != 'get'){
+				$this->requestData->$method = request()->$method;
+			}
 		}
 		
 		//TODO if RBAC on route , then check if valid!
@@ -60,7 +69,7 @@
 			else {
 				$this->success  = true;
 				$this->status   = 200;
-				$this->message  = 'No records found of Model: '.ucfirst(response()->requestParams->model).'. ';
+				$this->message  = 'No records found of Model: '.ucfirst($this->method).'. ';
 				if(!empty($page)) {
 					$this->message  .= 'Paginated page: '.$page.' and max '.$amount.' per page';
 				}
@@ -74,16 +83,17 @@
 			$this->data = $this->Model->find(request()->get->p2)->get();
 			if(!emptY($this->data))
 			{
+				
 				$this->success  = true;
 				$this->status   = 200;
-				$this->message  = 'Record found in Model: '.ucfirst($this->request->get->p1).' with id: '.request()->get->p2;
+				$this->message  = 'Record found in Model: '.ucfirst(request()->get->p1).' with id: '.request()->get->p2;
 				$this->count    = 1;
 				$this->total    = 1;
 			}
 			else {
 				$this->data     = false;
 				$this->status   = 400;
-				$this->message  = 'Record NOT FOUND in Model: '.ucfirst($this->request->get->p1).' with id: '.request()->get->p2;
+				$this->message  = 'Record NOT FOUND in Model: '.ucfirst(request()->get->p1).' with id: '.request()->get->p2;
 			}
 			$this->sendResponse();
 		}
@@ -93,7 +103,7 @@
 			{
 				$this->success  = true;
 				$this->status   = 200;
-				$this->message  = 'First record found in Model: '.ucfirst(response()->requestParams->model);
+				$this->message  = 'First record found in Model: '.ucfirst($this->model);
 				$this->count    = 1;
 				$this->total    = 1;
 			}
@@ -102,35 +112,36 @@
 		
 		public function add()
 		{   // inserts just one record (not multiple)
+
 			$request = new Request();
-			
-			$nsrequest = 'Http\Validation\\'.ucfirst(response()->requestParams->model).'Request';
+
+			$nsrequest = 'Http\Validation\\'.ucfirst($this->model).'Request';
 			$validator = new $nsrequest();
-			$validator->validator($request->all()->post, strtolower(response()->requestParams->model)); // call FruitRequest for data-validation
+			$validator->validator(request()->post, strtolower($this->model)); // call FruitRequest for data-validation
 			//	$validator->validator(request()->post, strtolower(response()->requestParams->model));   // alternative solution, without $request-object
 			if(empty($validator->fails))
 			{
 				if(empty($this->Model->getFillables()))
 				{
-					$this->message = 'No method getFillables in requested Model: '.ucfirst(response()->requestParams->model);
+					$this->message = 'No method getFillables in requested Model: '.ucfirst($this->model);
 				}
 				// if($this->Model->insert(request()->getFillable($this->Model->getFillables())))  // alternative solution, without $request-object
 				if($this->Model->insert($request->getFillable($this->Model->getFillables())))
 				{
 					
-					$this->success  = true;
-					$this->status   = 201;
-					$this->message  = 'Record inserted into Model: '.ucfirst(response()->requestParams->model);
+					$this->success      = true;
+					$this->status       = 201;
+					$this->message      = 'Record inserted into Model: '.ucfirst($this->model);
 
-					$this->affected=1;
-					$this->inserted_id=$this->Model->inserted_id; ///
+					$this->affected     = 1;
+					$this->inserted_id  = $this->Model->inserted_id; ///
 					$this->sendResponse();
 				}
 			}
 			$this->data         = false;
 			$this->status       = 400;
-			$this->message      = 'No record inserted into Model: '.ucfirst(response()->requestParams->model);
-			$this->validation   = (object)$validator->fails;
+			$this->message      = 'No record inserted into Model: '.ucfirst($this->model);
+			$this->validation   = (object) $validator->fails;
 			$this->sendResponse();
 		}
 		
@@ -141,20 +152,20 @@
 				$this->data     = true;
 				$this->success  = true;
 				$this->status   = 201;
-				$this->message  ='Record deleted from Model: '.ucfirst(response()->requestParams->model).' with id: '.request()->get->p3;
+				$this->message  ='Record deleted from Model: '.ucfirst($this->model).' with id: '.request()->get->p3;
 				$this->affected = 1;
 			}
 			elseif($result == true && $this->Model->affected_rows == -1)  {     // non existing record to delete
 				$this->data     = false;
 				$this->success  = false;
 				$this->status   = 400;
-				$this->message  ='No record found to deleted on Model: '.ucfirst(response()->requestParams->model).' with id: '.request()->get->p3;
+				$this->message  ='No record found to deleted on Model: '.ucfirst($this->model).' with id: '.request()->get->p3;
 				$this->affected = 0;
 			}
 			else    {
 				$this->data      = false;
 				$this->status    = 400;
-				$this->message   = 'No record deleted from Model: '.ucfirst(response()->requestParams->model).' with id: '.request()->get->p3;
+				$this->message   = 'No record deleted from Model: '.ucfirst($this->model).' with id: '.request()->get->p3;
 			}
 			$this->sendResponse();
 		}
@@ -163,78 +174,97 @@
 		{   // updates just one record (not multiple)
 			$request = new Request();
 
-			$nsrequest = 'Http\Validation\\'.ucfirst(response()->requestParams->model).'Request';
+			$nsrequest = 'Http\Validation\\'.ucfirst($this->model).'Request';
 			$validator = new $nsrequest();
-			$validator->validator($request->all()->put, strtolower(response()->requestParams->model)); // call FruitRequest for data-validation
+			$validator->validator($request->all()->put, strtolower($this->model)); // call FruitRequest for data-validation
 
 			if(!is_array($validator->fails))
 			{
 				if(empty($this->Model->getFillables())) {
-					$this->message='No method getFillables in requested Model: '.ucfirst(response()->requestParams->model);
+					$this->message='No method getFillables in requested Model: '.ucfirst($this->model);
 				}
 
 				if($this->Model->update($request->getFillable($this->Model->getFillables()), request()->get->p3))
 				{
 					if($this->Model->affected_rows == -1)   {   // nothing changed; submitted-data corresponds with the stored-data
-						$this->success  = true;
+						$this->success      = true;
 						$this->status       = 200;
-						$this->message      = 'No changes to update on record in Model: '.ucfirst(response()->requestParams->model).' with id: '.request()->get->p3;
+						$this->message      = 'No changes to update on record in Model: '.ucfirst($this->model).' with id: '.request()->get->p3;
 					}
 					else {  // update succeeded
-						$this->data     = true;
-						$this->success  = true;
-						$this->status   = 201;
-						$this->message  = 'Record updated in Model: '.ucfirst(response()->requestParams->model).' with id: '.request()->get->p3;
-						$this->affected = 1;
+						$this->data         = true;
+						$this->success      = true;
+						$this->status       = 201;
+						$this->message      = 'Record updated in Model: '.ucfirst($this->model).' with id: '.request()->get->p3;
+						$this->affected     = 1;
 					}
+					
 					$this->sendResponse();
 				}
 			}
 			$this->status       = 400;
-			$this->message      = 'No record updated in Model: '.ucfirst(response()->requestParams->model).' with id: '.request()->get->p3;
-			$this->validation = (object)$validator->fails;
+			$this->message      = 'No record updated in Model: '.ucfirst($this->model).' with id: '.request()->get->p3;
+			$this->validation   = (object) $validator->fails;
 			$this->sendResponse();
 		}
 		
 		
 		
 		////////////// TOKEN //////////////////////////////
-		public function token(Request $request)
+		public function token()
 		{
-			$validator = new UserRequest();
-			$validator->validator(request()->post, strtolower('user')); // call FruitRequest for data-validation
+			$method = strtolower($this->method);
+			$this->request = (object) [];
+			$this->request->$method = request()->$method;
+			if(!empty($requestedData->$method->password)) {
+				$this->request->$method->password = '***hidden***';
+			}
 			$this->model = 'user';
 
 			if(!empty(request()->post->username) && !empty(request()->post->password))
 			{
-				//TODO add validation on submited fields
+				$validator = new UserRequest();
+				$validator->validator(request()->post, strtolower('user')); // call FruitRequest for data-validation
 				if(empty($validator->fail))
 				{
-					$model=new User();
-					$result=$model->select(['id', 'username', 'profile'])
+					$model  = new User();
+					$result = $model->select(['id', 'username', 'profile'])
 						->where('username', request()->post->username)
 						->andWhere('password', sha1(request()->post->password))
 						->get();
-					if($model->num_rows==1)
+
+					if($model->num_rows == 1)
 					{
 						$token=sha1(date('si').CONFIG['app_key'].'ToKeN'.date('lu'));
 						$token.=sha1(date('Hi').CONFIG['app_key'].'InCubics'.date('is'));
 						if((new User())->update(['token'=>$token], $result->id))
 						{
-							$this->data     ="JWT: ".substr($token, 0, 100);
-							$this->success  =true;
-							$this->status   =200;
-							$request->all()->post->password = '***hidden***';
-							$this->message  ='Token created and stored for user: '.$result->username;
-							$this->affected =1;
+							$this->data         ="JWT: ".substr($token, 0, 100);
+							$this->success      = true;
+							$this->requestData  = (object) [];
+							$this->requestData->get  =  request()->get;
+							$this->requestData->post =  request()->post;
+							$this->status       = 200;
+							$this->count        = 1;
+							$this->request      = $requestedData;
+							$this->message      ='Token created and stored for user: '.$result->username;
+							$this->affected     = 1;
+		
 							$this->sendResponse();
 						}
 					}
 				}
 			}
-			$this->status   = 403;
-			$this->message  = 'Unauthorized, invalid API-account provided';
-			$this->validation = (object)$validator->fails['fail'];
+			$this->requestData       = (object) [];
+			$this->requestData->get  =  request()->get;
+			$this->requestData->post =  request()->post;
+			$this->status            = 403;
+			$this->message           = 'Unauthorized, invalid API-account provided';
+			$this->validation        = (object) $validator->fails['fail'];
 			$this->sendResponse();
+		}
+		
+		public function __destruct() {
+		//	return true;
 		}
 	}

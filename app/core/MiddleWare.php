@@ -30,6 +30,7 @@
 		
 		public function run($proces = 'up')
 		{
+
 			//call all Middleware from auto-folder
 			foreach($this->arrayMWauto as $mwFile)
 			{
@@ -44,7 +45,7 @@
 
 				(new $nsMW())->$proces();
 			}
-
+			
 			// run all middleware passed in an array on the current route,
 			// middleware named in requested route in routes/web.php, eq: [ 'fruit','index',['login', 'bla'] ],
 			if(!empty($this->mwRoutes))

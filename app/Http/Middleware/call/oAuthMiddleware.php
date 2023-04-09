@@ -15,11 +15,11 @@
 		// NB: more separate MiddleWare-classes can be made in the ./middleware - folder
 		public function up()
 		{
+		
 			$token = apache_request_headers()['token'];
 			if(empty($token)){
 				$token = request()->get->token;
 			}
-			
 			$user = new User();
 			$result = $user->select(['id', 'username', 'profile'])->where('token', $token )->get();
 			response_set('tokenUser', $result);     // found user in response for usage eq: RBAC

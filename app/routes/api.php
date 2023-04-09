@@ -25,7 +25,7 @@
 	/// make url-paths without params/options/wildcards must be UNIQUE !
 	return
 	[
-		'post@/token'              => ['api','token'],    // request a token by user-account and password :: first otherwise
+		'post@/token'                => ['api','token'],    // request a token by user-account and password :: first otherwise
 		
 		'post@/$model/add'		     => ['api','add',    ['oauth', 'rbac' ]], // check middleware "oAuth" & "rbac"
 		'delete@/$model/delete/#'    => ['api','delete', ['oauth', 'rbac' ]], // param p2 with id, check middleware "oAuth" & "rbac"

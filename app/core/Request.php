@@ -33,7 +33,9 @@
 		public function all()
 		{
 			$this->obj = self::getInstance();
-			unset($this->obj->obj); // remove recursion of result
+			if(!empty($this->obj->obj)){
+				unset($this->obj->obj); // remove recursive key
+			}
 			return $this->obj;
 		}
 		public function make()
@@ -66,7 +68,8 @@
 				if(isset($_GET['id']))   {   // add csrf if provided
 					$out->id = strip_tags(htmlspecialchars($_GET['id']));
 				}
-				if(isset($_POST['csrf']) && request()->get->p0 != 'api')   {   // add csrf if provided
+
+				if(isset(request()->post->csrf) && request()->get->p0 != 'api')   {   // add csrf if provided
 					$out->csrf = strip_tags(htmlspecialchars($_POST['csrf']));
 				}
 				
@@ -115,6 +118,7 @@
 				{
 					$out->$key = strip_tags(htmlspecialchars($value));    // clean input
 				}
+				
 				if(isset($data['csrf']) && request()->get->p0 != 'api')   {   // add csrf if provided
 					$out->csrf = strip_tags(htmlspecialchars($data['csrf']));
 				}
@@ -135,7 +139,8 @@
 				$GLOBALS[$global]       = $out;     // store submitted post-, put-, patch- or delete-data in global
 				$this->obj->$method     = $out;     // make data available in Request data-object
 			}
-			return true;
+			response_set('request' , $this->all());
+			return $this->obj;
 		}
 		
 		public function getFillable(array $fillableFieldnames, $stringify=false)

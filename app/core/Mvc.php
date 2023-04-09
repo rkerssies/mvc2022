@@ -79,16 +79,16 @@ class mvc
 			sessionkey_unset('messagebar');
 		}
 		(new \core\Request())->make();      // Initate request-object
-		
+
 		if($this->route() == false) {
 			error('404');         //die('<h1>404</h1> invalid url');
 		}
-		
 		// call down-methods on used MiddleWare (auto and called)
 		$middlewareObj = new MiddleWare($this->middlewareArray);
 		if(!$middlewareObj->run())    {                        // all MiddleWare-classes in ./middleware/auto automatically UP-method
 			die($middlewareObj->failed->message);
 		}
+
 		if(! $this->controller()) {
 			die($this->message);
 		}
@@ -207,7 +207,6 @@ class mvc
 				return true;          // match found, stop looking for other matches
 			}
 		}
-		
 		// set corresponding controller and action for found route
 		if( empty($this->controller) || empty($this->action))  {  // no matching route found
 			error('404');   //die('<h1>404</h1>');
@@ -246,7 +245,6 @@ class mvc
 			}
 			else {
 				$this->message =  'API-service on the MVC2022-project by InCubics.net (c)'.date('Y').'-'.(date('Y')+1);
-				
 			}
 			Response::class()->status = 404;
 			Response::class()->message = $this->message;
@@ -266,7 +264,7 @@ class mvc
 			Response::class()->message = $this->message;
 			return false;
 		}
-		
+
 		// call action on controller-class
 		if(is_object($this->obj) && method_exists($this->obj, $this->action))
 		{
@@ -281,31 +279,38 @@ class mvc
 				Response::class()->message = $this->message;
 				return false;
 			}
-			
-			$i          = 0;
-			foreach($parameters as $key => $parameter)      {
-				$p_name = ('param'.$i);
-				if(! $parameter->getType()) {   // fill var with data
-					$$p_name = $this->requestParams[$parameter->name];
-					$propertyName = $parameter->name;
-					$this->obj->$propertyName = $this->requestParams[$propertyName]; // making named route-parameters available in view
-				}
-				else { // make instance on typehinted action-parameter
-					$ns = $parameter->getType()->getName();
-					if (! class_exists($ns)) {  // make instace of known namespace
-						$this->message =  'The class '.$ns.'() doen\'t exists';
-						Response::class()->status   = 404;
-						Response::class()->message  = $this->message;
-						return false;
+			if(request()->get->p0 != 'api')
+			{
+				$i=0;
+				foreach($parameters as $key=>$parameter)
+				{
+					$p_name=('param'.$i);
+					if(!$parameter->getType())
+					{   // fill var with data
+						$$p_name=$this->requestParams[$parameter->name];
+						$propertyName=$parameter->name;
+						$this->obj->$propertyName=$this->requestParams[$propertyName]; // making named route-parameters available in view
 					}
-					$$p_name = new $ns();
+					else
+					{ // make instance on typehinted action-parameter
+						$ns=$parameter->getType()
+							->getName();
+						if(!class_exists($ns))
+						{  // make instace of known namespace
+							$this->message='The class '.$ns.'() doen\'t exists';
+							Response::class()->status=404;
+							Response::class()->message=$this->message;
+							return false;
+						}
+						$$p_name=new $ns();
+					}
+					$i++;
 				}
-				$i++;
 			}
+			
 			// function to call controller-action with (optional type-hinted params)
 			call_user_func_array(array($this->obj,$this->action), [$param0,$param1,$param2,$param3,$param4,$param5,$param6]);
 			// alternative way to call action on controller with type-hinted params: $this->obj->$method($param0,$param1,$param2,$param3,$param4 );// call the action on the controller-object
-
 			Response::class()->route->controllerClass   =   ucfirst($this->controller).'Controller';
 			Response::class()->route->controllerRoute   =  $this->controller;
 			Response::class()->route->action            =  $this->action;
@@ -313,7 +318,8 @@ class mvc
 		}
 		elseif(is_object($this->obj) && empty($this->action) && request()->get->p0 == 'api')    // base
 		{
-		die('api action GO');
+			
+			die('api action GO');
 		}
 		else    {
 			$this->message = 'action <b>'.$this->action.'</b> doesn\'t exist in class '.$controller. ' in file: '

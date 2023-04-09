@@ -57,7 +57,7 @@
 				$validator->validator($request->all()->$method, 'fruit'); // call FruitRequest for data-validation
 				
 				if(empty($validator->fails))    {
-					$result = $fruit->update($request->getFillable($fruit->getFillables()), $id);
+					$result = $fruit->update($request->all()->getFillable($fruit->getFillables()), $id);
 					if($result == true && $fruit->affected_rows == -1)      {    // NOT EXISTING id
 						$message = ['type'=>'warning', 'strong'=>'Warning!', 'message'=>'Record to update with id: <i>'
 									.$id. '</i> in \'Fruits\' has NO changes'];
