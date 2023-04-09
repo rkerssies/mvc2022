@@ -127,8 +127,7 @@
 				}
 				// if($this->Model->insert(request()->getFillable($this->Model->getFillables())))  // alternative solution, without $request-object
 				if($this->Model->insert($request->getFillable($this->Model->getFillables())))
-				{
-					
+				{   $this->data         = true;
 					$this->success      = true;
 					$this->status       = 201;
 					$this->message      = 'Record inserted into Model: '.ucfirst($this->model);
@@ -244,6 +243,7 @@
 							$this->requestData  = (object) [];
 							$this->requestData->get  =  request()->get;
 							$this->requestData->post =  request()->post;
+							$this->requestData->post->password =  '***hidden***';
 							$this->status       = 200;
 							$this->count        = 1;
 							$this->request      = $requestedData;
