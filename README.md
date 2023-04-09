@@ -35,6 +35,8 @@ In this framework the processes and functionality beneath it all are less abstra
     * optional change output to json-format
   * Database connection for full MySqli params-bind, MySQLi basic usage or PDO
   * Database connection-info stored in config.ini file
+  * Example-page with Controller that uses Mysqli CRUD-queries and
+   <br> a page with CRUD-queries that uses MySqli Bind-Params
 
 * Views and Layouts
   * Views handle all var-types from controller-action
