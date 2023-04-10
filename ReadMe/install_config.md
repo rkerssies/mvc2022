@@ -6,7 +6,7 @@ v2.1 (renewed @ 2023-03)
 There are many ways of developing an MVC-framework. MVC2022 is build with processes 
 that are familiair in the PHP Laravel-framework. To have some insight the following process-schema (not UML, sorry) 
 might help to understand the workings of this framework, and some others;<br>
-<img title="mvc-process scheme" alt="mvc-process scheme" src="images/schema mvc-process.png.png">
+<img title="mvc-process scheme" alt="mvc-process scheme" src="./images/schema mvc-process.png">
 
 
 ## Installation- & configuration-guide
