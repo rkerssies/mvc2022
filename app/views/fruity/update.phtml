@@ -9,7 +9,7 @@
 <h2>update FruitY</h2>
 &emsp; <a href="<?= back() ?>"?>back</a>
 
-<form action="<?= url('/fruity_update/'.$id) ?>" method="post">
+<form action="<?= url('/fruity_update/'.$id.currentPath(true)) ?>" method="post">
 	<?=  csrf() ?>
 	<input type="hidden" name="_method" value="PUT">
 	<label class="formLabel">name</label>

@@ -39,7 +39,7 @@
 				if(!is_array($validator->fails))   {                        // validation succes
 					if($fruit->insert($request->all()->getFillable(['name', 'color', 'sweetness'])))    {
 						$message = ['type'=>'success', 'strong'=>'Success!', 'message'=>'Record added to \'Fruits\''];
-						redirect("/fruity", $message);   // redirect
+						redirect("/fruity".currentPath(true), $message);   // redirect
 					}
 				}
 				else    {   // validation failed
@@ -63,13 +63,13 @@
 					if($result == true && $fruit->affected_rows == -1)      {    // NOT EXISTING id
 						$message = ['type'=>'warning', 'strong'=>'Warning!', 'message'=>'Record to update with id: <i>'
 									.$id. '</i> in \'Fruits\' has NO changes'];
-						redirect("/fruity", $message);   // redirect
+						redirect("/fruity".currentPath(true), $message);   // redirect
 					}
 					elseif($result == true && $fruit->affected_rows == 1)    {
 						// set info messagebar after redirect
 						$message = ['type'=>'success', 'strong'=>'Success!', 'message'=>'Record to update with the name: <i><b>'
 							.$request->$method->name.'</b></i> is updated in \'Fruits\''];
-						redirect("/fruity", $message);   // redirect
+						redirect("/fruity".currentPath(true), $message);   // redirect
 					}
 				}
 				else    {   // validation failed
@@ -91,11 +91,11 @@
 			{
 				if($result == true && $fruit->affected_rows == -1)      {    // NOT EXISTING id
 					$message = ['type'=>'warning', 'strong'=>'Warning!', 'message'=>'Record to delete with id: <i>'.$id. '</i> doen\'t exist in \'Fruits\''];
-					redirect("/fruity", $message);   // redirect
+					redirect("/fruity".currentPath(true), $message);   // redirect
 				}
 				elseif($result == true && $fruit->affected_rows == 1)  {    // DELETED
 					$message = ['type'=>'success', 'strong'=>'Success!', 'message'=>'Record with id: <i>'.$id.'</i> is deleted from \'Fruits\''];
-					redirect("/fruity", $message);   // redirect
+					redirect("/fruity".currentPath(true), $message);   // redirect
 				}
 			}
 			$this->meta = (object) ['keywords'=> 'fruity, deleting, example', 'description' => 'CRUD deleting-proces with no confirm-modal for the fruity database-table.'];

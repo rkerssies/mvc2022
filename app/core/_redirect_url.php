@@ -41,9 +41,12 @@
 	}
 	
 	
-	function currentPath()
+	function currentPath($qsa = false)
 	{
-		return $_SERVER['REQUEST_URI'];
+		if($qsa == false)   {
+			return $_SERVER['REQUEST_URI'];     // return complete path with qsa (eq: ?page=3 )
+		}
+		return '?'.explode('?', $_SERVER['REQUEST_URI'])[1];    // return only sqa
 	}
 	
 	
