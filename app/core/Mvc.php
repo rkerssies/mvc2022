@@ -97,7 +97,7 @@ class mvc
 		if(!$middlewareObj->run('down'))   {        // called MiddleWare-classes DOWN-method called by requested route
 			die($middlewareObj->failed->message);
 		}
-		//	view is placed within the layout-method
+		//	view is placed in the layout-method
 		
 		if($this->api == true)      {
 			echo json_encode(['No json-data response received from the ApiCointroller-action !']);
