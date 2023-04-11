@@ -10,7 +10,7 @@
 	Actions in FruitY are made as Eloquent alike queries build with model-methods<br>
 	All queries made with MySqli with bind-params<br>
 	<hr>
-	<a href="<?= url('/fruity_add'.currentPath(true)) ?>">add <i class="bi bi-plus darkblue"></i></a>
+	<a href="<?= url('/fruity_add'.getQsa()) ?>">add <i class="bi bi-plus darkblue"></i></a>
 	&emsp;
 	<a href="<?= url() ?>"?>home <i class="bi bi-house-door-fill darkblue"></i></a>
 	<!-- https://icons.getbootstrap.com -->
@@ -25,10 +25,10 @@
 				echo '<tr>';
 				echo '<td class="leftCel">'.$row->name.'</td>';
 				echo '<td>'.$row->color.'</td>';
-				echo '<td> <a href="'.url('/fruity_update/'.$row->id.currentPath(true)).'">
+				echo '<td> <a href="'.url('/fruity_update/'.$row->id.getQsa()).'">
 								<i class="bi bi-pen-fill darkblue"></i>
 							</a> </td>';
-				echo '<td class="rightCel"> <a href="'.url('/fruity_delete/'.$row->id.currentPath(true)).'">
+				echo '<td class="rightCel"> <a href="'.url('/fruity_delete/'.$row->id.getQsa()).'">
 							<i class="bi bi-trash3-fill text-danger"></i>
 						</a> </td>';
 				echo '</tr>';

@@ -8,7 +8,7 @@
 ?>
 <h2>update Fruit</h2>
 &emsp; <a href="<?= back() ?>"?>back</a>
-<form action="<?= url('/fruit_update/'.$id) ?>" method="post">
+<form action="<?= url(currentPath()) ?>" method="post">
 	<?=  csrf() ?>
 	<input type="hidden" name="_method" value="PUT">
 	<label class="formLabel">name</label>

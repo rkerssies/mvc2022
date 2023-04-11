@@ -10,7 +10,7 @@
 	Actions in Fruit are made with simple MySqli-queries.<br>
 	See 'fruity' (menu-bar) for queries with bind-params<br>
 	<hr>
-	<a href="<?= url('/fruit_add') ?>">add <i class="bi bi-plus darkblue"></i></a>
+	<a href="<?= url('/fruit_add'.getQsa()) ?>">add <i class="bi bi-plus darkblue"></i></a>
 	&emsp;
 	<a href="<?= url() ?>"?>home <i class="bi bi-house-door-fill darkblue"></i></a>
 	<!-- https://icons.getbootstrap.com -->
@@ -23,10 +23,10 @@
 			{
 				echo '<tr>';
 				echo '<td class="leftCel">'.$row->name.'</td>';
-				echo '<td><a href="'.url('/fruit_update/'.$row->id).'">
+				echo '<td><a href="'.url('/fruit_update/'.$row->id.getQsa()).'">
 							<i class="bi bi-pen-fill darkblue"></i>
 							</a> </td>';
-				echo '<td class="rightCel"><a href="'.url('/fruit_delete/'.$row->id).'">
+				echo '<td class="rightCel"><a href="'.url('/fruit_delete/'.$row->id.getQsa()).'">
 							<i class="bi bi-trash3-fill text-danger"></i>
 							</a> </td>';
 				echo '</tr>';

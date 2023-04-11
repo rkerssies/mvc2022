@@ -9,7 +9,7 @@
 <h2>add FruitY</h2>
 &emsp; <a href="<?= back() ?>"?>back</a>
 
-<form action="<?= url('/fruity_add'.currentPath(true)) ?>" method="post">
+<form action="<?= url(currentPath()) ?>" method="post">
 	<?= csrf() ?>
 	<label class="formLabel">name</label>
 	<input name="name" type="text" placeholder="vul in" class=" <?= ( $failMessages->name ) ? 'bg-danger ' : '' ?>"

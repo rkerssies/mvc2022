@@ -26,11 +26,7 @@
 		
 		public function index(Request $request, $bla=null, $bla2=null)
 		{
-			$this->bla2=$bla2;  // if "bla" is passed by router, then it has a value. eq:    /fruit/value/sasa
-			//			dd($request->all());        // example to see all request-data with Request-instance
-//			$this->data = $this->dbClass->querySQL('SELECT * FROM `fruits` ORDER BY `name`');
 			$this->data = (new Fruit())->select()->orderby('name')->get();
-//			 			dd((new Fruit())->allBind('fruits'));// OK
 			$this->useView='fruit.index';
 		}
 		
