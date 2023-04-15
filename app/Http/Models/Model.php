@@ -230,9 +230,9 @@ use lib\db\mysqliBind as mysqliDB;
 				$fields ='';
 				foreach($arrayFieldNames as $key => $fieldName)
 				{
-					$agg = strtolower(substr($key,0, 3));
+					$agg = strtolower(substr($key,0, 5));
 					$fieldNameArgg = $agg.ucfirst($fieldName);
-					if(in_array($agg, ['avg', 'sum', 'min', 'max']))   {   // Aggregate possibilities
+					if(in_array($agg, ['avg', 'sum', 'min', 'max', 'count']))   {   // Aggregate possibilities
 						$fields.= strtoupper($agg).'(`'.$fieldName.'`) AS `'.$agg.ucfirst($fieldName).'`, ';
 						$this->fillables[$fieldNameArgg] = $fieldNameArgg;  // add aggregateRequest to Fillables
 						$this->aggregateKeys[] = $fieldNameArgg;

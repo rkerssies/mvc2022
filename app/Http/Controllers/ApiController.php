@@ -30,6 +30,7 @@
 			}
 			if(request()->get->p1 != 'token')
 			{       // path /token doens't sreact for a peticular model in url ( $model )
+				$this->total = (int) (new $this->nsModel())->select(['count'=>'id'])->get()->countId;
 				$this->Model = new $this->nsModel();
 			}
 			
@@ -64,7 +65,6 @@
 				$this->status   = 200;
 				$this->message  = 'All records of Model: '.ucfirst(request()->get->p1);
 				$this->count    = count($this->data);
-				$this->total    = count($this->data);
 			}
 			else {
 				$this->success  = true;
@@ -88,7 +88,6 @@
 				$this->status   = 200;
 				$this->message  = 'Record found in Model: '.ucfirst(request()->get->p1).' with id: '.request()->get->p2;
 				$this->count    = 1;
-				$this->total    = 1;
 			}
 			else {
 				$this->data     = false;
@@ -105,7 +104,6 @@
 				$this->status   = 200;
 				$this->message  = 'First record found in Model: '.ucfirst($this->model);
 				$this->count    = 1;
-				$this->total    = 1;
 			}
 			$this->sendResponse();
 		}
@@ -133,6 +131,7 @@
 					$this->message      = 'Record inserted into Model: '.ucfirst($this->model);
 
 					$this->affected     = 1;
+					$this->total        = ($this->total + 1);
 					$this->inserted_id  = $this->Model->inserted_id; ///
 					$this->sendResponse();
 				}
@@ -153,6 +152,7 @@
 				$this->status   = 201;
 				$this->message  ='Record deleted from Model: '.ucfirst($this->model).' with id: '.request()->get->p3;
 				$this->affected = 1;
+				$this->total    = ($this->total - 1);
 			}
 			elseif($result == true && $this->Model->affected_rows == -1)  {     // non existing record to delete
 				$this->data     = false;

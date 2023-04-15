@@ -65,7 +65,7 @@
 					//'hiddenkeys'    =>request()->hiddenfields,    // fields marked to be hidden in model
 					'validation'    =>$this->validation,       // if invalid data is submitted
 					'count'         =>$this->count,            // count of records requested
-					'total'         =>$this->total,            // count of all posible records in request
+					'total'         =>$this->total,            // count of all possible records in request
 					'affected'      =>$this->affected,         // count of records affected
 					'inserted_id'   =>$this->inserted_id,      // last id on insert
 					'paginate'      =>$this->paginate,

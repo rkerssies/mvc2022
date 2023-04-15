@@ -26,7 +26,7 @@
 		public $message    = null;
 		public $errors      = null;
 		
-		public static function class() { // no cinstructor in Singleton
+		public static function class() { // no constructor in Singleton
 			
 			if (!self::$instance) {
 				self::$instance = new self();    // or    __CLASS__

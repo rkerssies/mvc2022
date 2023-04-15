@@ -36,9 +36,10 @@ Eloquent-alike data-queries;<br><br>
 	<li>(new Fruit())->select(['avg'=>'sweetness',<br>
 			&emsp;'sum'=> 'sweetness',<br>
 			&emsp;'min'=> 'sweetness',<br>
-			&emsp;'max'=> 'sweetness'])->where('color', 'yellow')->get();   &emsp;// aggregate examples <br>
+			&emsp;'max'=> 'sweetness',<br>
+			'count'=> 'id'])->where('color', 'yellow')->get();   &emsp;// aggregate examples <br>
 	<li>(new Fruit())->select(['color','sweetness'], true)->where('color', 'green')->get();
-	<>(new Fruit())->all()->toJson()->get();
+	<li>(new Fruit())->all()->toJson()->get();
 </ul>
 <li><b>Relations</b></li>
 	<ul>
