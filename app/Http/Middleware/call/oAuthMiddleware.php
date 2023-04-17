@@ -15,19 +15,29 @@
 		// NB: more separate MiddleWare-classes can be made in the ./middleware - folder
 		public function up()
 		{
-		
-			$token = apache_request_headers()['token'];
-			if(empty($token)){
+			$token = null;
+			if(isset(apache_request_headers()['token'])){
+				$token = apache_request_headers()['token'];
+			}
+			elseif(!empty(request()->get->token))   {   // token in url with param 'token', eq: index.php?token=a1b2c3d4
 				$token = request()->get->token;
 			}
-			$user = new User();
-			$result = $user->select(['id', 'username', 'profile'])->where('token', $token )->get();
-			response_set('tokenUser', $result);     // found user in response for usage eq: RBAC
+			
+			if(!empty($token)) {
+				$user = new User();
+				$result = $user->select(['id', 'username', 'profile'])->where('token', $token )->get();
+				response_set('tokenUser', $result);     // found user in response for usage eq: RBAC
+			}
 			
 			$responseObj =new ApiResponses();
-			if(empty($token) || $user->num_rows != 1 ){
+			if(empty($token) ){
 				$responseObj->status = 403;
-				$responseObj->message = "Unauthicated ! No token or valid token is provided in header or get-param with the name 'token'";
+				$responseObj->message = "Unauthicated ! No token is provided in header or get-param with the name 'token'";
+				$responseObj->sendResponse();
+			}
+			elseif($user->num_rows != 1 ){
+				$responseObj->status = 403;
+				$responseObj->message = "Unauthicated ! No valid token is provided in header or get-param with the name 'token'";
 				$responseObj->sendResponse();
 			}
 			
