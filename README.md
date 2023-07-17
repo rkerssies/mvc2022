@@ -11,7 +11,7 @@ Learing a framework can be overwhelming in the amount of folders, files and poss
 Junior developers  'can't see the forest for the trees'.
 In this framework the processes and functionality beneath it all are less abstract and easier to track and learn.
 
-> Need help to set up your own project websote?<br> Read the helppage: [Guid for installation- and configuration](ReadMe/install_config.md)
+> Need help to set up your own project website?<br> Read the helppage: [Guid for installation- and configuration](ReadMe/install_config.md)
 
 
 ### Features in this MVC-framework:
