@@ -6,13 +6,13 @@
 	 * File:    ApiResponses.php
 	 */
 	namespace Http\Controllers\Api;
-	
+
 	use core\Request;
-	
-	class ApiResponses
+
+	class ApiResponses extends \stdClass
 	{
 		protected $objModel = null;
-	
+
 		protected $validatedRequest = null;
 		protected $data     = null;
 		protected $requestData = null;
@@ -29,14 +29,14 @@
 		protected $page     = null;
 		protected $token    = null;
 
-		
+
 		public function sendResponse()
 		{
 			if(empty($this->model)) {
 				$model = response('requestParams')->model;
 				$this->model = $model;
 			}
-			
+
 			if(class_exists('\App\Http\Resources\\'.ucfirst($model).'Resource'))    {
 				$nsResource ='App\Http\Resources\\'.ucfirst($model).'Resource';
 				$this->data = new $nsResource((object)$this->data);
@@ -55,7 +55,7 @@
 			echo   json_encode(['data' => $this->data, 'request'=> $this->requestData, 'meta'=>$this->getMeta()],JSON_PRETTY_PRINT );
 			die;
 		}
-		
+
 		private function getMeta()
 		{
 			return ['success'       =>$this->success,          // success: true || false

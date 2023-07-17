@@ -5,10 +5,10 @@
 	 * Date:    28/06/2022
 	 * File:    lib\db\mysqliDB.php
 	 */
-	
+
 	namespace lib\db;
-	
-	class mysqliDB
+
+	class mysqliDB extends \stdClass
 	{
 		private static $instance = null;
 		private $conn;
@@ -18,8 +18,8 @@
 		public  $valueArray     = [];
 		public  $values         = null;  ///
 		public $inserted_id     = null;
-		
-		
+
+
 		public function __construct($host = null, $user = null, $pass = null, $dbname = null)
 		{
 			if(empty($host) && empty($user) && empty($pass) && empty($dbname) ) {
@@ -31,8 +31,8 @@
 				die("Connection failed: ".$this->conn->connect_error);
 			}
 		}
-		
-		
+
+
 		public static function getInstance()
 		{ // no constructor in Singleton
 			if (!self::$instance) {
@@ -55,11 +55,11 @@
 				die("Connection failed: ".$this->conn->connect_error);
 			}
 		}
-		
+
 		public function querySQL($sql, $list = false)
 		{
 			self::getInstance();
-			
+
 			$result=$this->conn->query($sql);
 
 			$this->num_rows     = 0;

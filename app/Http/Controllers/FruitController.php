@@ -4,32 +4,32 @@
 	 * Author:  InCubics
 	 * Date:    20/12/2022
 	 */
-	
+
 	namespace Http\controllers;
-	
+
 	use core\FormRequests;
 	use core\Request;
 	use Http\Models\Fruit;
 	use lib\db\mysqliDB;
-	
+
 	// validator used in controller.
-	class FruitController
+	class FruitController extends \stdClass
 	{
 		private $dbClass;
 		public $failMessages=[];
-		
+
 		public function __construct()
 		{
 			$this->dbClass = new mysqliDB();
 			// dd( lib\db\pdoDB::query('select * from `fruit`')); // example usage of PDO
 		}
-		
+
 		public function index(Request $request, $bla=null, $bla2=null)
 		{
 			$this->data = (new Fruit())->select()->orderby('name')->get();
 			$this->useView='fruit.index';
 		}
-		
+
 		public function index2(Fruit $fruit)
 		{
 			header('Content-Type: application/json; charset=utf-8');
@@ -38,11 +38,11 @@
 			response_set('params MiddleWare given from Route-file', null);
 			$fruits           = ['requestDataFromModelSql' =>  $fruit->all()];
 			$dataObject       = (object) array_merge($middlewareParams , $fruits);
-		
+
 			echo json_encode($dataObject, JSON_PRETTY_PRINT);
 			die;
 		}
-		
+
 		public function add(Request $request, FormRequests $validator)      // core\Request $request
 		{
 			$request->all();
@@ -68,7 +68,7 @@
 			}
 			$this->useView='fruit.add';
 		}
-		
+
 		public function update(Request $request, FormRequests $validator, $id)
 		{
 			$request->all();
@@ -102,7 +102,7 @@
 			}
 			$this->useView='fruit.update';
 		}
-		
+
 		public function delete(Request $request, $id)
 		{
 			$request->all();

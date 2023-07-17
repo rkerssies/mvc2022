@@ -1,12 +1,12 @@
 <?php
-	
+
 	namespace Http\Controllers;
 	/**
 	 * Project: MVC2022
 	 * Author:  InCubics
 	 * Date:    20/12/2022
 	 */
-	class ArticleController
+	class ArticleController extends \stdClass
 	{
 		public function index()
 		{
@@ -20,7 +20,7 @@
 			$this->title='All articles';
 			$this->useView='articles.index';
 		}
-		
+
 		public function show(\core\Request $request)
 		{
 			$this->id=$request->all()->get->p1; // param0 from url, eq: article/1
@@ -39,7 +39,7 @@
 				$this->useView='articles.show';
 			}
 		}
-		
+
 		public function add()
 		{
 			//TODO add logic to implement adding article-records
@@ -47,13 +47,13 @@
 				'description' => 'Examples in querying data via MySqli and API.'];
 			$this->useView='articles.add';        // view not created
 		}
-		
+
 		public function update()
 		{
 			//TODO add logic to implement updating article-records
 			$this->useView='articles.edit';       // view not created
 		}
-		
+
 		public function delete()
 		{
 			//TODO add logic to implement deleting article-records

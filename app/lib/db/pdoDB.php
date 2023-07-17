@@ -5,15 +5,15 @@
 	 * Date:    28/06/2022
 	 * File:    lib\db\pdoDB.php
 	 */
-	
+
 	namespace lib\db;
-	
+
 	use \PDO;
-	
-	class pdoDB
+
+	class pdoDB extends \stdClass
 	{
 		private static $_pdo=null;
-		
+
 		private static function getDatabase($host = null, $user = null, $pass = null, $dbname = null)
 		{
 			if(self::$_pdo===null)
@@ -25,7 +25,7 @@
 			}
 			return self::$_pdo;
 		}
-		
+
 		public static function query($query, $parameters=null)
 		{
 //			Database::_toArray($parameters);
@@ -35,7 +35,7 @@
 			$result=$query->fetchAll(pdo::FETCH_ASSOC);
 			return $result;
 		}
-		
+
 		private static function _toArray(&$parameters)
 		{
 			if(!is_array($parameters))
@@ -43,15 +43,15 @@
 				$parameters=array($parameters);
 			}
 		}
-		
+
 		private function __construct()
 		{
 		}
-		
+
 		private function __clone()
 		{
 		}
-		
+
 		private function __wakeup()
 		{
 		}

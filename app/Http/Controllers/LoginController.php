@@ -4,16 +4,16 @@
 	 * Author:  InCubics
 	 * Date:    20/12/2022
 	 */
-	
+
 	namespace Http\Controllers;
-	
+
 	use core\Request;
 	use Http\Models\User;
 	use Http\Validation\LoginRequest;
 	use Http\validation\NewpassRequest;
 	use lib\mail\Smtp;
-	
-	class LoginController
+
+	class LoginController extends \stdClass
 	{
 		public function show(LoginRequest $validator, Request $request, User $user) //
 		{
@@ -49,7 +49,7 @@
 			}
 			$this->useView='login.show';
 		}
-		
+
 		public function forgotPass(Request $request, User $user)
 		{
 			$request->all();
@@ -57,7 +57,7 @@
 			if(!empty($request->all()->post->username))
 			{
 				$this->userFound = $user->select()->where('username',$request->all()->post->username )->get();
-				
+
 				if( !empty($this->userFound->id ))
 				{
 					$this->hash = date('sY').md5($this->userFound->username).date('i');
@@ -83,7 +83,7 @@
 			}
 
 		}
-		
+
 		public function changePass(Request $request, NewpassRequest $validator, User $user)
 		{
 			///// // renew password for user with valid account
@@ -106,7 +106,7 @@
 				}
 				$this->useView  = 'login.renew'; // view with double new password + Request chack both the same
 			}
-			
+
 			//// // renew password without login
 			if(!empty($request->all()->get->p1)) { $this->hash = $request->all()->get->p1; }
 			else {  $this->hash = ''; }

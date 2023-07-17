@@ -5,10 +5,10 @@
 	 * Date:    28/06/2022
 	 * File:    lib\db\mysqliDB.php
 	 */
-	
+
 	namespace lib\db;
-	
-	class mysqliBind
+
+	class mysqliBind extends \stdClass
 	{
 		private static $instance = null;
 		private $conn;
@@ -23,8 +23,8 @@
 		public  $types      = null;
 		public $inserted_id = null;
 		public $queryString = null;
-		
-		
+
+
 		public function __construct($host = null, $user = null, $pass = null, $dbname = null)
 		{
 			if(empty($host) && empty($user) && empty($pass) && empty($dbname) ) {
@@ -36,7 +36,7 @@
 				die("Connection failed: ".$this->conn->connect_error);
 			}
 		}
-		
+
 		public static function getInstance()
 		{ // no constructor in Singleton
 			if (!self::$instance) {
@@ -44,7 +44,7 @@
 			}
 			return self::$instance;
 		}
-		
+
 
 		public  function connect($host = null, $user = null, $pass = null, $dbname = null)
 		{
@@ -59,7 +59,7 @@
 				die("Connection failed: ".$this->conn->connect_error);
 			}
 		}
-		
+
 		public function PrepereParams($dataArray)
 		{
 			if(empty($dataArray))   {   // no data given to bind
@@ -91,16 +91,16 @@
 					$this->types .= 'b';
 				}
 			}
-			
+
 			$this->values      = rtrim($valueString,' ,' );
 			$this->qMarkString = rtrim($questionMarkString,' ,' );
-			
+
 			if(is_array($this->valueArrayN) &&  is_string($this->types))    {
 				return true;
 			}
 			return false;
 		}
-		
+
 		public function QueryBindParams($prepairedStmt = '', $alwaysReturnList = false)
 		{
 			$stmt = $this->conn->prepare($prepairedStmt);
@@ -111,7 +111,7 @@
 			call_user_func_array(array($stmt, 'bind_param'), $params);
 //				$stmt->bind_param($this->types, $params);
 			}
-			
+
 			$this->conn->query("START TRANSACTION");
 			$stmt->execute();
 			$result = $stmt->get_result();
@@ -128,7 +128,7 @@
 			$this->field_count  = $result->field_count;
 			$this->affected_rows= $stmt->affected_rows;
 			$this->error_list   = $stmt->error_list;
-			
+
 			if($result->num_rows > 0 ) {
 				$data = [];
 				while ($row = $result->fetch_assoc()) {
@@ -138,7 +138,7 @@
 				if($result->num_rows == 1 && $alwaysReturnList != true) {
 					$data = $data[0];   // return single data-set of one record without key 0
 				}
-				
+
 				$this->field_count  = $result->field_count;
 				$this->fieldsInfo   =  $result->fetch_fields();
 				foreach($this->fieldsInfo as $field){
@@ -152,7 +152,7 @@
 				if(!empty($stmt->insert_id) && is_numeric($stmt->insert_id)) {  // last inserted ID
 					$this->inserted_id = $stmt->insert_id;
 				}
-	
+
 
 				$this->erven = $result;
 				return true;
@@ -161,7 +161,7 @@
 				$this->affected_rows = "-1";
 				return true;
 			}
-			
+
 			return false;
 		}
 	}

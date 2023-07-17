@@ -4,33 +4,33 @@
 	 * Author:  InCubics
 	 * Date:    20/12/2022
 	 */
-	
+
 	namespace Http\Controllers;
-	
+
 	use core\Request;
 	use Http\Models\Fruit;
 	use Http\Validation\FruitRequest;
 	use Http\Models\User;       // used in data-query examples in index-method
-	
+
 	use lib\mail\Smtp;
-	
-	class Fruit2Controller
+
+	class Fruit2Controller extends \stdClass
 	{
 		private $dbClass;
 		public $failMessages=[];
-		
+
 		public function __construct()
 		{
 			//
 		}
-		
+
 		public function index(Fruit $fruit)
 		{
 			$this->data = (new Fruit())->select()->all()->pagination(5)->get(); // paginate 5 records per page, override config.ini setting
 			$this->meta = (object) ['keywords'=> 'fruity, index, example, paginated, overview', 'description' => 'CRUD overview of paginated records in the fruity database-table.'];
 			$this->useView='fruity.index';
 		}
-		
+
 		public function add(Fruit $fruit, Request $request, FruitRequest $validator)      // core\Request $request
 		{
 			if(isset($request->all()->post->submit))
@@ -50,14 +50,14 @@
 			$this->meta = (object) ['keywords'=> 'fruity, adding, example', 'description' => 'CRUD add-form with validation for the fruity database-table.'];
 			$this->useView = 'fruity.add';
 		}
-		
+
 		public function update(Fruit $fruit, Request $request, FruitRequest $validator, $id)
 		{
 			$method = strtolower(request()->method);    // possibility for: put, patch or post
 			if(isset($request->all()->$method->submit))
 			{ //  submitted, chack validation-form and sql-update
 				$validator->validator($request->all()->$method, 'fruit'); // call FruitRequest for data-validation
-				
+
 				if(empty($validator->fails))    {
 					$result = $fruit->update($request->all()->getFillable($fruit->getFillables()), $id);
 					if($result == true && $fruit->affected_rows == -1)      {    // NOT EXISTING id
@@ -84,7 +84,7 @@
 			$this->meta = (object) ['keywords'=> 'fruity, updating, example', 'description' => 'CRUD update-form with validation for the fruity database-table.'];
 			$this->useView = 'fruity.update';
 		}
-		
+
 		public function delete(Fruit $fruit, $id)
 		{
 			if(is_numeric($id) && $result = $fruit->delete($id))
