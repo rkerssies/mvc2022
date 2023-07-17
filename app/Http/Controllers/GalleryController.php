@@ -6,10 +6,10 @@
 	 */
 
 	namespace Http\Controllers;
-	
+
 	use lib\files\getFiles;
-	
-	class GalleryController
+
+	class GalleryController extends \stdClass
 	{
 		public function photos(getFiles $oFile)
 		{

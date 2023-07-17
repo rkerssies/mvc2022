@@ -5,12 +5,12 @@
 	 * Date:    09/07/2022
 	 * File:    Session.php
 	 */
-	
+
 	namespace core;
-	
+
 	use lib\encrypt\Salt;
-	
-	class Session
+
+	class Session extends \stdClass
 	{
 		private $salt   = null;
 		public function __construct()
@@ -33,7 +33,7 @@
 				$_SESSION['finger'] = $saltObject->encryptSalt(json_encode( $session));
 			}
 		}
-		
+
 		public function run()
 		{   // check stored fingerprint
 			$saltObject = new Salt();
@@ -44,7 +44,7 @@
 			else {
 				$sessionAdrr = $_SERVER['REMOTE_ADDR'];             // contains client IP-address
 			}
-			
+
 			if($sessionAdrr != $session->REMOTE_ADDR             // check on same ip
 				|| $_SERVER['HTTP_USER_AGENT'] != $session->HTTP_USER_AGENT ) {   // check on same browser
 				//options: adding register and bann ip-address.  // $_SERVER['REMOTE_ADDR']

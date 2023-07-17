@@ -6,31 +6,32 @@
 	 * File:    MiddleWare.php
 	 */
 	namespace core;
-	
+
 	use lib\files\getFiles;
-	
-	class MiddleWare
+
+	class MiddleWare extends \stdClass
 	{
 		/*
 		 *  Middlewares forms a CHAIN between the request and the controller to its execution and response.
 		 *  The request/response objects are free to modify. It's possible to log something, modify the response, redirect, etc.
 		 */
-		
+
 		private $middlewareObjects = [];
 		public $failed = null;
-		
+
 		public function __construct($middlewareArray = null)
 		{
 			$this->mwRoutes = $middlewareArray; // midddleWare called on route
-			
+
 			// read and initiate all the MiddleWare-classes in ./app/middleware
 			$this->arrayMWauto = (new getFiles())->files('../app/Http/Middleware/auto', 'php');
 			$this->arrayMWcall = (new getFiles())->files('../app/Http/Middleware/call', 'php');
 		}
-		
+
 		public function run($proces = 'up')
 		{
 
+            $mwRoute = null;
 			//call all Middleware from auto-folder
 			foreach($this->arrayMWauto as $mwFile)
 			{
@@ -45,7 +46,6 @@
 
 				(new $nsMW())->$proces();
 			}
-			
 			// run all middleware passed in an array on the current route,
 			// middleware named in requested route in routes/web.php, eq: [ 'fruit','index',['login', 'bla'] ],
 			if(!empty($this->mwRoutes))
@@ -58,7 +58,7 @@
 						$dataParams = $mwFile;
 						$mwFile = $key;
 					}
-					
+
 					$nsMW='Http\Middleware\call\\'.ucfirst($mwFile).'Middleware';
 					$mwRoute[] = $nsMW;
 					if(!class_exists($nsMW)) {  // check if middleware-class exists
@@ -82,7 +82,7 @@
 					}
 					$objMw = new $nsMW();
 					call_user_func_array([$objMw,$proces], $dataParams);    // call midleWare-class with (optional) params
-					
+
 				}
 			}
 			if($proces == 'up'){

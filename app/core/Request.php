@@ -5,12 +5,12 @@
 	 * Date:    29/06/2022
 	 * File:    Request.php
 	 */
-	
+
 	namespace core;
-	
+
 	use lib\encrypt\Salt;
-	
-	class Request
+
+	class Request extends \stdClass
 	{
 		private static $instance = null;
 		public $method;
@@ -21,15 +21,15 @@
 //		public $delete;
 		public $message;
 		public $hiddenfields      = null;
-		
-		
+
+
 		public static function getInstance() { // no constructor in Singleton
 			if (!self::$instance) {
 				self::$instance = (new self());    // or    __CLASS__
 			}
 			return self::$instance;
 		}
-		
+
 		public function all()
 		{
 			$this->obj = self::getInstance();
@@ -56,7 +56,7 @@
 				}
 				$message = 'GET request-data cleaned';
 			}
-			
+
 		/// POST /////////////////////////////////
 			if(!empty($_POST) && empty($_POST['_method']))
 			{
@@ -72,13 +72,16 @@
 				if(isset(request()->post->csrf) && request()->get->p0 != 'api')   {   // add csrf if provided
 					$out->csrf = strip_tags(htmlspecialchars($_POST['csrf']));
 				}
-				
+
 				if(!empty((array) $out) && $method == 'POST'){
 					$message .= ' & POST request-data cleaned';
 				}
 			}
-			
+
 		/// PUT - PATCH - DELETE /////////////////////////////////
+			if(empty($_POST['_method'])) {
+				$_POST['_method'] = 'GET';
+			}
 			if(strtoupper($_POST['_method'])     == 'PUT'
 				|| strtoupper($_POST['_method']) == 'PATCH'
 				|| strtoupper($_POST['_method']) == 'DELETE'
@@ -118,11 +121,11 @@
 				{
 					$out->$key = strip_tags(htmlspecialchars($value));    // clean input
 				}
-				
+
 				if(isset($data['csrf']) && request()->get->p0 != 'api')   {   // add csrf if provided
 					$out->csrf = strip_tags(htmlspecialchars($data['csrf']));
 				}
-				
+
 				if(!empty((array) $out) && $method != 'POST'){
 					$message .= ' & '.$method.' request-data cleaned';
 				}
@@ -142,7 +145,7 @@
 			response_set('request' , $this->all());
 			return $this->obj;
 		}
-		
+
 		public function getFillable(array $fillableFieldnames, $stringify=false)
 		{
 			//$this->obj = self::getInstance();
@@ -169,7 +172,7 @@
 			}
 			return $out;
 		}
-		
+
 		//// CSRF
 		/*      set CSRF-token in session and return form input-tag
 		*		Check in lib\db\Model on Insert- and Update-method (and Delete) if csrf-token is valid
@@ -180,18 +183,18 @@
 			$saltObject = new Salt('customCSRF_4_privateKey'.CONFIG['app_key']);
 			$secret = $saltObject->generateSecret('60');
 			$csrf[$secret] = date('Y-m-d H:i:s');
-			
+
 			$_SESSION['csrf'] = $saltObject->encryptSalt(json_encode( $csrf)); // store CSRF-token in session
-			
+
 			return '<input type="hidden" name="csrf" value="'.$secret.'" >'; // return input-tag to add in form, via helper-function csrf()
 		}
-		
+
 		public function checkCsrf($postData = [])
 		{
 			$method = strtolower(request()->method);
 			$saltObject = new Salt('customCSRF_4_privateKey'.CONFIG['app_key']);
 			$csrfSession = (array) json_decode($saltObject->decryptSalt($_SESSION['csrf']));
-			
+
 			if(empty($postData)) {
 				$postData = request();
 			}
@@ -199,7 +202,7 @@
 			if(! array_key_exists(request()->$method->csrf, $csrfSession))  {
 				error('403');   // Unauthorized! None or an invalid csrf-token found in session
 			}
-			
+
 			$to_time = strtotime(date('Y-m-d H:i:s'));
 			$from_time = strtotime($csrfSession[$postData->$method->csrf]);
 
@@ -208,7 +211,7 @@
 			}
 			return true;
 		}
-		
+
 		public function setKey($key, $value)
 		{
 			$this->obj = self::getInstance();

@@ -5,16 +5,16 @@
 	 * Date:    29/06/2022
 	 * File:    Mvc.php
 	 */
-	
+
 	namespace core;
-	
+
 	use core\Session;
 	use core\Response;
 	use core\Request;
 	use lib\files\getFiles;
 	use lib\encrypt\Salt;
-	
-class mvc
+
+class mvc extends \stdClass
 {
 	private $config;                        // contains all init-configuration
 	public $controller          = null;     // updates in route-method
@@ -47,18 +47,18 @@ class mvc
 		$parts = parse_ini_file('../app/config/config.ini');    // get config-data in constant-var
 		$this->config = (object) $parts;
 		define( 'DB', $parts['db']); // config-db available in whole framework
-		unset($parts['db']);
+//unset($parts['db']);
 		define( 'SMTP', $parts['smtp']); // config-db available in whole framework
-		unset($parts['smtp']);
+//unset($parts['smtp']);
 		define( 'CONFIG', $parts);  // config-constants available in whole framework
-		
+
 		/* Bootsrap reads all files in core-folder for eq: Request-class, Middleware-class and
 		 *  a singleton Response-class as dataobject and other classes
 		 * Also several helper-functions are read */
 		if($this->bootstrap('../app/core') == false)  {
 			die('error: failed bootstrap');
 		}
-		
+
 		/*
 		 *  Encrypted fingerprint (remote ipaddress + browser + due-time)
 		 *  additional security on session-id
@@ -66,7 +66,7 @@ class mvc
 		if(! (new Session())->run())    {
 			die('FATAL !  Session hijack');
 		}
-		
+
 	}
 
 	/* Main front-entrance of the application */
@@ -92,27 +92,27 @@ class mvc
 		if(! $this->controller()) {
 			die($this->message);
 		}
-		
+
 		// call down-methods on used MiddleWare (auto and called)
 		if(!$middlewareObj->run('down'))   {        // called MiddleWare-classes DOWN-method called by requested route
 			die($middlewareObj->failed->message);
 		}
 		//	view is placed in the layout-method
-		
+
 		if($this->api == true)      {
 			echo json_encode(['No json-data response received from the ApiCointroller-action !']);
 			die;
 		}
-		
+
 		// call configured layout according to config.ini
 		 if(! $this->layout())  {
 			 die($this->message);
 		 }
 
 	}
-	
+
 	///////////////////////////////////////////////////////
-	
+
 	/*
 	 *      Method used for reading all class-files and helper-functions in app/core
 	 */
@@ -123,7 +123,7 @@ class mvc
 		}
 		return true;
 	}
-	
+
 	/*
 	 *      Method used for calling the route
 	 */
@@ -136,7 +136,7 @@ class mvc
 		else    {                           // web-routes
 			$routes=include('../app/routes/web.php');
 		}
-		
+
 		$routesValues = array_keys($routes);
 
 		$path = str_replace( (string) $this->config->base_path, '/', (string)  $_SERVER['REQUEST_URI']);
@@ -147,17 +147,17 @@ class mvc
 		Response::class()->route = (object) ['domain'=> $this->config->domain];
 		Response::class()->route->url =   $this->url;
 		Response::class()->route->path =  $this->path;
-		
+
 		$path = explode('?', $path)[0]; // remove QSA from path, if is set. Eq: /fruits/var_value1/var_value2?page=3
 		$givenPathToCheck = ltrim($path, '/');
 		$methodFound = null;
-		
+
 		foreach($routesValues as $route)
 		{
 			$routePatternToCheck = null;
 			$methodsToCheck = ltrim(explode('@', $route)[0], '/');
 			$routePart      = ltrim(explode('@', $route)[1], '/');
-			
+
 			// alter patterns based on route-part to check on path in request-url;
 			$ArrayMethodsToCheck = explode('-', $methodsToCheck);
 			if(in_array(strtolower(request()->method), $ArrayMethodsToCheck))   {
@@ -173,7 +173,7 @@ class mvc
 			$routePatternToCheck = str_replace('/%?', '[/]?[a-zA-Z]*', $routePatternToCheck);
 			$routePatternToCheck = str_replace('/%', '[/]?[a-zA-Z]+', $routePatternToCheck);
 			//$routePatternToCheck = str_replace('/[a-zA-Z0-9-_]+', '[/]?[a-zA-Z0-9-_]+', $routePatternToCheck);
-			
+
 			// check created patern on url-path with optional QSA
 			if(preg_match(',^[/]?'.$routePatternToCheck.'[?]?[a-z0-9&-_=&]*$,', $this->path, $pathFound))   {
 				$pathFound = $pathFound[0];
@@ -184,10 +184,10 @@ class mvc
 					error('405');   //die('<h1>405</h1> method not supported on route-request');
 				}
 				$requestParam = array();
-				
+
 				if(strpos($route, '$'))     {     // if $ in route, then create var-name and its value from url in var.
 					$pathParts = explode('/',$givenPathToCheck);
-					
+
 					foreach(explode('/', $routePart) as $key => $route_param)
 					{
 						if(substr($route_param, 0,1) == '$')    {
@@ -212,8 +212,8 @@ class mvc
 		}
 		return false;
 	}
-	
-	
+
+
 	/*
 	 *      Method 'services' is calling the needed service-class
 	 */
@@ -225,14 +225,14 @@ class mvc
 			$this->message = 'running Services failed on:'.$serviceHandler->failMessage;
 			return false;
 		}
-		
+
 		$this->services = (object) $this->services;
 		foreach( (array) $services as $sName => $serviceValue)  {
 			$this->services->$sName = (object) $serviceValue;  // response Service avaliable in Mvc-object ($this->var) and all views/layout ($var)
 		}
 		return true;
 	}
-	
+
 	/*
 	 *      Method 'controller' calling in the MVC-process
 	 */
@@ -270,7 +270,7 @@ class mvc
 			// Support type-hinted parameter called in controller-action
 			$ReflectionMethod   = new \ReflectionMethod($controller, $this->action);
 			$parameters = $ReflectionMethod->getParameters();
-			
+
 			if(count($parameters) > 5){
 				$this->message = 'action <b>'.$this->action.'</b> can\'t contain more than 5 params in file: '
 								.'../app/Http/Controllers/'.ucfirst($this->controller).'Controller.php';
@@ -306,7 +306,7 @@ class mvc
 					$i++;
 				}
 			}
-			
+
 			// function to call controller-action with (optional type-hinted params)
 			call_user_func_array(array($this->obj,$this->action), [$param0,$param1,$param2,$param3,$param4,$param5,$param6]);
 			// alternative way to call action on controller with type-hinted params: $this->obj->$method($param0,$param1,$param2,$param3,$param4 );// call the action on the controller-object
@@ -317,7 +317,7 @@ class mvc
 		}
 		elseif(is_object($this->obj) && empty($this->action) && request()->get->p0 == 'api')    // base
 		{
-			
+
 			die('api action GO');
 		}
 		else    {
@@ -329,13 +329,13 @@ class mvc
 		}
 		return true;
 	}
-	
+
 	/*
 	 *      Method 'layout' calling in the MVC-process
 	 */
 	private function layout()
 	{
-	
+
 	// get required layout-set, bij default in config.ini ore schedueled
 		$layoutName = $this->config->layoutName;
 		if($this->config->ScheduledLayout == true){
@@ -345,7 +345,7 @@ class mvc
 				$today = new \DateTime(); // Today
 				$beginSchedule = new \DateTime($changeLayout['from']);
 				$endSchedule  = new \DateTime($changeLayout['till']);
-				
+
 				if ($today->getTimestamp() >= $beginSchedule->getTimestamp() &&
 					$today->getTimestamp() < $endSchedule->getTimestamp())
 				{
@@ -354,20 +354,20 @@ class mvc
 			}
 		}
 		$this->layoutName = $layoutName;
-		
+
 		// call Services
 		if(! $this->services($layoutName))  {
 			die($this->message);
 		}
-		
+
 		if(!empty($this->services->pagination->scalar))     {
 			$this->pagination = $this->services->pagination->scalar;
 		}
-		
+
 		// get the required view-file and the params to pass to the view from the controller-action
 		$this->useView($this->obj->useView);
 		$this->params = $this->obj; // object-params available in view-method
-		
+
 		// convert object-properties to variables, eq: '$this->view' becomes '$view' in the view/layout-file
 		foreach((array) $this->services as $key => $service){
 			if($this->services->$key->scalar){
@@ -405,7 +405,7 @@ class mvc
 		}
 		Response::class()->view =  (object) ['view' => $pathView, 'view-path' => 'app/views/'.$this->viewPath.'.phtml'];
 	}
-	
+
 	/*
 	 *      Method 'view' called within the layout-view to pullin views
 	 */

@@ -25,19 +25,33 @@
 			
 			if(!empty($token)) {
 				$user = new User();
-				$result = $user->select(['id', 'username', 'profile'])->where('token', $token )->get();
+				$result = $user->select(['id', 'username', 'profile', 'blocked', 'renew'])->where('token', $token )->get();
+				$responseObj = new ApiResponses();
+//				dd($result);
+				if(!empty($result->blocked))        // timestamp
+				{
+					$responseObj->status = 403;
+					$responseObj->message = "Forbidden ! Blocked account on provided 'token'";
+					$responseObj->sendResponse();
+				}
+				elseif(!empty($result->renew))     // timestamp
+				{
+					$responseObj->status = 403;
+					$responseObj->message = "Forbidden ! First renew password for account on provided 'token'";
+					$responseObj->sendResponse();
+				}
+				
 				response_set('tokenUser', $result);     // found user in response for usage eq: RBAC
 			}
 			
-			$responseObj =new ApiResponses();
 			if(empty($token) ){
-				$responseObj->status = 403;
-				$responseObj->message = "Unauthicated ! No token is provided in header or get-param with the name 'token'";
+				$responseObj->status = 401;
+				$responseObj->message = "Unauthorized ! No token provided in header or get-param";
 				$responseObj->sendResponse();
 			}
 			elseif($user->num_rows != 1 ){
-				$responseObj->status = 403;
-				$responseObj->message = "Unauthicated ! No valid token is provided in header or get-param with the name 'token'";
+				$responseObj->status = 401;
+				$responseObj->message = "Unauthorized ! No valid token is provided in header or get-param with the name 'token'";
 				$responseObj->sendResponse();
 			}
 			

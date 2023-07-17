@@ -1,5 +1,7 @@
-# mvc2022 
-v2.2 (renewed and stable @ 2023-04-10)  <img title="new release" alt="new version relase" height="25px" src="ReadMe/images/new.png">
+# mvc2022
+> v2.2.2 (renewed and stable @ 2023-07-17)  <img title="new release" alt="new version relase" height="25px" src="ReadMe/images/new.png">
+> * compatible with PHP8.2
+> * resolved 'deprecated dynamic properties' and other warnings
 
 
 ## Basic MVC-framework for educational purposes
@@ -7,7 +9,7 @@ v2.2 (renewed and stable @ 2023-04-10)  <img title="new release" alt="new versio
 This small framework contains many features that Laravel has as well.
 Learing a framework can be overwhelming in the amount of folders, files and possibilities.
 Junior developers  'can't see the forest for the trees'.
-In this framework the processes and functionality beneath it all are less abstract and easier to track and learn. 
+In this framework the processes and functionality beneath it all are less abstract and easier to track and learn.
 
 > Need help to set up your own project websote?<br> Read the helppage: [Guid for installation- and configuration](ReadMe/install_config.md)
 
@@ -31,12 +33,12 @@ In this framework the processes and functionality beneath it all are less abstra
     * min,max,sum,avg-aggregates
     * raw
     * oneOnMany, manyOnMany
-    * optional get all realted data within a nested-key 
+    * optional get all realted data within a nested-key
     * optional change output to json-format
   * Database connection for full MySqli params-bind, MySQLi basic usage or PDO
   * Database connection-info stored in config.ini file
   * Example-page with Controller that uses Mysqli CRUD-queries and
-   <br> a page with CRUD-queries that uses MySqli Bind-Params
+    <br> a page with CRUD-queries that uses MySqli Bind-Params
 
 * Views and Layouts
   * Views handle all var-types from controller-action
@@ -45,7 +47,7 @@ In this framework the processes and functionality beneath it all are less abstra
   * Swithing between layouts is possible on a custom schedule
   * External CSS and JS scripts via CDN are configurable in config-files
   * Showing a message in a show-hide animated bar at the top of the screen
-  * Pagination with chained query on Models and buttons by paginatorService 
+  * Pagination with chained query on Models and buttons by paginatorService
 
 * Some build-in feautures;
   * Login-form
@@ -62,7 +64,7 @@ In this framework the processes and functionality beneath it all are less abstra
 
 * Security
   * Routes protected on submit-method (get, post, put, patch ad/or delete)
-  * Routes protected with URL-whitelist 
+  * Routes protected with URL-whitelist
     * Middleware protection on routes (optional for eq: authentication and authorization)
     * Classes, Traits and Inheritance namespaced by an autoloader on the app-folder
     * Unique encryption depending on: App-key
@@ -72,8 +74,8 @@ In this framework the processes and functionality beneath it all are less abstra
     * Forms for adding and updating protected with csrf-token
     * Form-data validation FormRequests on pipe-line seperated strings multiple checks, like:
       *  eq: required, nullable, between, same, string, min, max, reg_ex, alphanum, and more.
-   * Single-point of entry by index-file in public-folder
-   * Public content in public-folder, eq: css, js and images
+  * Single-point of entry by index-file in public-folder
+  * Public content in public-folder, eq: css, js and images
 
   * Helper-functions
     * Request-dataobject and Response-dataobject
@@ -90,21 +92,21 @@ In this framework the processes and functionality beneath it all are less abstra
   * Calling Services before views (eq: nav, meta-tags for seo, css link-tag and js-tags)
   * Appending meta-tags in head-tag for keyword and description into the layout from the controller-action
   * Smtp-mailer
-       * Sending smtp-email with a view-template
-       * WEB-server configuration in ini-file
-       * Email-preview on screen-dump on flag in ini-file
+    * Sending smtp-email with a view-template
+    * WEB-server configuration in ini-file
+    * Email-preview on screen-dump on flag in ini-file
 * API
   * Model-name in url triggers controller-method
   * Action: all, find by id, insert, update and delting records
   * Optional: pagination
-  * Validation on submitted-data by fillable keys in Models 
+  * Validation on submitted-data by fillable keys in Models
   * oAuth width JWT-token, check token by middleware in route
-  * API-response has one structure with request-data, response-date and meta-data 
+  * API-response has one structure with request-data, response-date and meta-data
 
 * Artibuild
   * An (basic) Artisan-alike terminal-command to create all kinds of MVC2022 controllers, models and views
-<br>
-<br>
+    <br>
+    <br>
 <div style="display:inline-block; margin: 3px;">
 <img title="example homepage" alt="example homepage" height="150px" src="ReadMe/images/01 home.png">
 <img title="example gallery" alt="example gallery" height="150px" src="ReadMe/images/02 find by id.png">

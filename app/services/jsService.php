@@ -10,7 +10,7 @@
 
 	use lib\files\getFiles;
 
-	class jsService
+	class jsService  extends \stdClass
 	{
 		public function call()
 		{
@@ -38,16 +38,18 @@
 					$js.='></script>';
 				}
 			}
-			$files = (new getFiles())->files('js', 'js');
-			foreach($files as $file){
-				$js .= '<script src="http';
-				if( isset($_SERVER['HTTPS'] ) ){
-					$js .= 's';
-				}
-				$js.= '://'.$_SERVER['SERVER_NAME'].'/'.
-					rtrim( ltrim($this->config->base_path,'/'),'/').'/'.
-					ltrim($file, './').'"></script>';
-			}
+            $files = (new getFiles())->files('js', 'js');
+            foreach($files as $file){
+                $js .= '<script src="http';
+                if( isset($_SERVER['HTTPS'] ) ){
+                    $js .= 's';
+                }
+                $js.= '://'.$_SERVER['SERVER_NAME'].'/';
+                if(!empty($this->config->base_path)) {
+                    $js .= rtrim(ltrim($this->config->base_path, '/'), '/') . '/';
+                }
+                $js .= ltrim($file, './').'"></script>';
+            }
 			return (string) $js;
 
 		}
