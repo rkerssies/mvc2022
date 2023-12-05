@@ -16,7 +16,7 @@
 		public $failMessage = null;
 		
 		// The is_Regex method is reused by serveral other methods in this class
-		private function is_Regex($value, $regExpr)
+		private function is_Regex($regExpr, $value)
 		{
 			preg_match($regExpr, $value, $aMatches);
 			if(!empty($aMatches[0]))    {
@@ -254,11 +254,6 @@
 		
 ///// add if's with error-messages
 ///
-		protected function is_simpleEmailRegex($value)
-		{
-			$r='/^[A-z0-9-_]+([.][A-z0-9-_]+)*[@][A-z0-9-_]+([.][A-z0-9-_]+)*[.][a-z]{2,4}$/D';
-			return $this->is_Regex($r, $value);
-		}
 		
 		protected function is_Name($value)
 		{
