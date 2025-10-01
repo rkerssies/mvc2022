@@ -3,6 +3,7 @@
 	 * Project: MVC2022.
 	 * Author:  InCubics
 	 * Date:    09/07/2022
+	 * Update:  01/10/2025
 	 * File:    Session.php
 	 */
 

@@ -3,6 +3,7 @@
 	 * Project: PhpStorm.
 	 * Author:  InCubics
 	 * Date:    18/03/2023
+	 * Update:  01/10/2025
 	 * File:    smpt.php
 	 */
 	namespace lib\mail;

@@ -3,7 +3,7 @@
 	 * Project: MVC2022.
 	 * Author:  InCubics
 	 * Date:    29/06/2022
-	 * Update:  29/09/2025
+	 * Update:  01/10/2025
 	 * File:    public\index.php
 	 */
 

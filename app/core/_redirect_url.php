@@ -3,6 +3,7 @@
 	 * Project: MVC2022
 	 * Author:  InCubics
 	 * Date:    20/12/2022
+	 * Update:  01/10/2025
 	 * File: _redirect_url.php
 	 */
 	

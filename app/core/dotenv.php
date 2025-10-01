@@ -3,7 +3,7 @@
 	/**
 	 * Project: MVC2025.
 	 * Author:  InCubics
-	 * Date:    30/09/2025
+	 * Date:    01/10/2025
 	 * File:    dotenv.php
 	 */
 

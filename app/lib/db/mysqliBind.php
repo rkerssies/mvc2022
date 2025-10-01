@@ -3,6 +3,7 @@
 	 * Project: PhpStorm.
 	 * Author:  InCubics
 	 * Date:    28/06/2022
+	 * Update:  01/10/2025
 	 * File:    lib\db\mysqliDB.php
 	 */
 
