@@ -12,7 +12,7 @@
 	
 	class FormRequests  extends ValidationPatterns
 	{
-		public $fail = null;
+		public $fails = [];
 		
 		public function validator($request, string $item)
 		{
