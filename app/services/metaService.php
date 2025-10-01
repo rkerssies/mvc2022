@@ -19,12 +19,12 @@
 			// create object with html-header meta-values for SEO-support
 			$meta = (object) [];
 			
-			$meta->keywords = CONFIG['keywords'];
+			$meta->keywords = env('app')->keywords;
 			if($controllerObj->meta->keywords) {
 				$meta->keywords .= ', '.$controllerObj->meta->keywords;
 			}
 			
-			$meta->description = CONFIG['description'];
+			$meta->description = env('app')->description;
 			if($controllerObj->meta->description) {
 				$meta->description .= '. '.$controllerObj->meta->description;
 			}
@@ -33,14 +33,14 @@
 				$meta->html_lang = $controllerObj->meta->html_lang;
 			}
 			else {
-				$meta->html_lang = CONFIG['html_lang'];
+				$meta->html_lang =env('app')->htmllang;
 			}
 			
 			if($controllerObj->meta->language) {
 				$meta->language = $controllerObj->meta->language;
 			}
 			else {
-				$meta->language = CONFIG['language'];
+				$meta->language = env('app')->language;
 			}
 			
 			if(!empty($controllerObj->meta->title)) { // to append title-tag with text, eq: controller and action || custom text
@@ -50,9 +50,9 @@
 				$meta->title = ucfirst(response()->route->controllerRoute) .'-'.ucfirst(response()->route->action);
 			}
 			
-			$meta->robot    = CONFIG['robot'];         //follow, nofollow, noindex, index  -->   content="index,follow"
-			$meta->author   = CONFIG['author'];
-			$meta->char_set = CONFIG['charset'];
+			$meta->robot    = env('app')->robot;         //follow, nofollow, noindex, index  -->   content="index,follow"
+			$meta->author   = env('app')->author;
+			$meta->char_set = env('app')->charset;
 			
 			return (object) $meta;
 		}

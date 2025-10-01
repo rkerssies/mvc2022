@@ -3,3 +3,8 @@
 .idea
 .vscode
 app/config/config.ini
+/vendor
+/node_modules
+.env
+/composer.lock
+

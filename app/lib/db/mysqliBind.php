@@ -11,6 +11,7 @@
 	class mysqliBind extends \stdClass
 	{
 		private static $instance = null;
+		private $env;
 		private $conn;
 		public $num_rows    = null;
 		public $affected_rows = null;
@@ -27,9 +28,11 @@
 
 		public function __construct($host = null, $user = null, $pass = null, $dbname = null)
 		{
+			$this->env = env('db');
 			if(empty($host) && empty($user) && empty($pass) && empty($dbname) ) {
-				$host = DB['host']; $user = DB['user']; $pass = DB['pass']; $dbname = DB['dbname'];
+				$host = $this->env->host; $user = $this->env->username; $pass = $this->env->password; $dbname = $this->env->database;
 			}
+			
 			$this->conn= new \mysqli($host, $user, $pass, $dbname);
 			if($this->conn->connect_error)
 			{
@@ -50,7 +53,7 @@
 		{
 			self::getInstance();
 			if(empty($host) && empty($user) && empty($pass) && empty($dbname) ) {
-				$host = DB['host']; $user = DB['user']; $pass = DB['pass']; $dbname = DB['dbname'];
+				$host = $this->env->host; $user = $this->env->username; $pass = $this->env->password; $dbname = $this->env->database;
 			}
 
 			$this->conn= new self($host, $user, $pass, $dbname);

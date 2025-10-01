@@ -8,6 +8,6 @@
 	?>
 	<hr>
 	Greetings,<br>
-	
-	<b><?= SMTP['defaultFromName'] ?></b><br><br>
-	for questions you can contact us by email: <?= SMTP['defaultFrom'] ?>
+
+	<b><?= env('smtp')->fromname ?></b><br><br>
+	for questions you can contact us by email: <?= env('smtp')->fromaddress ?>

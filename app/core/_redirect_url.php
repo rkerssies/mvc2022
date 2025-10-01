@@ -15,8 +15,8 @@
 				$out = 'http://';
 			}
 			$out.= rtrim($_SERVER['SERVER_NAME'],'/').'/';
-			if(CONFIG['base_path'] != '/'){
-				$out .= rtrim(ltrim( rtrim(CONFIG['base_path'],'/'),'/'),'/').'/';
+			if(env('app')->basepath != '/'){
+				$out .= rtrim(ltrim( rtrim(env('app')->basepath,'/'),'/'),'/').'/';
 			}
 			$out .= ltrim($path, '/');
 			return $out;
@@ -37,7 +37,7 @@
 	
 	function get_path()
 	{
-		return ( str_replace(rtrim(CONFIG['base_path'],'/'), '', rtrim($_SERVER['REQUEST_URI'],'/')) );
+		return ( str_replace(rtrim(env('app')->basepath,'/'), '', rtrim($_SERVER['REQUEST_URI'],'/')) );
 	}
 	
 	
