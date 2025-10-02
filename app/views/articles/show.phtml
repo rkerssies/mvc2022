@@ -3,6 +3,7 @@
 	 * Project: MVC2022.
 	 * Author:  InCubics
 	 * Date:    29/06/2022
+	 * Updated: 02/10/2025
 	 * File:    show.phtml
 	 */
 ?>
@@ -36,32 +37,32 @@ Data by id from given array; <b><i><?= $data ?></i></b>
 			<li>Models with defining custom tablename (other than modelname + s)</li>
 			<li>Chainable methods to build database queries Eloquent-alike, eq:</li>
 			<ul>
-				<li>all</li><li>find</li><li>andWhere</li><li>CRUD-methods</li>
+				<li>all</li><li>find</li><li>andWhere</li><li>all CRUD-methods</li>
 				<li>min,max,sum,avg-aggregates</li><li>raw</li>
 				<li>oneOnMany, manyOnMany</li>
 				<li>optional get all realted data within a nested-key</li>
 				<li>optional change output to json-format </li>
 			</ul>
 			<li>Database connection for full MySqli params-bind, MySQLi basic usage or PDO</li>
-			<li>Database connection-info stored in config.ini file</li>
+			<li>Database connection-info stored in .env-file</li>
 		</ul>
 	</li>
 	<li>
 		Views and Layouts
 		<ul>
 			<li>Views handle all var-types from controller-action</li>
-			<li>Layout selection between multiple layouts with key in config.ini file</li>
+			<li>Layout selection between multiple layouts with key in .env-file file</li>
 			<li>Build in responsive layout by <a href="http://www.initializr.com">Initializr</a> HTML5 with Bootsrap</li>
 			<li>Swithing between layouts is possible on a custom schedule</li>
-			<li>External CSS and JS scripts via CDN are configurable in config-files</li>
+			<li>External CSS and JS scripts via CDN are configured as arrays in PHP files located in the config folder</li>
 			<li>Showing a message in a show-hide animated bar at the top of the screen</li>
 			<li>Pagination with chained query on Models and buttons by paginatorService</li>
-			
 		</ul>
 	</li>
 	<li>
 		Some build-in feautures
 		<ul>
+			<li>Environment variables from .env </li>
 			<li>Login-form</li>
 			<li>Password renewal for logged-on users</li>
 			<li>Password-forgot-form</li>
@@ -83,7 +84,6 @@ Data by id from given array; <b><i><?= $data ?></i></b>
 			<li>Classes, Traits and Inheritance namespaced by an autoloader on the app-folder</li>
 			<li>Unqiue encryption depending on: App-key</li>
 			<li>Salt ecryption and decryption</li>
-			<li>Config in INI-file and accessible via a definition</li>
 			<li>Session fingerprint-protected with IP-check</li>
 			<li>Forms for adding and updating protected with csrf-token</li>
 			<li>Form-data validation FormRequests on pipe-line seperated strings multiple checks, like:</li>
@@ -97,9 +97,10 @@ Data by id from given array; <b><i><?= $data ?></i></b>
 	<li>Helper-functions
 		<ul>
 			<li>Request-dataobject and Response-dataobject</li>
-			<li>Dump 'n Die (dd)</li>
-			<li>Url, back and redirect</li>
-			<li>Set var in session and retrieving it</li>
+			<li>Dump 'n Die -function (dd)</li>
+			<li>Url, back and redirect-functions</li>
+			<li>Setting and getting var's in session and/or the response-object</li>
+			<li>Environment-function to get easily env-variables, eq: env('app')->sitename</li>
 		</ul>
 	</li>
 	<li>Middleware
@@ -116,14 +117,14 @@ Data by id from given array; <b><i><?= $data ?></i></b>
 	</li>
 	<li>Smtp-mailer
 		<ul>
-			<li>Sending smtp-email with a view-template</li>
-			<li>WEB-server configuration in ini-file</li>
-			<li>Email-preview on screen-dump on flag in ini-file</li>
+			<li>Sending smtp-email</li>
+			<li>WEB-server configuration in .env-file</li>
+			<li>Email-preview on screen-dump on flag in .env-file</li>
 		</ul>
 	</li>
 	<li>Artibuild
 		<ul>
-			<li>An (basic) Artisan-alike terminal-command to create all kinds of MVC2022 controllers, models and views </li>
+			<li>An (basic) Artisan-alike terminal-command to create all kinds of MVC2025 controllers, models and views </li>
 		</ul>
 	</li>
 </ul>

@@ -3,6 +3,7 @@
 	 * Project: MVC2022.
 	 * Author:  InCubics
 	 * Date:    29/06/2022
+	 * Updated: 02/10/2025
 	 * File:    show.phtml
 	 */
 ?>
@@ -52,49 +53,49 @@ Eloquent-alike data-queries;<br><br>
 	</ul>
 <li><b>API solution</b></li>
 	<ul>
-	<li>http://mvc2022.rk/api/token</li>
+	<li>http://mvc2025.rk/api/token</li>
 		<ul>
 			<li>get a JWT token</li>
 			<li>stores token in table `users` of given user-data</li>
 			<li>submitted password is hidden in json-response</li>
 			<li>method: POST, values: [username =>'aadmin@app.com', password='password'] </li>
 		</ul>
-		<li>http://mvc2022.rk/api/fruit</li>
+		<li>http://mvc2025.rk/api/fruit</li>
 		<ul>
 			<li>gets all record of table `fruits`, only fillable-fields</li>
 		</ul>
-	<li>http://mvc2022.rk/api/user</li>
+	<li>http://mvc2025.rk/api/user</li>
 		<ul>
 			<li>gets all record of table `fruits`</li>
 			<li>only fillable-fields and without hidden-fields</li>
 		</ul>
-	<li>http://mvc2022.rk/api/fruit/6</li>
+	<li>http://mvc2025.rk/api/fruit/6</li>
 		<ul>
 			<li>find id 6 of table `fruits`</li>
 		</ul>
-		<li>http://mvc2022.rk/api/fruit/first</li>
+		<li>http://mvc2025.rk/api/fruit/first</li>
 		<ul>
 			<li>finds first record of table `fruits`</li>
 		</ul>
-	<li>http://mvc2022.rk/api/fruit?page=2</li>
+	<li>http://mvc2025.rk/api/fruit?page=2</li>
 		<ul>
 			<li>page 2 paginated of table `fruits`</li>
 			<li>amount by param or config.ini</li>
 		</ul>
-	<li>http://mvc2022.rk/api/fruit/add</li>
+	<li>http://mvc2025.rk/api/fruit/add</li>
 		<ul>
 			<li>adds a record to table `fruits`</li>
 			<li>requires token in header-key: <token>, depending in Middleware-route</li>
 			<li>method: POST, values: [name =>'Starfruit', color='light yellow', sweetness='1'] </li>
 		</ul>
-		<li>http://mvc2022.rk/api/fruit/update/3</li>
+		<li>http://mvc2025.rk/api/fruit/update/3</li>
 			<ul>
 				<li>updates record with id 3 of table `fruits`</li>
 				<li>requires token in header-key: <token>, depending in Middleware-route</li>
 				<li>method: post, values: [_method=>'PUT', name =>'Starfruit', color='light yellow', sweetness='1'] </li>
 				<li>get-values: [p2 => 3]</li>
 			</ul>
-		<li>http://mvc2022.rk/api/fruit/delete/3</li>
+		<li>http://mvc2025.rk/api/fruit/delete/3</li>
 			<ul>
 				<li>updates record with id 3 of table `fruits`</li>
 				<li>requires token in header-key: <token>, depending in Middleware-route</li>
