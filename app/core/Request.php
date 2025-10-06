@@ -3,6 +3,7 @@
 	 * Project: MVC2022.
 	 * Author:  InCubics
 	 * Date:    29/06/2022
+	 * Update:  01/10/2025
 	 * File:    Request.php
 	 */
 
@@ -180,7 +181,7 @@
 		*/
 		public function csrf()  //
 		{
-			$saltObject = new Salt('customCSRF_4_privateKey'.CONFIG['app_key']);
+			$saltObject = new Salt('customCSRF_4_privateKey'.env('app')->key);
 			$secret = $saltObject->generateSecret('60');
 			$csrf[$secret] = date('Y-m-d H:i:s');
 
@@ -192,7 +193,7 @@
 		public function checkCsrf($postData = [])
 		{
 			$method = strtolower(request()->method);
-			$saltObject = new Salt('customCSRF_4_privateKey'.CONFIG['app_key']);
+			$saltObject = new Salt('customCSRF_4_privateKey'.env('app')->key);
 			$csrfSession = (array) json_decode($saltObject->decryptSalt($_SESSION['csrf']));
 
 			if(empty($postData)) {

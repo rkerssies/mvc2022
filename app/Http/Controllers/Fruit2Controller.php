@@ -3,6 +3,8 @@
 	 * Project: MVC2022
 	 * Author:  InCubics
 	 * Date:    20/12/2022
+	 * Update:  01/10/2025
+	 * File: Fruit2Controller.php
 	 */
 
 	namespace Http\Controllers;
@@ -26,7 +28,7 @@
 
 		public function index(Fruit $fruit)
 		{
-			$this->data = (new Fruit())->select()->all()->pagination(5)->get(); // paginate 5 records per page, override config.ini setting
+			$this->data = (new Fruit())->select()->all()->pagination(env('app')->pagination)->get(); // paginate 5 records per page, override config.ini setting
 			$this->meta = (object) ['keywords'=> 'fruity, index, example, paginated, overview', 'description' => 'CRUD overview of paginated records in the fruity database-table.'];
 			$this->useView='fruity.index';
 		}

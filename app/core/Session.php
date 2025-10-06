@@ -3,6 +3,7 @@
 	 * Project: MVC2022.
 	 * Author:  InCubics
 	 * Date:    09/07/2022
+	 * Update:  01/10/2025
 	 * File:    Session.php
 	 */
 
@@ -44,7 +45,7 @@
 			else {
 				$sessionAdrr = $_SERVER['REMOTE_ADDR'];             // contains client IP-address
 			}
-
+			
 			if($sessionAdrr != $session->REMOTE_ADDR             // check on same ip
 				|| $_SERVER['HTTP_USER_AGENT'] != $session->HTTP_USER_AGENT ) {   // check on same browser
 				//options: adding register and bann ip-address.  // $_SERVER['REMOTE_ADDR']

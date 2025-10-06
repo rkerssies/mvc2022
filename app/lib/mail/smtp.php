@@ -3,6 +3,7 @@
 	 * Project: PhpStorm.
 	 * Author:  InCubics
 	 * Date:    18/03/2023
+	 * Update:  01/10/2025
 	 * File:    smpt.php
 	 */
 	namespace lib\mail;
@@ -12,26 +13,33 @@
 	class Smtp
 	{
 		public $preview = false;
+		private $env;
+		protected $mail;
+		protected $templateName ='app/views/mail/template.phtml';
+		protected $from;
+		protected $fromName;
+		protected $subject;
+
 		public function __construct(string $templateName, $subject, $from=null)
 		{
 		
-//			dd( SMTP );
+			$this->env = env('smtp');
 			$this->mail = new PHPMailer();
 			
 			$this->mail->isSMTP();
-			$this->mail->SMTPSecure = SMTP['SMTPSecure'];
-			$this->mail->Host       = SMTP['host'];
-			$this->mail->SMTPAuth   = SMTP['SMTPAuth'];
-			$this->mail->Port       = SMTP['port'];
-			$this->mail->Username   = SMTP['user'];
-			$this->mail->Password   = SMTP['pass'];
+			$this->mail->SMTPSecure = $this->env->encryption;  // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` also accepted
+			$this->mail->Host       = $this->env->host;    
+			$this->mail->SMTPAuth   = $this->env->auth;   	// Enable SMTP authentication
+			$this->mail->Port       = $this->env->port;    	// TCP port to connect to];
+			$this->mail->Username   = $this->env->username; 
+			$this->mail->Password   = $this->env->password; 
 			
 			$this->templateName = $templateName;
 			$this->subject      = $subject;
 			
 			if(!empty($from))   {
-				$this->from       = SMTP['defaultFrom'];
-				$this->fromName   = SMTP['defaultFromName'];
+				$this->from       = $this->env->from;
+				$this->fromName   = $this->env->fromName;
 			}
 			else    {
 				$this->from       = $from;
@@ -64,13 +72,13 @@
 			}
 			
 			//$this->mail->AddAttachment($_FILES["attachment"]["tmp_name"], $_FILES["attachment"]["name"]);
-			
-			if(SMTP['preview'] == false) {
-				if($this->mail->send())   {
-					return true;            // email send
-				}
-				return  false;
+
+			if($this->env->preview == false) {
+				return $this->mail->Body;        // open emailBody in new browser-tab
 			}
-			return $this->mail->Body;        // open emailBody in new browser-tab
+			if($this->mail->send())   {			// email send
+					return true;            
+			}
+			return  false;
 		}
 	}

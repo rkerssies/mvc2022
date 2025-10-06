@@ -3,6 +3,7 @@
 	 * Project: MVC2022.
 	 * Author:  InCubics
 	 * Date:    29/06/2022
+	* Update:  01/10/2025
 	 * File:    Mvc.php
 	 */
 
@@ -11,8 +12,9 @@
 	use core\Session;
 	use core\Response;
 	use core\Request;
-	use lib\files\getFiles;
-	use lib\encrypt\Salt;
+	// use lib\files\getFiles;
+	// use lib\encrypt\Salt;
+	use \Exception;	
 
 class mvc extends \stdClass
 {
@@ -31,6 +33,9 @@ class mvc extends \stdClass
 
 	public function __construct()
 	{
+		require '../vendor/autoload.php';	// read composer-packages in /vendor
+
+
 		/* Activate autoloader on app-folder to initiate classes by there namespace */
 		spl_autoload_register(
 			function ($class) {
@@ -41,16 +46,6 @@ class mvc extends \stdClass
 		);
 		spl_autoload_extensions('.php');
 
-		/*
-		 *  Setting global constanses CONFIG and DB + making config available for the MVC-proces
-		 */
-		$parts = parse_ini_file('../app/config/config.ini');    // get config-data in constant-var
-		$this->config = (object) $parts;
-		define( 'DB', $parts['db']); // config-db available in whole framework
-//unset($parts['db']);
-		define( 'SMTP', $parts['smtp']); // config-db available in whole framework
-//unset($parts['smtp']);
-		define( 'CONFIG', $parts);  // config-constants available in whole framework
 
 		/* Bootsrap reads all files in core-folder for eq: Request-class, Middleware-class and
 		 *  a singleton Response-class as dataobject and other classes
@@ -59,6 +54,21 @@ class mvc extends \stdClass
 			die('error: failed bootstrap');
 		}
 
+		/* Load configuration from .env
+			set default timezone if APP_TIMEZONE exists in .env
+			define constants per prefix in .env (eq: DB_HOST becomes DB::HOST)
+			populate global $_ENV array with env values
+			define global env() function to get env-values 
+		*/
+		try {
+			loadEnv();
+		} 
+		catch (Exception $e) {
+			die("FATAL !  ".$e->getMessage());
+		}
+
+			// load envoronmet-variables from .env-file into $_ENV-array and env() function
+
 		/*
 		 *  Encrypted fingerprint (remote ipaddress + browser + due-time)
 		 *  additional security on session-id
@@ -66,7 +76,6 @@ class mvc extends \stdClass
 		if(! (new Session())->run())    {
 			die('FATAL !  Session hijack');
 		}
-
 	}
 
 	/* Main front-entrance of the application */
@@ -78,7 +87,7 @@ class mvc extends \stdClass
 			response_set('messagebar', session_get('messagebar'));
 			sessionkey_unset('messagebar');
 		}
-		(new \core\Request())->make();      // Initate request-object
+		(new Request())->make();      // Initate request-object
 
 		if($this->route() == false) {
 			error('404');         //die('<h1>404</h1> invalid url');
@@ -119,7 +128,7 @@ class mvc extends \stdClass
 	private function bootstrap($path)
 	{   // read all php-files (non-namespaced) in core-folder
 		foreach(glob($path.'/*.php') as $file)  {
-			include_once($file);
+			require_once($file);
 		}
 		return true;
 	}
@@ -129,6 +138,7 @@ class mvc extends \stdClass
 	 */
 	private function route()
 	{
+
 		if(request()->get->p0 == 'api'){    // api-routes
 			$this->api = true;
 			$routes  = include('../app/routes/api.php');
@@ -139,12 +149,12 @@ class mvc extends \stdClass
 
 		$routesValues = array_keys($routes);
 
-		$path = str_replace( (string) $this->config->base_path, '/', (string)  $_SERVER['REQUEST_URI']);
-		$this->url =$this->config->domain. $_SERVER['REQUEST_URI'];
+		$path = str_replace( (string) env('app')->basepath, '/', (string)  $_SERVER['REQUEST_URI']);
+		$this->url =env('app')->domain. $_SERVER['REQUEST_URI'];
 		$path = str_replace('/api', '', $path);   // remove prefix:  /api   from path
 		$this->path = $path;
 
-		Response::class()->route = (object) ['domain'=> $this->config->domain];
+		Response::class()->route = (object) ['domain'=> env('app')->domain];
 		Response::class()->route->url =   $this->url;
 		Response::class()->route->path =  $this->path;
 
@@ -335,10 +345,9 @@ class mvc extends \stdClass
 	 */
 	private function layout()
 	{
-
 	// get required layout-set, bij default in config.ini ore schedueled
-		$layoutName = $this->config->layoutName;
-		if($this->config->ScheduledLayout == true){
+		$layoutName = env('app')->layoutname;
+		if(env('app')->ScheduledLayout == true){
 			$schedule  = include('../app/config/layoutSchedule.php');
 			foreach($schedule as $changeLayout)
 			{
@@ -353,6 +362,7 @@ class mvc extends \stdClass
 				}
 			}
 		}
+
 		$this->layoutName = $layoutName;
 
 		// call Services

@@ -3,6 +3,7 @@
 	 * Project: MVC2022.
 	 * Author:  InCubics
 	 * Date:    29/06/2022
+	 * Update:  01/10/2025
 	 * File:    layout.phtml
 	 */
 ?>
@@ -15,7 +16,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
 <head>
 	<meta charset="utf-8">
-	<title><?= $this->config->sitename ?> | <?= $meta->title ?></title>
+	<title><?= env('app')->name ?> | <?= $meta->title ?></title>
 	<!-- <link rel="icon" type="image/x-icon" href="/favicon.ico">
 	<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico"> -->
 	<link rel="icon" type="image/png" href="/favicon.png">
@@ -65,8 +66,8 @@
 
 	<div class="container">
 		<a class="navbar-brand" href="#">
-			<i class="bi bi-filetype-php font-weight-bold lightblue"></i>
-			<?= $this->config->sitename ?>
+			<i class="bi bi-filetype-php font-weight-bold darkblue"></i>
+			<?= env('app')->sitename ?>
 		</a>
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -111,7 +112,7 @@
 	<hr>
 	
 	<footer>
-		<p class="author">&copy;<?= date('Y').'-'.(date('Y')+1)?> by <?= CONFIG['author']?></p>
+		<p class="author">&copy;<?= date('Y').'-'.(date('Y')+1)?> by <?= env('app')->author?></p>
 	</footer>
 </div> <!-- /container -->        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="http://mvc2022.rk/js/vendor/jquery-1.11.2.min.js"><\/script>')</script>

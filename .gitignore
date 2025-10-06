@@ -5,4 +5,12 @@
 .env
 composer.lock
 app/config/config.ini
+<<<<<<< HEAD
 /vendor
+=======
+/vendor
+/node_modules
+.env
+/composer.lock
+
+>>>>>>> dotenv

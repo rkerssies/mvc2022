@@ -3,22 +3,24 @@
 	 * Project: MVC2022.
 	 * Author:  InCubics
 	 * Date:    29/06/2022
+	 * Update:  01/10/2025
 	 * File:    Salt.php
 	 */
 	
 	namespace lib\encrypt;
 	class Salt
 	{
+		private static $instance = null;
 		private $salt = null;
 		private $ivalue;
 		private $key;
 		private $secretKey;
 		
-		public function __construct(string $privateKey = null)
+		public function __construct(string $privateKey = '')
 		{
 			//dd(hash_algos());       // shows a list of all hashing-algorithms
 			$this->secretKey = hash( hash_algos()[52],str_pad(
-					CONFIG['author'].'*'.CONFIG['app_key'],32, "^_", STR_PAD_BOTH));
+					env('app')->author.'*'.env('app')->key,32, "^_", STR_PAD_BOTH));
 			
 			// ($this->generateAppKey(33)); // generate a new key og 33 chars based on the string in: app/config/.privateKey
 			if($privateKey == null){
