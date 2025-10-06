@@ -15,7 +15,7 @@
 			else {
 				$out = 'http://';
 			}
-			$out.= rtrim($_SERVER['SERVER_NAME'],'/').'/';
+			$out.= rtrim($_SERVER['HTTP_HOST'],'/').'/';
 			if(env('app')->basepath != '/'){
 				$out .= rtrim(ltrim( rtrim(env('app')->basepath,'/'),'/'),'/').'/';
 			}

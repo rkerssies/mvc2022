@@ -67,6 +67,16 @@ function loadEnv(string|null $file = null): object
     foreach ($parts as $prefix => $config) {
         $constName = strtoupper($prefix);
         if (!defined($constName)) {
+            // Ensure APP_URL and APP_DOMAIN include a scheme (default to http:// if missing)
+            if ($prefix === 'app') {
+                if (!empty($config['url'])) {
+                    $config['url'] = normalize_scheme($config['url']);
+                }
+                if (!empty($config['domain'])) {
+                    $config['domain'] = normalize_scheme($config['domain']);
+                }
+            }
+
             define($constName, $config); // array constant
         }
         // unset($parts[$prefix]);
@@ -92,4 +102,24 @@ function env(string $key = ''): object|null{
     }
 
     return (object) $env->$key ?? null;
+}
+
+
+/**
+ * Ensure a URL or domain contains a scheme. If it already has http(s)://, return as-is.
+ * If it looks like just a domain (no scheme), prepend http:// by default.
+ */
+function normalize_scheme(string $url): string {
+    $trimmed = trim($url);
+    if (preg_match('#^https?://#i', $trimmed)) {
+        return $trimmed;
+    }
+
+    // If it's empty or starts with a slash, return as-is
+    if ($trimmed === '' || strpos($trimmed, '/') === 0) {
+        return $trimmed;
+    }
+
+    // Default to http://
+    return 'http://' . $trimmed;
 }
